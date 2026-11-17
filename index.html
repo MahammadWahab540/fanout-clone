@@ -1,1678 +1,331 @@
-<!DOCTYPE html>
-<html lang="en" class="light">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Pathwisse — Employability Operating System for Higher Education</title>
-  <meta name="description" content="Guide every student from career choice to placement readiness. Premium Apple-inspired employability operating system." />
-  
-  <!-- Apple Touch Icon & Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='10' fill='%23102F60'/%3E%3Cpath d='M9 21L16 7l7 14h-4.5l-2.5-5-2.5 5H9z' fill='%23007AFF'/%3E%3Ccircle cx='16' cy='18.5' r='2' fill='%23FFAA33'/%3E%3C/svg%3E" />
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23102F60'/%3E%3Cpath d='M50 125L90 45l40 80h-25l-15-30-15 30H50z' fill='%23007AFF'/%3E%3Ccircle cx='90' cy='110' r='12' fill='%23FFAA33'/%3E%3C/svg%3E" />
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-  <!-- Fonts: Inter / SF Pro fallbacks, IBM Plex Mono for metrics -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Session-fragment scrub. If an auth redirect ever lands with tokens in
+         the URL fragment (legacy implicit-flow magic links), remove them
+         before any tracker below can read location.href. Position matters:
+         this must stay the first script in <head>, above GTM and every pixel.
+         Pinned by tests/security-headers.test.ts. -->
+    <script>
+      if (location.hash.indexOf("access_token") !== -1) {
+        history.replaceState(null, "", location.pathname + location.search);
+      }
+    </script>
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            display: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', 'Inter', 'sans-serif'],
-            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', 'Inter', 'sans-serif'],
-            mono: ['"SF Mono"', '"IBM Plex Mono"', 'ui-monospace', 'monospace'],
-          },
-          colors: {
-            // Apple-inspired Pathwisse Palette
-            navy: '#102F60',          // Primary Navy
-            apple: {
-              blue: '#007AFF',        // Apple Blue
-              brand: '#2458E8',       // Brand Blue
-              amber: '#FFAA33',       // Accent Amber
-              bg: '#F5F7FA',          // Background
-              card: '#FFFFFF',        // Cards
-              text: '#1D1D1F',        // Primary Text
-              muted: '#667085',       // Secondary Text
-              border: '#E5E7EB',      // Borders
-            }
-          },
-          borderRadius: {
-            'card': '16px',           // Specified 16px cards
-            'btn': '12px',            // Specified 12px buttons
-          },
-          boxShadow: {
-            'apple-sm': '0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.02)',
-            'apple': '0 4px 16px -2px rgba(16, 47, 96, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
-            'apple-elevated': '0 12px 32px -4px rgba(16, 47, 96, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.04)',
-            'apple-glow': '0 0 20px rgba(0, 122, 255, 0.18)',
+    <!-- Local dev CORS interceptor for remote telemetry -->
+    <script>
+      (function() {
+        const _fetch = window.fetch;
+        window.fetch = function(input, init) {
+          const url = typeof input === 'string' ? input : (input && input.url ? input.url : '');
+          if (url && (url.includes('fanout-analytics') || url.includes('/v1/sessions'))) {
+            return Promise.resolve(new Response(JSON.stringify({ ok: true, status: 'mocked' }), {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' }
+            }));
           }
+          return _fetch.apply(this, arguments);
+        };
+      })();
+    </script>
+
+    <!-- Google Tag Manager -->
+    <!-- Container id is pinned by tests/static-metadata.test.ts and mirrored in
+         src/lib/analytics/gtm.ts. The container's built-in Page View trigger only
+         fires on this document load; SPA route changes and catalog events are
+         pushed to the dataLayer from src/lib/analytics/gtm.ts. -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-W7BVZPQV');</script>
+    <!-- End Google Tag Manager -->
+
+    <script>!function(w,d,s,u,n,a,b){if(w[n])return;a=w[n]={q:[],t:+new Date,s:[],o:u,track:function(){a.q.push([+new Date].concat([].slice.call(arguments)))},setScope:function(){a.s=[].slice.call(arguments).filter(function(x){return typeof x==="string"});a.q.push([+new Date,"setScope"].concat(a.s))},scope:function(){var c=[].slice.call(arguments);return{track:function(){a.q.push([+new Date].concat([].slice.call(arguments)).concat([{__scope:c}]))}}}};b=d.createElement(s);b.async=1;b.src=u+"/s.js";d.getElementsByTagName(s)[0].parentNode.insertBefore(b,d.getElementsByTagName(s)[0])}(window,document,"script","https://t.whop.tw","whop");whop.setScope("biz_UvSk2l0dpckrBO");whop.track("page");</script>
+
+    <!-- fanout:route-meta:start -->
+    <title data-fanout-static-route>Fanout: AI Research, System Design &amp; ML Math</title>
+    <meta name="description" content="Mapped learning across AI research, systems, ML math, inference, and open robotics, with practical labs, daily papers, and roadmaps." data-fanout-static-route />
+    <link rel="canonical" href="https://fanout.sh/" data-fanout-static-route />
+    <link rel="alternate" type="text/markdown" href="/index.md" data-fanout-static-route />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" data-fanout-static-route />
+    <meta property="og:type" content="website" data-fanout-static-route />
+    <meta property="og:url" content="https://fanout.sh/" data-fanout-static-route />
+    <meta property="og:title" content="Fanout: AI Research, System Design &amp; ML Math" data-fanout-static-route />
+    <meta property="og:description" content="Mapped learning across AI research, systems, ML math, inference, and open robotics, with practical labs, daily papers, and roadmaps." data-fanout-static-route />
+    <meta property="og:image" content="https://fanout.sh/og-everything-google-l7-mapped.png" data-fanout-static-route />
+    <meta property="og:image:secure_url" content="https://fanout.sh/og-everything-google-l7-mapped.png" data-fanout-static-route />
+    <meta property="og:image:type" content="image/png" data-fanout-static-route />
+    <meta property="og:image:width" content="1200" data-fanout-static-route />
+    <meta property="og:image:height" content="630" data-fanout-static-route />
+    <meta property="og:image:alt" content="Fanout: AI Research, System Design &amp; ML Math on Fanout" data-fanout-static-route />
+    <meta name="twitter:url" content="https://fanout.sh/" data-fanout-static-route />
+    <meta name="twitter:title" content="Fanout: AI Research, System Design &amp; ML Math" data-fanout-static-route />
+    <meta name="twitter:description" content="Mapped learning across AI research, systems, ML math, inference, and open robotics, with practical labs, daily papers, and roadmaps." data-fanout-static-route />
+    <meta name="twitter:image" content="https://fanout.sh/og-everything-google-l7-mapped.png" data-fanout-static-route />
+    <meta name="twitter:image:alt" content="Fanout: AI Research, System Design &amp; ML Math on Fanout" data-fanout-static-route />
+    <script type="application/ld+json" data-fanout-static-route>[{"@context":"https://schema.org","@type":"WebPage","@id":"https://fanout.sh/#webpage","url":"https://fanout.sh/","name":"Fanout: AI Research, System Design & ML Math","description":"Mapped learning across AI research, systems, ML math, inference, and open robotics, with practical labs, daily papers, and roadmaps.","inLanguage":"en-US","isPartOf":{"@id":"https://fanout.sh/#website"},"about":{"@id":"https://fanout.sh/#org"}},{"@context":"https://schema.org","@type":"ItemList","@id":"https://fanout.sh/#courses","itemListElement":[{"@type":"ListItem","position":1,"url":"https://fanout.sh/ai-engineering/overview","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/ai-engineering/overview#course","url":"https://fanout.sh/ai-engineering/overview","name":"Fanout AI Engineering","description":"Build with models, embeddings, retrieval, reasoning, and agents. Free introductory modules and selected lessons, with Pro access to the full course.","provider":{"@id":"https://fanout.sh/#org"}}},{"@type":"ListItem","position":2,"url":"https://fanout.sh/ai","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/ai#course","url":"https://fanout.sh/ai","name":"Fanout AI Research","description":"AI research from math foundations to RLHF and MLOps.","provider":{"@id":"https://fanout.sh/#org"}}},{"@type":"ListItem","position":3,"url":"https://fanout.sh/system","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/system#course","url":"https://fanout.sh/system","name":"System Design In Depth","description":"System design notes, case studies, and implementations.","provider":{"@id":"https://fanout.sh/#org"}}},{"@type":"ListItem","position":4,"url":"https://fanout.sh/ml-math","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/ml-math#course","url":"https://fanout.sh/ml-math","name":"Machine Learning Mathematics","description":"Mathematics for machine learning across 12 modules.","provider":{"@id":"https://fanout.sh/#org"}}},{"@type":"ListItem","position":5,"url":"https://fanout.sh/inference-eng","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/inference-eng#course","url":"https://fanout.sh/inference-eng","name":"Fanout Inference Engineering","description":"A self-paced production LLM inference course with free introductory lessons and Pro lessons.","provider":{"@id":"https://fanout.sh/#org"}}}]}]</script>
+    <!-- fanout:route-meta:end -->
+
+    <!-- React owns the same route metadata after hydration and on SPA navigation. -->
+    <meta name="author" content="Suraj Gaud" />
+    <meta name="creator" content="Suraj Gaud" />
+    <meta name="publisher" content="Fanout" />
+    <meta name="application-name" content="Fanout" />
+    <meta name="generator" content="Vite + React" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="format-detection" content="telephone=no, address=no, email=no" />
+    <meta name="theme-color" content="#FBFBFB" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      (() => {
+        try {
+          const stored = localStorage.getItem("fanout-theme");
+          const dark = stored
+            ? stored === "dark"
+            : matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.classList.toggle("dark", dark);
+          document.documentElement.style.colorScheme = dark ? "dark" : "light";
+          document
+            .querySelector('meta[name="theme-color"]')
+            ?.setAttribute("content", dark ? "#111315" : "#FBFBFB");
+        } catch {
+          // Keep the default light theme when storage or media queries fail.
         }
+      })();
+    </script>
+
+    <!-- Icons & PWA -->
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/svg+xml" sizes="any" href="/assets/brand/fanout-mark.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Fanout" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="msapplication-TileColor" content="#FBFBFB" />
+    <meta name="msapplication-TileImage" content="/icon-192.png" />
+
+    <!-- Open Graph site identity; route-specific fields live in the generated block above. -->
+    <meta property="og:site_name" content="Fanout" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:author" content="https://x.com/notsurajgaud" />
+    <meta property="article:publisher" content="https://x.com/notsurajgaud" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@notsurajgaud" />
+    <meta name="twitter:creator" content="@notsurajgaud" />
+    <meta name="twitter:domain" content="fanout.sh" />
+
+    <!-- Shared Google tag for Ads and GA4. GA4 enhanced measurement handles
+         page views on initial load and SPA history changes. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18393127573"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-18393127573');
+      gtag('config', 'G-EPZE2FZ1XT');
+    </script>
+
+    <!-- X Ads conversion tracking base code -->
+    <script>
+      !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments)},s.version="1.1",s.queue=[],u=t.createElement(n),u.async=!0,u.src="https://static.ads-twitter.com/uwt.js",a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,"script");
+      // Three pixels, three ads accounts — see shared/x-capi.ts X_PIXEL_IDS.
+      // The sync test in tests/x-pixel.test.ts keeps these literals honest.
+      twq("config", "reepc");
+      twq("config", "reczr");
+      twq("config", "rf84d");
+    </script>
+
+    <!-- Meta Pixel base code. fbevents.js hooks pushState itself, so SPA route
+         changes fire PageView without react-router wiring. -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      // Automatic event detection labelled every button "SubscribedButtonClick";
+      // real funnel events are forwarded from src/lib/analytics/metaPixel.ts.
+      fbq('set', 'autoConfig', false, '2545109755937527');
+      fbq('init', '2545109755937527');
+      fbq('track', 'PageView');
+    </script>
+
+    <!-- TikTok Pixel base code. events.js hooks pushState itself (like
+         fbevents.js), so SPA route changes fire Pageview without react-router
+         wiring; funnel events are forwarded from
+         src/lib/analytics/tiktokPixel.ts. One ttq.load per pixel in
+         shared/tiktok-capi.ts TIKTOK_PIXEL_IDS; every global ttq call (page,
+         track, identify) fans out to each loaded pixel with the same
+         event_id (verified live 2026-09-10). The literals are pinned to
+         TIKTOK_PIXEL_IDS by tests/tiktok-pixel.test.ts. -->
+    <script>
+      !function (w, d, t) {
+        w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+      var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+      ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+
+        ttq.load('DAH7P8RC77UDHLL3QKVG');
+        ttq.page();
+      }(window, document, 'ttq');
+    </script>
+
+    <!-- rel=me for identity verification (Mastodon, IndieWeb) -->
+    <link rel="me" href="https://x.com/notsurajgaud" />
+    <link rel="me" href="https://github.com/suraj-xd" />
+    <link rel="author" href="https://x.com/notsurajgaud" />
+
+    <!-- Sitemap -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Fanout Daily papers" href="/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Fanout blog" href="/blog/feed.xml" />
+    <link rel="alternate" type="text/plain" title="Fanout for language models" href="/llms.txt" />
+
+    <!-- Structured data — WebSite + Organization + Person. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://fanout.sh/#website",
+            "url": "https://fanout.sh/",
+            "name": "Fanout",
+            "description": "Mapped technical learning across AI research, system design, ML math, and inference engineering, with practical labs, daily papers, and roadmaps.",
+            "inLanguage": "en-US",
+            "publisher": { "@id": "https://fanout.sh/#org" }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://fanout.sh/#org",
+            "name": "Fanout",
+            "url": "https://fanout.sh/",
+            "logo": "https://fanout.sh/icon-512.png",
+            "description": "Technical learning for AI systems engineers, with structured courses, practical roadmaps, interactive labs, and source-led field notes.",
+            "knowsAbout": [
+              "AI research engineering",
+              "LLM inference engineering",
+              "Machine learning mathematics",
+              "System design"
+            ],
+            "founder": { "@id": "https://fanout.sh/#person" },
+            "brand": "Fanout",
+            "sameAs": [
+              "https://x.com/Fanoutdotsh",
+              "https://www.instagram.com/fanout.sh/"
+            ]
+          },
+          {
+            "@type": "Person",
+            "@id": "https://fanout.sh/#person",
+            "name": "Suraj Gaud",
+            "alternateName": "notsurajgaud",
+            "url": "https://surajgaud.com",
+            "sameAs": [
+              "https://x.com/notsurajgaud",
+              "https://github.com/suraj-xd"
+            ]
+          }
+        ]
       }
-    }
-  </script>
+    </script>
 
-  <style>
-    :root {
-      --bg: #F5F7FA;
-      --card: #FFFFFF;
-      --text: #1D1D1F;
-      --muted: #667085;
-      --border: #E5E7EB;
-      --primary-navy: #102F60;
-      --apple-blue: #007AFF;
-      --brand-blue: #2458E8;
-      --accent-amber: #FFAA33;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-    }
-
-    h1, h2, h3, h4, .font-display {
-      font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-      letter-spacing: -0.025em;
-    }
-
-    /* Apple-style Frosted Glass Navigation */
-    .apple-glass {
-      background: rgba(255, 255, 255, 0.82);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border-bottom: 1px solid rgba(229, 231, 235, 0.8);
-    }
-
-    /* Apple Direct Manipulation Touch/Press Response */
-    .apple-btn {
-      border-radius: 12px;
-      transition: all 140ms cubic-bezier(0.25, 1, 0.5, 1);
-    }
-    .apple-btn:active {
-      transform: scale(0.975);
-    }
-
-    .apple-card {
-      border-radius: 16px;
-      background: #FFFFFF;
-      border: 1px solid #E5E7EB;
-      transition: transform 200ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 200ms cubic-bezier(0.25, 1, 0.5, 1);
-    }
-    .apple-card:hover {
-      box-shadow: 0 10px 28px -4px rgba(16, 47, 96, 0.07), 0 4px 10px -2px rgba(0, 0, 0, 0.03);
-    }
-
-    /* Subtle Apple Atmospheric Blue Background */
-    .apple-mesh-bg {
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(36, 88, 232, 0.04) 0px, transparent 55%),
-        radial-gradient(at 100% 0%, rgba(0, 122, 255, 0.035) 0px, transparent 50%),
-        radial-gradient(at 50% 100%, rgba(255, 170, 51, 0.02) 0px, transparent 60%);
-    }
-
-    /* Custom Apple Range Slider */
-    input[type=range] {
-      -webkit-appearance: none;
-      height: 6px;
-      background: #E5E7EB;
-      border-radius: 9999px;
-      outline: none;
-    }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: #007AFF;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0, 122, 255, 0.35);
-      border: 2px solid #FFFFFF;
-      transition: transform 100ms ease;
-    }
-    input[type=range]::-webkit-slider-thumb:active {
-      transform: scale(1.15);
-    }
-  </style>
-</head>
-<body class="min-h-screen apple-mesh-bg flex flex-col">
-
-  <!-- ========================================================================= -->
-  <!-- 1. APPLE-INSPIRED FROSTED GLASS NAVIGATION BAR                            -->
-  <!-- ========================================================================= -->
-  <header class="sticky top-0 z-50 apple-glass transition-all duration-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-      
-      <!-- Brand & Wordmark -->
-      <a href="/" class="flex items-center gap-3 group">
-        <div class="w-9 h-9 rounded-xl bg-navy flex items-center justify-center shadow-sm group-hover:bg-[#0c2349] transition-colors">
-          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-            <path d="M2 17l10 5 10-5"></path>
-            <path d="M2 12l10 5 10-5"></path>
-          </svg>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="text-lg font-bold font-display tracking-tight text-navy">Pathwisse</span>
-          <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-apple-blue border border-blue-100">OS 2.4</span>
-        </div>
-      </a>
-
-      <!-- Desktop Links -->
-      <nav class="hidden lg:flex items-center gap-1 text-[13px] font-medium text-apple-muted">
-        <a href="#overview" class="px-3 py-1.5 rounded-lg text-apple-text hover:text-navy hover:bg-slate-100/70 transition-colors">Overview</a>
-        <a href="#journey" class="px-3 py-1.5 rounded-lg hover:text-apple-text hover:bg-slate-100/70 transition-colors">10-Stage Model</a>
-        <a href="#readiness" class="px-3 py-1.5 rounded-lg hover:text-apple-text hover:bg-slate-100/70 transition-colors">Readiness Engine</a>
-        <a href="#instruments" class="px-3 py-1.5 rounded-lg hover:text-apple-text hover:bg-slate-100/70 transition-colors">Engineering Labs</a>
-        <a href="#tracks" class="px-3 py-1.5 rounded-lg hover:text-apple-text hover:bg-slate-100/70 transition-colors">Curriculum Tracks</a>
-        <a href="#institutions" class="px-3 py-1.5 rounded-lg hover:text-apple-text hover:bg-slate-100/70 transition-colors">Institutions</a>
-        <a href="#plans" class="px-3 py-1.5 rounded-lg hover:text-apple-text hover:bg-slate-100/70 transition-colors">Plans</a>
-      </nav>
-
-      <!-- Right CTAs & Tools -->
-      <div class="flex items-center gap-2.5">
-        
-        <!-- Spotlight Search Trigger -->
-        <button onclick="toggleCommandPalette()" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-btn border border-apple-border bg-white text-xs text-apple-muted hover:border-slate-300 transition-colors shadow-apple-sm">
-          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          <span class="text-[12px]">Search pathways...</span>
-          <kbd class="px-1.5 py-0.5 rounded bg-slate-100 text-[10px] font-mono text-slate-500 font-semibold">⌘K</kbd>
-        </button>
-
-        <!-- Notification / Amber Milestone Pill -->
-        <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-[11px] font-medium text-amber-900">
-          <span class="w-1.5 h-1.5 rounded-full bg-apple-amber animate-pulse"></span>
-          <span>Placement Season Ready</span>
-        </div>
-
-        <!-- Primary CTA: 12px rounded, Apple Blue -->
-        <button onclick="openDemoModal()" class="apple-btn px-4 py-2 bg-apple-blue hover:bg-blue-600 text-white text-xs font-semibold shadow-apple-sm hover:shadow-apple-glow flex items-center gap-1.5">
-          <span>Request Demo</span>
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-        </button>
-
-        <!-- Mobile Menu Trigger -->
-        <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-btn border border-apple-border text-apple-muted">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-        </button>
-
-      </div>
-
+    <!-- Icon fonts are decorative; load them without delaying first paint. -->
+    <!-- Core subsets of the faces nearly every page renders (scripts/generate-webfonts.py).
+         Extended files load on demand through unicode-range. -->
+    <link rel="preload" href="/assets/OverusedGrotesk-Roman-core-Bdvro-z4.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/OverusedGrotesk-Medium-core-BPZFOhJr.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/OverusedGrotesk-SemiBold-core-z15TJaaJ.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/IBMPlexMono-Regular-core-BhwDdshb.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/IBMPlexMono-Medium-core-Cm2hjasA.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/DepartureMono-Regular-core-BG0_QVaz.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/phosphor-regular-d6b5dcdf2f.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="/assets/phosphor-fill-fc2384beef.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="/assets/phosphor-bold-0fc7c5b1b7.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript>
+      <link rel="stylesheet" href="/assets/phosphor-regular-d6b5dcdf2f.css" />
+      <link rel="stylesheet" href="/assets/phosphor-fill-fc2384beef.css" />
+      <link rel="stylesheet" href="/assets/phosphor-bold-0fc7c5b1b7.css" />
+    </noscript>
+    <script type="module" crossorigin src="/assets/index-CXfpSli5.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-BgaNhQyE.js">
+    <link rel="modulepreload" crossorigin href="/assets/courses-BfdxzLqa.js">
+    <link rel="modulepreload" crossorigin href="/assets/gift-links-ZewkrAX8.js">
+    <link rel="modulepreload" crossorigin href="/assets/dodoCurrency-DJAmdqii.js">
+    <link rel="modulepreload" crossorigin href="/assets/module-g1eYuniJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-C65L1HE3.js">
+    <link rel="modulepreload" crossorigin href="/assets/jsx-runtime-CIkHs51R.js">
+    <link rel="modulepreload" crossorigin href="/assets/dist-B84PheR_.js">
+    <link rel="modulepreload" crossorigin href="/assets/preload-helper-BfGapeCf.js">
+    <link rel="modulepreload" crossorigin href="/assets/datafast-B4-DpDB2.js">
+    <link rel="modulepreload" crossorigin href="/assets/api-CZnonzPU.js">
+    <link rel="modulepreload" crossorigin href="/assets/auth-CKFvb8-Z.js">
+    <link rel="modulepreload" crossorigin href="/assets/useActiveOffer-Cr7YoOeM.js">
+    <link rel="modulepreload" crossorigin href="/assets/dist-BXxUuVPX.js">
+    <link rel="modulepreload" crossorigin href="/assets/haptics-CImxe2gB.js">
+    <link rel="modulepreload" crossorigin href="/assets/PhIcon-C8YzW2Wq.js">
+    <link rel="modulepreload" crossorigin href="/assets/utils-40vLMUdz.js">
+    <link rel="modulepreload" crossorigin href="/assets/lucide-react-BhmvaPUY.js">
+    <link rel="modulepreload" crossorigin href="/assets/button-Db2QPobg.js">
+    <link rel="modulepreload" crossorigin href="/assets/brand-C2gbhl7g.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-DS65NBSq.js">
+    <link rel="modulepreload" crossorigin href="/assets/profile-bootstrap-BrHLLe3z.js">
+    <link rel="modulepreload" crossorigin href="/assets/subscription-CGNDjmrL.js">
+    <link rel="modulepreload" crossorigin href="/assets/dialog-BjiUTJbW.js">
+    <link rel="stylesheet" crossorigin href="/assets/brand-q-gmNaul.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-DCAXL5XB.css">
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W7BVZPQV"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <!-- Meta Pixel no-JS fallback; img is not valid inside a head noscript. -->
+    <noscript><img height="1" width="1" style="display:none" alt=""
+      src="https://www.facebook.com/tr?id=2545109755937527&ev=PageView&noscript=1"
+    /></noscript>
+    <div id="root">
+      <!-- fanout:route-heading:start -->
+      <h1 class="sr-only" data-fanout-static-route>Mapped technical learning across AI research, system design, and ML math</h1>
+      <nav class="sr-only" aria-label="Fanout site directory" data-fanout-static-route><h2>Explore Fanout</h2><ul><li><a href="/">Fanout home</a></li><li><a href="/ai">Fanout AI Research Course &amp; Roadmap</a></li><li><a href="/system">System Design Course: Concepts, Cases and Builds</a></li><li><a href="/ml-math">Machine Learning Mathematics Course</a></li><li><a href="/math-decoder">Math Decoder for AI Research Papers</a></li><li><a href="/inference-eng">Inference Engineering Course</a></li><li><a href="/open-robotics">Open Robotics</a></li><li><a href="/labs">Interactive AI and System Design Labs</a></li><li><a href="/labs/math-decoder">Mathematical Notation Library</a></li><li><a href="/daily">AI Research Papers Explained Daily</a></li><li><a href="/blog">Fanout blog: AI, systems and ML engineering</a></li><li><a href="/roadmaps">AI, system design &amp; ML math roadmaps</a></li><li><a href="/tools">Tools for technical work</a></li><li><a href="/knowledge-graph">Knowledge Topography</a></li><li><a href="/study-with-me">Study With Me</a></li><li><a href="/pricing">Fanout Course Pricing: AI, Systems and ML Math</a></li></ul></nav>
+      <!-- fanout:route-heading:end -->
     </div>
-
-    <!-- Mobile Drawer -->
-    <div id="mobile-menu" class="hidden lg:hidden border-t border-apple-border bg-white/95 px-4 pt-3 pb-6 space-y-2">
-      <a href="#overview" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-btn text-sm font-medium text-apple-text hover:bg-slate-100">Overview</a>
-      <a href="#journey" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-btn text-sm font-medium text-apple-text hover:bg-slate-100">10-Stage Model</a>
-      <a href="#readiness" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-btn text-sm font-medium text-apple-text hover:bg-slate-100">Readiness Engine</a>
-      <a href="#instruments" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-btn text-sm font-medium text-apple-text hover:bg-slate-100">Engineering Labs</a>
-      <a href="#tracks" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-btn text-sm font-medium text-apple-text hover:bg-slate-100">Curriculum Tracks</a>
-      <a href="#institutions" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-btn text-sm font-medium text-apple-text hover:bg-slate-100">Institutions</a>
-      <a href="#plans" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-btn text-sm font-medium text-apple-text hover:bg-slate-100">Plans</a>
-      <button onclick="toggleMobileMenu(); openDemoModal();" class="w-full mt-2 apple-btn py-2.5 bg-apple-blue text-white text-sm font-semibold text-center">Request Institutional Demo</button>
-    </div>
-  </header>
-
-  <!-- ========================================================================= -->
-  <!-- 2. HERO SECTION: CLEAN ASYMMETRIC APPLE LAYOUT                            -->
-  <!-- ========================================================================= -->
-  <section id="overview" class="pt-14 pb-20 lg:pt-20 lg:pb-28">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
-        
-        <!-- Left: Crisp Apple Typography & Declarative Value -->
-        <div class="lg:col-span-6 space-y-6 text-left">
-          
-          <!-- Subtle Blue Eyebrow Pill -->
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100">
-            <span class="w-2 h-2 rounded-full bg-apple-blue"></span>
-            <span class="text-[11px] font-semibold tracking-wide text-apple-blue uppercase font-mono">EMPLOYABILITY OPERATING SYSTEM</span>
-          </div>
-
-          <!-- Declarative Title -->
-          <h1 class="text-4xl sm:text-5xl lg:text-[3.25rem] font-extrabold text-navy leading-[1.12] tracking-tight">
-            Guide every student from <span class="text-apple-blue">career choice</span> to placement readiness.
-          </h1>
-
-          <!-- Secondary Text -->
-          <p class="text-base sm:text-lg text-apple-muted leading-relaxed max-w-xl">
-            Pathwisse transforms fragmented curriculum initiatives into an evidence-based operating system. Uniting technical pathways, interactive labs, verified code builds, and institutional readiness intelligence.
-          </p>
-
-          <!-- 3 Micro Metrics (16px cards) -->
-          <div class="grid grid-cols-3 gap-3 pt-1">
-            <div class="apple-card p-3.5 bg-white">
-              <span class="text-[11px] text-apple-muted block font-mono">Verified Score</span>
-              <span class="text-xl font-bold font-display text-navy mt-0.5 block">88 / 100</span>
-            </div>
-            <div class="apple-card p-3.5 bg-white">
-              <span class="text-[11px] text-apple-muted block font-mono">Verification</span>
-              <span class="text-xl font-bold font-display text-emerald-600 mt-0.5 block">100% Code</span>
-            </div>
-            <div class="apple-card p-3.5 bg-white">
-              <span class="text-[11px] text-apple-muted block font-mono">Campus Pilot</span>
-              <span class="text-xl font-bold font-display text-apple-brand mt-0.5 block">4 Weeks</span>
-            </div>
-          </div>
-
-          <!-- Apple Action Buttons (12px rounded) -->
-          <div class="flex flex-wrap items-center gap-3.5 pt-2">
-            <button onclick="openDemoModal()" class="apple-btn px-6 py-3.5 bg-apple-blue hover:bg-blue-600 text-white text-sm font-semibold shadow-apple-sm flex items-center gap-2">
-              <span>Request Institutional Demo</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </button>
-            <a href="#journey" class="apple-btn px-5 py-3.5 bg-white border border-apple-border text-apple-text hover:bg-slate-50 text-sm font-semibold shadow-apple-sm flex items-center gap-2">
-              <svg class="w-4 h-4 text-apple-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-              <span>Explore 10-Stage Model</span>
-            </a>
-          </div>
-
-          <!-- Trust Badges -->
-          <div class="pt-3 flex items-center gap-6 text-xs text-apple-muted">
-            <div class="flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-              <span>NAAC & NBA Audit Compliant</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-              <span>Zero-Hallucination Evidence</span>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Right: Apple-Inspired Institutional Readiness Cockpit (16px card) -->
-        <div class="lg:col-span-6">
-          <div class="apple-card p-6 sm:p-7 shadow-apple-elevated relative overflow-hidden bg-white">
-            
-            <!-- Top Subtle Blue Accent Bar -->
-            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-navy via-brand-blue to-apple-blue"></div>
-
-            <!-- Header -->
-            <div class="flex items-center justify-between pb-5 border-b border-apple-border">
-              <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-btn bg-blue-50 flex items-center justify-center text-apple-blue font-bold font-mono text-sm">
-                  PW
-                </div>
-                <div>
-                  <h3 class="text-sm font-bold text-navy">Apex Institute of Technology</h3>
-                  <span class="text-xs text-apple-muted">School of AI & Systems • Cohort 2026</span>
-                </div>
-              </div>
-              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                ● Telemetry Live
-              </span>
-            </div>
-
-            <!-- Central Gauge -->
-            <div class="py-6 grid grid-cols-1 sm:grid-cols-12 gap-5 items-center">
-              <div class="sm:col-span-6 text-center sm:text-left">
-                <span class="text-[11px] font-mono uppercase tracking-wider font-semibold text-apple-muted">VERIFIED READINESS INDEX</span>
-                <div class="flex items-baseline justify-center sm:justify-start gap-2 mt-1">
-                  <span id="demo-readiness-score" class="text-5xl font-black font-display text-navy">88</span>
-                  <span class="text-xl font-bold text-slate-400">/ 100</span>
-                </div>
-                <div class="mt-2 text-xs text-apple-muted flex items-center justify-center sm:justify-start gap-1.5">
-                  <span class="text-emerald-600 font-semibold font-mono">▲ +14 pts</span>
-                  <span>vs 30-day baseline • Top 8% percentile</span>
-                </div>
-              </div>
-
-              <!-- Milestone Completion Status -->
-              <div class="sm:col-span-6 p-4 rounded-btn bg-[#F9FAFB] border border-apple-border">
-                <div class="flex items-center justify-between text-xs mb-2">
-                  <span class="font-medium text-apple-text">Production Lab Verifications</span>
-                  <span class="font-mono text-apple-blue font-semibold">14/16 Done</span>
-                </div>
-                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                  <div class="bg-gradient-to-r from-navy via-brand-blue to-apple-blue h-2 rounded-full transition-all duration-500" style="width: 88%"></div>
-                </div>
-                <div class="mt-2 flex items-center justify-between text-[11px] text-apple-muted">
-                  <span>Target: Tier-1 Systems SDE</span>
-                  <span class="text-emerald-600 font-medium">Placement Cleared</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- 3 Competency Breakdown Rows -->
-            <div class="space-y-2.5 pt-1">
-              <div class="p-3 rounded-btn bg-[#FAFBFC] border border-apple-border flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                  <div class="w-2.5 h-2.5 rounded-full bg-apple-blue"></div>
-                  <div>
-                    <span class="text-xs font-semibold text-apple-text block">Distributed Systems & Storage</span>
-                    <span class="text-[11px] text-apple-muted">LSM-Trees, Raft Consensus, Cache Invalidation</span>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <span class="text-xs font-mono font-bold text-navy">92%</span>
-                  <span class="text-[10px] text-emerald-600 font-medium block">Verified</span>
-                </div>
-              </div>
-
-              <div class="p-3 rounded-btn bg-[#FAFBFC] border border-apple-border flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                  <div class="w-2.5 h-2.5 rounded-full bg-brand-blue"></div>
-                  <div>
-                    <span class="text-xs font-semibold text-apple-text block">LLM Inference & KV Cache</span>
-                    <span class="text-[11px] text-apple-muted">Memory Bandwidth, FlashAttention-2 Lab</span>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <span class="text-xs font-mono font-bold text-navy">86%</span>
-                  <span class="text-[10px] text-emerald-600 font-medium block">Verified</span>
-                </div>
-              </div>
-
-              <div class="p-3 rounded-btn bg-[#FAFBFC] border border-apple-border flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                  <div class="w-2.5 h-2.5 rounded-full bg-apple-amber"></div>
-                  <div>
-                    <span class="text-xs font-semibold text-apple-text block">Machine Learning Mathematics</span>
-                    <span class="text-[11px] text-apple-muted">Eigendecomposition, Hessian Matrix Drills</span>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <span class="text-xs font-mono font-bold text-navy">84%</span>
-                  <span class="text-[10px] text-emerald-600 font-medium block">Verified</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Footer: Next Action -->
-            <div class="mt-4 pt-3.5 border-t border-apple-border flex items-center justify-between text-xs">
-              <span class="text-apple-muted">Next Action: <strong class="text-apple-text font-medium">Distributed KV Cache Lab Submission</strong></span>
-              <a href="#instruments" class="text-apple-blue font-semibold hover:underline flex items-center gap-1">
-                <span>Open Lab</span>
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-              </a>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 3. BRAND PRINCIPLES (APPLE 3-CARD CLEAN GRID)                             -->
-  <!-- ========================================================================= -->
-  <section class="py-16 bg-white border-y border-apple-border">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="text-center max-w-2xl mx-auto mb-12">
-        <span class="text-xs font-mono uppercase tracking-widest text-apple-blue font-semibold">FOUNDATIONAL PRINCIPLES</span>
-        <h2 class="text-3xl font-bold text-navy mt-1">Built on institutional principles, not hype.</h2>
-        <p class="text-sm text-apple-muted mt-2">Every feature in the operating system replaces guesswork with reliable student progression.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        <!-- Principle 1 -->
-        <div class="apple-card p-6 border border-apple-border bg-white">
-          <div class="w-10 h-10 rounded-btn bg-blue-50 text-apple-blue flex items-center justify-center font-bold text-base font-display mb-4">
-            01
-          </div>
-          <h3 class="text-lg font-bold text-navy mb-2">System, not scramble</h3>
-          <p class="text-xs sm:text-sm text-apple-muted leading-relaxed">
-            Eliminates last-minute placement panic. Progression is mapped from year two through graduation in a deliberate, continuous sequence rather than disconnected 2-week cram bootcamps.
-          </p>
-        </div>
-
-        <!-- Principle 2 -->
-        <div class="apple-card p-6 border border-apple-border bg-white">
-          <div class="w-10 h-10 rounded-btn bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-base font-display mb-4">
-            02
-          </div>
-          <h3 class="text-lg font-bold text-navy mb-2">Evidence beats claims</h3>
-          <p class="text-xs sm:text-sm text-apple-muted leading-relaxed">
-            Certificates of completion are replaced with verifiable engineering artifacts: code repositories, stress-test logs, and real lab benchmarks reviewed against production standards.
-          </p>
-        </div>
-
-        <!-- Principle 3 -->
-        <div class="apple-card p-6 border border-apple-border bg-white">
-          <div class="w-10 h-10 rounded-btn bg-amber-50 text-apple-amber flex items-center justify-center font-bold text-base font-display mb-4">
-            03
-          </div>
-          <h3 class="text-lg font-bold text-navy mb-2">Support the quiet</h3>
-          <p class="text-xs sm:text-sm text-apple-muted leading-relaxed">
-            Passive struggle is caught early. Predictive telemetry surfaces students stalling on foundational math or system design concepts before semester exams, triggering supportive faculty intervention.
-          </p>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 4. 10-STAGE OPERATING MODEL (APPLE SEGMENTED CONTROLLER & RAIL)            -->
-  <!-- ========================================================================= -->
-  <section id="journey" class="py-20 lg:py-28">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-        <div>
-          <span class="text-xs font-mono uppercase tracking-widest text-apple-blue font-semibold">THE OPERATING JOURNEY</span>
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-navy mt-1">The 10-Stage Employability Pipeline</h2>
-          <p class="text-sm sm:text-base text-apple-muted mt-2 max-w-xl">
-            A cohesive operational flow that transforms unstructured ambition into verified placement readiness. Select any stage to inspect its deliverables.
-          </p>
-        </div>
-        <div class="text-xs font-mono text-apple-muted bg-white px-3.5 py-2 rounded-btn border border-apple-border shadow-apple-sm">
-          Standard Cycle: 2 to 4 Academic Semesters
-        </div>
-      </div>
-
-      <!-- Apple-style Horizontal Step Rail -->
-      <div class="overflow-x-auto pb-4 mb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
-        <div class="flex items-center gap-2 min-w-[1020px]">
-          <button onclick="selectStage(1)" id="stage-btn-1" class="stage-nav-btn flex-1 p-3 rounded-btn border border-apple-blue bg-apple-blue text-white text-left transition-all shadow-apple-sm">
-            <span class="text-[10px] font-mono opacity-80 block">STAGE 01</span>
-            <span class="text-xs font-bold block mt-0.5">Career Goal</span>
-          </button>
-          <button onclick="selectStage(2)" id="stage-btn-2" class="stage-nav-btn flex-1 p-3 rounded-btn border border-apple-border bg-white text-apple-text text-left hover:border-slate-300 transition-all shadow-apple-sm">
-            <span class="text-[10px] font-mono text-apple-muted block">STAGE 02</span>
-            <span class="text-xs font-bold block mt-0.5">Skill Mapping</span>
-          </button>
-          <button onclick="selectStage(3)" id="stage-btn-3" class="stage-nav-btn flex-1 p-3 rounded-btn border border-apple-border bg-white text-apple-text text-left hover:border-slate-300 transition-all shadow-apple-sm">
-            <span class="text-[10px] font-mono text-apple-muted block">STAGE 03</span>
-            <span class="text-xs font-bold block mt-0.5">Core Math & Arch</span>
-          </button>
-          <button onclick="selectStage(4)" id="stage-btn-4" class="stage-nav-btn flex-1 p-3 rounded-btn border border-apple-border bg-white text-apple-text text-left hover:border-slate-300 transition-all shadow-apple-sm">
-            <span class="text-[10px] font-mono text-apple-muted block">STAGE 04</span>
-            <span class="text-xs font-bold block mt-0.5">Interactive Labs</span>
-          </button>
-          <button onclick="selectStage(5)" id="stage-btn-5" class="stage-nav-btn flex-1 p-3 rounded-btn border border-apple-border bg-white text-apple-text text-left hover:border-slate-300 transition-all shadow-apple-sm">
-            <span class="text-[10px] font-mono text-apple-muted block">STAGE 05</span>
-            <span class="text-xs font-bold block mt-0.5">Verified Builds</span>
-          </button>
-          <button onclick="selectStage(6)" id="stage-btn-6" class="stage-nav-btn flex-1 p-3 rounded-btn border border-apple-border bg-white text-apple-text text-left hover:border-slate-300 transition-all shadow-apple-sm">
-            <span class="text-[10px] font-mono text-apple-muted block">STAGE 06</span>
-            <span class="text-xs font-bold block mt-0.5">Code Review</span>
-          </button>
-          <button onclick="selectStage(7)" id="stage-btn-7" class="stage-nav-btn flex-1 p-3 rounded-btn border border-apple-border bg-white text-apple-text text-left hover:border-slate-300 transition-all shadow-apple-sm">
-            <span class="text-[10px] font-mono text-apple-muted block">STAGE 07</span>
-            <span class="text-xs font-bold block mt-0.5">Readiness Index</span>
-          </button>
-          <button onclick="selectStage(8)" id="stage-btn-8" class="stage-nav-btn flex-1 p-3 rounded-btn border border-apple-border bg-white text-apple-text text-left hover:border-slate-300 transition-all shadow-apple-sm">
-            <span class="text-[10px] font-mono text-apple-muted block">STAGE 08</span>
-            <span class="text-xs font-bold block mt-0.5">Benchmarking</span>
-          </button>
-          <button onclick="selectStage(9)" id="stage-btn-9" class="stage-nav-btn flex-1 p-3 rounded-btn border border-apple-border bg-white text-apple-text text-left hover:border-slate-300 transition-all shadow-apple-sm">
-            <span class="text-[10px] font-mono text-apple-muted block">STAGE 09</span>
-            <span class="text-xs font-bold block mt-0.5">Matching</span>
-          </button>
-          <button onclick="selectStage(10)" id="stage-btn-10" class="stage-nav-btn flex-1 p-3 rounded-btn border border-apple-border bg-white text-apple-text text-left hover:border-slate-300 transition-all shadow-apple-sm">
-            <span class="text-[10px] font-mono text-apple-muted block">STAGE 10</span>
-            <span class="text-xs font-bold block mt-0.5">Audit Report</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Stage Detail Display Card (16px card) -->
-      <div id="stage-detail-card" class="apple-card p-7 sm:p-9 shadow-apple-elevated bg-white">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div class="lg:col-span-8 space-y-4">
-            <div class="flex items-center gap-2.5">
-              <span id="stage-badge" class="px-2.5 py-1 rounded-full bg-blue-50 text-apple-blue text-xs font-mono font-bold">STAGE 01 OF 10</span>
-              <span id="stage-owner" class="text-xs text-apple-muted font-medium">Ownership: Student + Department Counselor</span>
-            </div>
-            <h3 id="stage-title" class="text-2xl sm:text-3xl font-bold text-navy">Career Goal & Competency Profiling</h3>
-            <p id="stage-desc" class="text-sm sm:text-base text-apple-muted leading-relaxed">
-              Students identify target engineering specializations (e.g. Distributed Systems Engineer, LLM Inference Specialist, or AI Research Practitioner). The operating system maps exact skill graphs and industry requirements without vague generalizations.
-            </p>
-            <div id="stage-deliverables" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-              <div class="p-3 rounded-btn bg-[#F9FAFB] border border-apple-border">
-                <span class="text-[11px] text-apple-muted block">Deliverable</span>
-                <span class="text-xs font-semibold text-apple-text">Role Competency Matrix</span>
-              </div>
-              <div class="p-3 rounded-btn bg-[#F9FAFB] border border-apple-border">
-                <span class="text-[11px] text-apple-muted block">Verification</span>
-                <span class="text-xs font-semibold text-emerald-600">Baseline Diagnostic</span>
-              </div>
-              <div class="p-3 rounded-btn bg-[#F9FAFB] border border-apple-border">
-                <span class="text-[11px] text-apple-muted block">Time Horizon</span>
-                <span class="text-xs font-semibold text-navy">Weeks 1–2</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="lg:col-span-4 bg-[#F9FAFB] rounded-btn p-6 border border-apple-border text-center">
-            <span class="text-[11px] font-mono uppercase text-apple-muted block mb-3 font-semibold">Institutional Metric Impact</span>
-            <div class="text-4xl font-extrabold text-navy font-display mb-1" id="stage-metric">100%</div>
-            <span class="text-xs text-apple-muted block" id="stage-metric-label">Students with deterministic milestone roadmaps</span>
-            <div class="mt-4 pt-4 border-t border-apple-border">
-              <span class="inline-flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
-                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                <span>Accreditation Ready</span>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 5. VERIFIED READINESS ENGINE: QUANTIFIED SIMULATOR                        -->
-  <!-- ========================================================================= -->
-  <section id="readiness" class="py-20 bg-white border-y border-apple-border">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <span class="text-xs font-mono uppercase tracking-widest text-apple-blue font-semibold">VERIFIED TELEMETRY</span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-navy mt-1">Readiness is a quantified score — never a guess.</h2>
-        <p class="text-sm sm:text-base text-apple-muted mt-2">
-          We combine code test suites, architectural write-ups, and interactive labs into a tamper-proof index for recruiters and placement cells.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        <!-- Interactive Simulator Left -->
-        <div class="lg:col-span-7 apple-card p-6 sm:p-8 bg-white border border-apple-border shadow-apple-sm">
-          <div class="flex items-center justify-between pb-4 border-b border-apple-border">
-            <div>
-              <h3 class="text-lg font-bold text-navy">Readiness Score Simulator</h3>
-              <p class="text-xs text-apple-muted">Toggle student milestones to see live recalculation</p>
-            </div>
-            <button onclick="resetReadinessDemo()" class="text-xs text-apple-blue hover:underline font-mono font-medium">Reset Default</button>
-          </div>
-
-          <!-- Milestones with Amber Accent Tags -->
-          <div class="space-y-3 mt-5" id="milestones-container">
-            
-            <label class="flex items-start gap-3 p-3.5 rounded-btn border border-apple-border bg-[#FAFBFC] hover:bg-white cursor-pointer transition-colors">
-              <input type="checkbox" checked onchange="recalculateReadiness()" class="milestone-toggle mt-1 h-4 w-4 rounded text-apple-blue focus:ring-apple-blue" data-pts="25">
-              <div class="flex-1">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs sm:text-sm font-semibold text-apple-text">LSM-Tree Storage Engine Implementation</span>
-                  <span class="text-xs font-mono font-bold text-apple-blue">+25 pts</span>
-                </div>
-                <p class="text-[11px] text-apple-muted mt-0.5">MemTable, WAL, SSTable sparse indexing, compaction benchmarks passed</p>
-              </div>
-            </label>
-
-            <label class="flex items-start gap-3 p-3.5 rounded-btn border border-apple-border bg-[#FAFBFC] hover:bg-white cursor-pointer transition-colors">
-              <input type="checkbox" checked onchange="recalculateReadiness()" class="milestone-toggle mt-1 h-4 w-4 rounded text-apple-blue focus:ring-apple-blue" data-pts="25">
-              <div class="flex-1">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs sm:text-sm font-semibold text-apple-text">LLM Inference & KV Cache Arithmetic Lab</span>
-                  <span class="text-xs font-mono font-bold text-apple-blue">+25 pts</span>
-                </div>
-                <p class="text-[11px] text-apple-muted mt-0.5">FlashAttention-2 and continuous batching capacity calculations submitted</p>
-              </div>
-            </label>
-
-            <label class="flex items-start gap-3 p-3.5 rounded-btn border border-apple-border bg-[#FAFBFC] hover:bg-white cursor-pointer transition-colors">
-              <input type="checkbox" checked onchange="recalculateReadiness()" class="milestone-toggle mt-1 h-4 w-4 rounded text-apple-blue focus:ring-apple-blue" data-pts="20">
-              <div class="flex-1">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs sm:text-sm font-semibold text-apple-text">Distributed Consensus (Raft/Paxos) Simulator</span>
-                  <span class="text-xs font-mono font-bold text-apple-blue">+20 pts</span>
-                </div>
-                <p class="text-[11px] text-apple-muted mt-0.5">Leader election and log replication stress test pass rate > 98%</p>
-              </div>
-            </label>
-
-            <label class="flex items-start gap-3 p-3.5 rounded-btn border border-apple-border bg-[#FAFBFC] hover:bg-white cursor-pointer transition-colors">
-              <input type="checkbox" checked onchange="recalculateReadiness()" class="milestone-toggle mt-1 h-4 w-4 rounded text-apple-blue focus:ring-apple-blue" data-pts="18">
-              <div class="flex-1">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs sm:text-sm font-semibold text-apple-text">ML Math Decoder Drills (Linear Algebra & Hessians)</span>
-                  <span class="text-xs font-mono font-bold text-apple-blue">+18 pts</span>
-                </div>
-                <p class="text-[11px] text-apple-muted mt-0.5">Matrix calculus and attention weight gradient derivations verified</p>
-              </div>
-            </label>
-
-            <label class="flex items-start gap-3 p-3.5 rounded-btn border border-apple-border bg-[#FAFBFC] hover:bg-white cursor-pointer transition-colors">
-              <input type="checkbox" onchange="recalculateReadiness()" class="milestone-toggle mt-1 h-4 w-4 rounded text-apple-blue focus:ring-apple-blue" data-pts="12">
-              <div class="flex-1">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs sm:text-sm font-semibold text-apple-text">Production Code Review & Mock Interview</span>
-                  <span class="text-xs font-mono font-semibold text-apple-amber">+12 pts (Pending)</span>
-                </div>
-                <p class="text-[11px] text-apple-muted mt-0.5">Live technical walkthrough with alumni engineering mentors</p>
-              </div>
-            </label>
-
-          </div>
-        </div>
-
-        <!-- Live Score Output Card Right -->
-        <div class="lg:col-span-5 space-y-5">
-          <div class="apple-card p-6 sm:p-7 bg-white border border-apple-border shadow-apple-elevated">
-            <span class="text-xs font-mono uppercase tracking-wider font-semibold text-apple-muted">Calculated Index</span>
-            
-            <div class="flex items-baseline gap-3 my-2">
-              <span id="sim-score" class="text-6xl font-black font-display text-navy">88</span>
-              <span class="text-2xl font-bold text-slate-400">/ 100</span>
-            </div>
-
-            <div id="sim-verdict" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 mb-4">
-              ● Tier-1 Placement Ready
-            </div>
-
-            <!-- Score breakdown bars with Apple Blue & Brand Blue -->
-            <div class="space-y-3 pt-3 border-t border-apple-border text-xs">
-              <div>
-                <div class="flex justify-between mb-1">
-                  <span class="text-apple-muted font-medium">Code Artifact Quality</span>
-                  <span id="bar-artifact-val" class="font-mono font-bold text-apple-text">92%</span>
-                </div>
-                <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                  <div id="bar-artifact" class="bg-navy h-1.5 rounded-full transition-all duration-300" style="width: 92%"></div>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex justify-between mb-1">
-                  <span class="text-apple-muted font-medium">Systems & Scale Rigor</span>
-                  <span id="bar-systems-val" class="font-mono font-bold text-apple-text">86%</span>
-                </div>
-                <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                  <div id="bar-systems" class="bg-apple-blue h-1.5 rounded-full transition-all duration-300" style="width: 86%"></div>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex justify-between mb-1">
-                  <span class="text-apple-muted font-medium">Mathematical Fluency</span>
-                  <span id="bar-math-val" class="font-mono font-bold text-apple-text">84%</span>
-                </div>
-                <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                  <div id="bar-math" class="bg-brand-blue h-1.5 rounded-full transition-all duration-300" style="width: 84%"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-6 pt-4 border-t border-apple-border text-xs text-apple-muted">
-              Score includes automated unit/load testing telemetry, plagiarism screening, and timestamped commit signatures.
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 6. INTERACTIVE INSTRUMENTS: GPU WORKBENCH & MATH DECODER                  -->
-  <!-- ========================================================================= -->
-  <section id="instruments" class="py-20 lg:py-28">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="text-center max-w-3xl mx-auto mb-14">
-        <span class="text-xs font-mono uppercase tracking-widest text-apple-blue font-semibold">HANDS-ON INSTRUMENTATION</span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-navy mt-1">Built-in Engineering Labs & Calculators</h2>
-        <p class="text-sm sm:text-base text-apple-muted mt-2">
-          Theoretical learning fails in production interviews. Pathwisse equips students with interactive instruments used daily by senior infrastructure engineers.
-        </p>
-      </div>
-
-      <!-- Apple Segmented Control Switcher -->
-      <div class="flex justify-center mb-10">
-        <div class="inline-flex p-1 rounded-btn bg-[#E5E7EB]/80 border border-apple-border">
-          <button onclick="switchInstrument('gpu')" id="inst-tab-gpu" class="px-5 py-2 rounded-btn bg-white text-navy text-xs sm:text-sm font-semibold shadow-apple-sm transition-all">
-            ⚡ GPU Memory & VRAM Workbench
-          </button>
-          <button onclick="switchInstrument('decoder')" id="inst-tab-decoder" class="px-5 py-2 rounded-btn text-apple-muted hover:text-navy text-xs sm:text-sm font-semibold transition-all">
-            📐 Mathematical Notation Decoder
-          </button>
-        </div>
-      </div>
-
-      <!-- Instrument 1: GPU Memory Workbench (16px card) -->
-      <div id="inst-gpu-panel" class="apple-card p-6 sm:p-9 bg-white border border-apple-border shadow-apple-elevated">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          
-          <div class="lg:col-span-7 space-y-6">
-            <div>
-              <span class="text-xs font-mono text-apple-blue font-bold uppercase">LLM INFERENCE ENGINEERING INSTRUMENT</span>
-              <h3 class="text-2xl font-bold text-navy mt-1">GPU VRAM & KV Cache Budget Estimator</h3>
-              <p class="text-xs sm:text-sm text-apple-muted mt-1">Calculate exact weight footprint, attention key-value caches across batch sizes, and check for Out-Of-Memory (OOM) boundaries.</p>
-            </div>
-
-            <!-- Controls -->
-            <div class="space-y-4">
-              <!-- Parameter Slider -->
-              <div>
-                <div class="flex justify-between text-xs font-semibold mb-1 text-apple-text">
-                  <span>Model Size (Parameters)</span>
-                  <span id="gpu-param-val" class="font-mono text-apple-blue">7 Billion (7B)</span>
-                </div>
-                <input type="range" id="gpu-param-slider" min="1" max="70" value="7" step="1" oninput="updateGpuCalc()" class="w-full">
-                <div class="flex justify-between text-[10px] text-apple-muted font-mono mt-1">
-                  <span>1B</span>
-                  <span>7B (Mistral/Llama)</span>
-                  <span>13B</span>
-                  <span>34B</span>
-                  <span>70B (Llama 3)</span>
-                </div>
-              </div>
-
-              <!-- Quantization Buttons (12px rounded) -->
-              <div>
-                <label class="block text-xs font-semibold text-apple-text mb-1.5">Weight Precision / Quantization</label>
-                <div class="grid grid-cols-3 gap-2">
-                  <button type="button" onclick="setPrecision('fp16')" id="prec-fp16" class="p-2 text-xs rounded-btn border border-apple-blue bg-blue-50 text-navy font-bold font-mono">FP16 (2 B/p)</button>
-                  <button type="button" onclick="setPrecision('int8')" id="prec-int8" class="p-2 text-xs rounded-btn border border-apple-border bg-white text-apple-muted font-medium font-mono hover:border-slate-300">INT8 (1 B/p)</button>
-                  <button type="button" onclick="setPrecision('int4')" id="prec-int4" class="p-2 text-xs rounded-btn border border-apple-border bg-white text-apple-muted font-medium font-mono hover:border-slate-300">INT4 AWQ (0.5 B/p)</button>
-                </div>
-              </div>
-
-              <!-- Context Window & Batch -->
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <div class="flex justify-between text-xs font-semibold mb-1 text-apple-text">
-                    <span>Context Length</span>
-                    <span id="gpu-ctx-val" class="font-mono text-apple-blue">4k tokens</span>
-                  </div>
-                  <input type="range" id="gpu-ctx-slider" min="1" max="32" value="4" step="1" oninput="updateGpuCalc()" class="w-full">
-                </div>
-                <div>
-                  <div class="flex justify-between text-xs font-semibold mb-1 text-apple-text">
-                    <span>Batch Size (Concurrent)</span>
-                    <span id="gpu-batch-val" class="font-mono text-apple-blue">4 requests</span>
-                  </div>
-                  <input type="range" id="gpu-batch-slider" min="1" max="32" value="4" step="1" oninput="updateGpuCalc()" class="w-full">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Output VRAM Visualization Right -->
-          <div class="lg:col-span-5 bg-[#F9FAFB] p-6 rounded-btn border border-apple-border space-y-4">
-            <span class="text-xs font-mono uppercase text-apple-muted font-semibold block">Total Estimated VRAM</span>
-            
-            <div class="flex items-baseline gap-2">
-              <span id="gpu-total-vram" class="text-5xl font-black font-display text-navy">16.4</span>
-              <span class="text-xl font-bold text-slate-400">GB</span>
-            </div>
-
-            <!-- VRAM Breakdown -->
-            <div class="space-y-2 text-xs pt-3 border-t border-apple-border">
-              <div class="flex justify-between">
-                <span class="text-apple-muted">Model Weights:</span>
-                <span id="gpu-weights-mem" class="font-mono font-bold text-apple-text">14.0 GB</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-apple-muted">KV Cache Allocation:</span>
-                <span id="gpu-kv-mem" class="font-mono font-bold text-apple-text">1.2 GB</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-apple-muted">CUDA & Headroom:</span>
-                <span class="font-mono font-bold text-apple-text">1.2 GB</span>
-              </div>
-            </div>
-
-            <!-- Hardware Fit Box -->
-            <div id="gpu-fit-box" class="p-3.5 rounded-btn bg-emerald-50 border border-emerald-200 text-xs">
-              <span class="font-semibold text-emerald-800 block">✓ Fits in 1x NVIDIA RTX 4090 / A10G (24GB)</span>
-              <span class="text-emerald-700 text-[11px] block mt-0.5">Headroom: ~7.6 GB free for dynamic batch expansion</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Instrument 2: Mathematical Notation Decoder (Hidden by default) -->
-      <div id="inst-decoder-panel" class="hidden apple-card p-6 sm:p-9 bg-white border border-apple-border shadow-apple-elevated">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <div>
-            <span class="text-xs font-mono text-apple-blue font-bold uppercase">AI RESEARCH TRANSLATOR</span>
-            <h3 class="text-2xl font-bold text-navy mt-1">Research Paper Math Decoder</h3>
-            <p class="text-xs sm:text-sm text-apple-muted">Search mathematical symbols to get instant plain-English intuition and code implementations.</p>
-          </div>
-          <input type="text" id="math-search-input" oninput="filterMathSymbols()" placeholder="Search symbol (e.g. gradient, kl, norm)..." class="w-full sm:w-64 px-3.5 py-2 rounded-btn border border-apple-border bg-white text-xs text-apple-text focus:border-apple-blue outline-none shadow-apple-sm">
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="math-grid">
-          <div class="math-card p-4 rounded-btn bg-[#F9FAFB] border border-apple-border">
-            <div class="flex items-center justify-between">
-              <span class="text-2xl font-bold font-mono text-navy">∇_θ L</span>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-50 text-apple-blue border border-blue-100">Optimization</span>
-            </div>
-            <h4 class="text-xs sm:text-sm font-bold text-apple-text mt-2">Gradient with respect to Parameters</h4>
-            <p class="text-xs text-apple-muted mt-1">Vector of partial derivatives showing the direction of steepest loss ascent.</p>
-            <div class="mt-3 pt-2 border-t border-apple-border flex justify-between text-[11px] font-mono text-apple-muted">
-              <span>\nabla_\theta \mathcal{L}</span>
-              <button onclick="copyLatex('\\nabla_\\theta \\mathcal{L}')" class="text-apple-blue hover:underline">Copy LaTeX</button>
-            </div>
-          </div>
-
-          <div class="math-card p-4 rounded-btn bg-[#F9FAFB] border border-apple-border">
-            <div class="flex items-center justify-between">
-              <span class="text-2xl font-bold font-mono text-navy">D_KL (P || Q)</span>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">Info Theory</span>
-            </div>
-            <h4 class="text-xs sm:text-sm font-bold text-apple-text mt-2">Kullback–Leibler Divergence</h4>
-            <p class="text-xs text-apple-muted mt-1">Quantifies relative entropy / distribution drift, used critically in RLHF and VAEs.</p>
-            <div class="mt-3 pt-2 border-t border-apple-border flex justify-between text-[11px] font-mono text-apple-muted">
-              <span>D_{KL}(P \parallel Q)</span>
-              <button onclick="copyLatex('D_{KL}(P \\parallel Q)')" class="text-apple-blue hover:underline">Copy LaTeX</button>
-            </div>
-          </div>
-
-          <div class="math-card p-4 rounded-btn bg-[#F9FAFB] border border-apple-border">
-            <div class="flex items-center justify-between">
-              <span class="text-2xl font-bold font-mono text-navy">W_Q · W_K^T</span>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Transformers</span>
-            </div>
-            <h4 class="text-xs sm:text-sm font-bold text-apple-text mt-2">Attention Affinity Matrix</h4>
-            <p class="text-xs text-apple-muted mt-1">Dot-product similarity projection measuring cross-token alignment before scaling.</p>
-            <div class="mt-3 pt-2 border-t border-apple-border flex justify-between text-[11px] font-mono text-apple-muted">
-              <span>W_Q W_K^T / \sqrt{d_k}</span>
-              <button onclick="copyLatex('W_Q W_K^T / \\sqrt{d_k}')" class="text-apple-blue hover:underline">Copy LaTeX</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 7. CURRICULUM SPECIFICATIONS (4 CORE TRACKS, 16PX CARDS)                  -->
-  <!-- ========================================================================= -->
-  <section id="tracks" class="py-20 bg-white border-y border-apple-border">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="text-center max-w-2xl mx-auto mb-16">
-        <span class="text-xs font-mono uppercase tracking-widest text-apple-blue font-semibold">CURRICULUM SPECIFICATIONS</span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-navy mt-1">Four Industry-Verified Tracks</h2>
-        <p class="text-sm sm:text-base text-apple-muted mt-2">Structured engineering depth designed directly for high-growth tech firms.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        
-        <!-- Track 1: System Design -->
-        <div class="apple-card p-6 border border-apple-border bg-white flex flex-col justify-between">
-          <div>
-            <div class="w-10 h-10 rounded-btn bg-blue-50 flex items-center justify-center text-apple-blue mb-4 font-bold font-mono">
-              SYS
-            </div>
-            <h3 class="text-base sm:text-lg font-bold text-navy">System Design In Depth</h3>
-            <span class="text-xs font-mono text-apple-muted block mb-2.5">18 Modules • 8 Labs</span>
-            <p class="text-xs text-apple-muted leading-relaxed">
-              LSM-Trees vs B-Trees, append-only logs, distributed consensus (Raft/Paxos), sharding strategies, and company architecture deep-dives.
-            </p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-apple-border flex items-center justify-between text-xs">
-            <span class="text-emerald-600 font-medium">● 3 Verified Builds</span>
-            <button onclick="openDemoModal()" class="text-apple-blue font-semibold hover:underline">Syllabus →</button>
-          </div>
-        </div>
-
-        <!-- Track 2: Inference Engineering -->
-        <div class="apple-card p-6 border border-apple-border bg-white flex flex-col justify-between">
-          <div>
-            <div class="w-10 h-10 rounded-btn bg-blue-50 flex items-center justify-center text-brand-blue mb-4 font-bold font-mono">
-              INF
-            </div>
-            <h3 class="text-base sm:text-lg font-bold text-navy">LLM Inference Engineering</h3>
-            <span class="text-xs font-mono text-apple-muted block mb-2.5">14 Modules • 6 Labs</span>
-            <p class="text-xs text-apple-muted leading-relaxed">
-              Memory-bandwidth bottlenecks, KV cache arithmetic, PagedAttention, continuous batching, FlashAttention-2, and multi-GPU tensor parallelism.
-            </p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-apple-border flex items-center justify-between text-xs">
-            <span class="text-emerald-600 font-medium">● 2 Verified Builds</span>
-            <button onclick="openDemoModal()" class="text-apple-blue font-semibold hover:underline">Syllabus →</button>
-          </div>
-        </div>
-
-        <!-- Track 3: AI Research -->
-        <div class="apple-card p-6 border border-apple-border bg-white flex flex-col justify-between">
-          <div>
-            <div class="w-10 h-10 rounded-btn bg-blue-50 flex items-center justify-center text-apple-blue mb-4 font-bold font-mono">
-              AIR
-            </div>
-            <h3 class="text-base sm:text-lg font-bold text-navy">AI Research & Models</h3>
-            <span class="text-xs font-mono text-apple-muted block mb-2.5">16 Modules • 10 Labs</span>
-            <p class="text-xs text-apple-muted leading-relaxed">
-              Self-attention mechanics, transformer decoder from scratch, pre-training scaling laws, SFT pipelines, RLHF, and DPO alignment.
-            </p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-apple-border flex items-center justify-between text-xs">
-            <span class="text-emerald-600 font-medium">● 4 Verified Builds</span>
-            <button onclick="openDemoModal()" class="text-apple-blue font-semibold hover:underline">Syllabus →</button>
-          </div>
-        </div>
-
-        <!-- Track 4: ML Math -->
-        <div class="apple-card p-6 border border-apple-border bg-white flex flex-col justify-between">
-          <div>
-            <div class="w-10 h-10 rounded-btn bg-amber-50 flex items-center justify-center text-apple-amber mb-4 font-bold font-mono">
-              MTH
-            </div>
-            <h3 class="text-base sm:text-lg font-bold text-navy">ML Mathematics In Depth</h3>
-            <span class="text-xs font-mono text-apple-muted block mb-2.5">12 Modules • 50+ Drills</span>
-            <p class="text-xs text-apple-muted leading-relaxed">
-              Vector spaces, linear maps, eigendecomposition, SVD, multivariable gradients, Hessians, probability densities, and information theory.
-            </p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-apple-border flex items-center justify-between text-xs">
-            <span class="text-emerald-600 font-medium">● 2 Verified Builds</span>
-            <button onclick="openDemoModal()" class="text-apple-blue font-semibold hover:underline">Syllabus →</button>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 8. INSTITUTIONAL STAKEHOLDER OUTCOMES                                     -->
-  <!-- ========================================================================= -->
-  <section id="institutions" class="py-20 lg:py-28">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="text-center max-w-2xl mx-auto mb-12">
-        <span class="text-xs font-mono uppercase tracking-widest text-apple-blue font-semibold">STAKEHOLDER VALUE</span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-navy mt-1">One Shared Operating Picture</h2>
-        <p class="text-sm sm:text-base text-apple-muted mt-2">Connecting students, placement officers, faculty mentors, and university leadership.</p>
-      </div>
-
-      <!-- Segmented Control for Stakeholders -->
-      <div class="flex justify-center mb-8">
-        <div class="inline-flex p-1 rounded-btn bg-[#E5E7EB]/80 border border-apple-border">
-          <button onclick="switchAudience('students')" id="aud-tab-students" class="px-4 py-2 rounded-btn bg-white text-navy text-xs font-bold shadow-apple-sm transition-all">For Students</button>
-          <button onclick="switchAudience('placement')" id="aud-tab-placement" class="px-4 py-2 rounded-btn text-apple-muted hover:text-navy text-xs font-semibold transition-all">For Placement Teams</button>
-          <button onclick="switchAudience('faculty')" id="aud-tab-faculty" class="px-4 py-2 rounded-btn text-apple-muted hover:text-navy text-xs font-semibold transition-all">For Faculty & HODs</button>
-          <button onclick="switchAudience('leadership')" id="aud-tab-leadership" class="px-4 py-2 rounded-btn text-apple-muted hover:text-navy text-xs font-semibold transition-all">For Leadership</button>
-        </div>
-      </div>
-
-      <div id="audience-content" class="apple-card p-7 sm:p-9 bg-white border border-apple-border shadow-apple-elevated">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="p-5 rounded-btn bg-[#FAFBFC] border border-apple-border">
-            <span class="text-xs font-mono text-apple-blue font-bold block mb-1">01. CERTAINTY</span>
-            <h4 class="text-sm sm:text-base font-bold text-apple-text">Deterministic Roadmap</h4>
-            <p class="text-xs text-apple-muted mt-1 leading-relaxed">Know exactly what to study each week without wasting months on superficial beginner tutorials.</p>
-          </div>
-          <div class="p-5 rounded-btn bg-[#FAFBFC] border border-apple-border">
-            <span class="text-xs font-mono text-emerald-600 font-bold block mb-1">02. CREDIBILITY</span>
-            <h4 class="text-sm sm:text-base font-bold text-apple-text">Verifiable Portfolio</h4>
-            <p class="text-xs text-apple-muted mt-1 leading-relaxed">Proof-of-work code builds and stress tests that instantly distinguish you from generic applicants.</p>
-          </div>
-          <div class="p-5 rounded-btn bg-[#FAFBFC] border border-apple-border">
-            <span class="text-xs font-mono text-apple-amber font-bold block mb-1">03. PLACEMENT READY</span>
-            <h4 class="text-sm sm:text-base font-bold text-apple-text">Verified Score Badge</h4>
-            <p class="text-xs text-apple-muted mt-1 leading-relaxed">Your 0-100 Readiness Index gives recruiting partners instant confidence in your engineering abilities.</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 9. PRICING & INSTITUTIONAL PLANS (16PX CARDS, APPLE LAYOUT)               -->
-  <!-- ========================================================================= -->
-  <section id="plans" class="py-20 bg-white border-y border-apple-border">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="text-center max-w-2xl mx-auto mb-16">
-        <span class="text-xs font-mono uppercase tracking-widest text-apple-blue font-semibold">INSTITUTIONAL PARTNERSHIPS</span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-navy mt-1">Controlled Pilots & Campus Rollouts</h2>
-        <p class="text-sm sm:text-base text-apple-muted mt-2">Transparent pricing backed by verified student outcomes and full operational support.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-        
-        <!-- Tier 1: Department Pilot -->
-        <div class="apple-card p-7 sm:p-8 bg-white border border-apple-border shadow-apple-sm flex flex-col justify-between">
-          <div>
-            <span class="text-xs font-mono font-bold text-apple-muted uppercase">PILOT PROGRAM</span>
-            <h3 class="text-2xl font-bold text-navy mt-1">Campus Pilot</h3>
-            <p class="text-xs text-apple-muted mt-1">Ideal for 1 department or 1 selected cohort of 100–300 students.</p>
-            <div class="my-6">
-              <span class="text-4xl font-extrabold text-navy font-display">4–8</span>
-              <span class="text-sm text-apple-muted font-medium">Weeks Structured Trial</span>
-            </div>
-            <ul class="space-y-2.5 text-xs text-apple-muted">
-              <li class="flex items-center gap-2">✓ Full access to 1 chosen track (e.g. System Design)</li>
-              <li class="flex items-center gap-2">✓ Interactive Labs & Code Build Suites</li>
-              <li class="flex items-center gap-2">✓ Baseline diagnostic & readiness scoring</li>
-              <li class="flex items-center gap-2">✓ Placement cell analytics dashboard</li>
-            </ul>
-          </div>
-          <button onclick="openDemoModal()" class="w-full mt-8 apple-btn py-3 border border-apple-border bg-white text-apple-text hover:bg-slate-50 font-semibold text-xs transition-colors">
-            Request Pilot Access
-          </button>
-        </div>
-
-        <!-- Tier 2: Campus OS (Featured Apple Card) -->
-        <div class="apple-card p-7 sm:p-8 bg-white border-2 border-apple-blue shadow-apple-elevated relative flex flex-col justify-between">
-          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-0.5 rounded-full bg-apple-blue text-white text-[10px] font-mono font-bold uppercase tracking-wider shadow-apple-sm">
-            RECOMMENDED INSTITUTIONAL TIER
-          </div>
-          <div>
-            <span class="text-xs font-mono font-bold text-apple-blue uppercase">FULL IMPLEMENTATION</span>
-            <h3 class="text-2xl font-bold text-navy mt-1">Full Campus OS</h3>
-            <p class="text-xs text-apple-muted mt-1">Full institution-wide deployment across multiple years and branches.</p>
-            <div class="my-6">
-              <span class="text-4xl font-extrabold text-navy font-display">Annual</span>
-              <span class="text-sm text-apple-muted font-medium">Campus License</span>
-            </div>
-            <ul class="space-y-2.5 text-xs text-apple-muted">
-              <li class="flex items-center gap-2">✓ All 4 tracks (Systems, Inference, AI, ML Math)</li>
-              <li class="flex items-center gap-2">✓ Unlimited student seats & cohort workspaces</li>
-              <li class="flex items-center gap-2">✓ NAAC / NBA compliant exportable audit logs</li>
-              <li class="flex items-center gap-2">✓ Dedicated academic success manager</li>
-              <li class="flex items-center gap-2">✓ Custom LMS and single sign-on (SSO) integration</li>
-            </ul>
-          </div>
-          <button onclick="openDemoModal()" class="w-full mt-8 apple-btn py-3 bg-apple-blue hover:bg-blue-600 text-white font-semibold text-xs shadow-apple-sm transition-colors">
-            Schedule Institutional Review
-          </button>
-        </div>
-
-        <!-- Tier 3: Independent Learner -->
-        <div class="apple-card p-7 sm:p-8 bg-white border border-apple-border shadow-apple-sm flex flex-col justify-between">
-          <div>
-            <span class="text-xs font-mono font-bold text-apple-muted uppercase">INDIVIDUAL ENROLLMENT</span>
-            <h3 class="text-2xl font-bold text-navy mt-1">Student Pro</h3>
-            <p class="text-xs text-apple-muted mt-1">Self-paced access for students outside participating universities.</p>
-            <div class="my-6">
-              <span class="text-4xl font-extrabold text-navy font-display">$39</span>
-              <span class="text-sm text-apple-muted font-medium">/ month</span>
-            </div>
-            <ul class="space-y-2.5 text-xs text-apple-muted">
-              <li class="flex items-center gap-2">✓ Complete access to all 4 curricula</li>
-              <li class="flex items-center gap-2">✓ All interactive labs & math decoders</li>
-              <li class="flex items-center gap-2">✓ Automated code build test runners</li>
-              <li class="flex items-center gap-2">✓ Public verified readiness portfolio link</li>
-            </ul>
-          </div>
-          <button onclick="openDemoModal()" class="w-full mt-8 apple-btn py-3 border border-apple-border bg-white text-apple-text hover:bg-slate-50 font-semibold text-xs transition-colors">
-            Get Pro Access
-          </button>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 10. FINAL INSTITUTIONAL CONVERSION BLOCK                                  -->
-  <!-- ========================================================================= -->
-  <section class="py-20 lg:py-24">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="apple-card p-10 sm:p-14 bg-gradient-to-br from-navy via-[#173a73] to-navy text-white text-center shadow-apple-elevated relative overflow-hidden">
-        <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-apple-blue/15 blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-20 -top-20 w-80 h-80 rounded-full bg-apple-amber/10 blur-3xl pointer-events-none"></div>
-        
-        <span class="text-xs font-mono uppercase tracking-widest text-sky-300 font-semibold block mb-2">INSTITUTIONAL CONSULTATION</span>
-        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight max-w-2xl mx-auto leading-tight">
-          Ready to institutionalize student placement readiness?
-        </h2>
-        <p class="text-sm sm:text-base text-blue-100 max-w-xl mx-auto mt-4">
-          Join universities transforming unstructured training into verified, quantifiable student outcomes. Deploy a pilot within 4 weeks.
-        </p>
-
-        <div class="flex flex-wrap items-center justify-center gap-4 mt-8">
-          <button onclick="openDemoModal()" class="apple-btn px-7 py-3.5 bg-white text-navy font-bold text-xs hover:bg-blue-50 transition-colors shadow-apple-sm">
-            Request Institutional Demo
-          </button>
-          <a href="#overview" class="apple-btn px-6 py-3.5 border border-white/30 text-white font-semibold text-xs hover:bg-white/10 transition-colors">
-            Explore Features
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 11. APPLE-STYLE MINIMAL FOOTER                                            -->
-  <!-- ========================================================================= -->
-  <footer class="mt-auto border-t border-apple-border bg-white py-12 text-xs text-apple-muted">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
-        
-        <div class="col-span-2 space-y-3">
-          <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-lg bg-navy flex items-center justify-center text-white font-bold text-xs">
-              PW
-            </div>
-            <span class="text-base font-bold font-display text-navy">Pathwisse</span>
-          </div>
-          <p class="text-xs text-apple-muted max-w-sm">
-            Employability Operating System for higher education. Bridging technical learning, verified lab evidence, and institutional placement outcomes.
-          </p>
-          <span class="text-[11px] text-slate-400 block font-mono">Reference: pathwisse.com • Apple-Inspired Theme</span>
-        </div>
-
-        <div>
-          <span class="font-bold text-navy block mb-2.5 font-mono">PLATFORM</span>
-          <ul class="space-y-2">
-            <li><a href="#overview" class="hover:underline">Overview</a></li>
-            <li><a href="#journey" class="hover:underline">10-Stage Model</a></li>
-            <li><a href="#readiness" class="hover:underline">Readiness Engine</a></li>
-            <li><a href="#instruments" class="hover:underline">GPU Workbench</a></li>
-            <li><a href="#instruments" class="hover:underline">Math Decoder</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <span class="font-bold text-navy block mb-2.5 font-mono">CURRICULUM</span>
-          <ul class="space-y-2">
-            <li><a href="#tracks" class="hover:underline">System Design</a></li>
-            <li><a href="#tracks" class="hover:underline">Inference Engineering</a></li>
-            <li><a href="#tracks" class="hover:underline">AI Research & Models</a></li>
-            <li><a href="#tracks" class="hover:underline">ML Mathematics</a></li>
-            <li><a href="#tracks" class="hover:underline">Daily Research Papers</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <span class="font-bold text-navy block mb-2.5 font-mono">INSTITUTIONS</span>
-          <ul class="space-y-2">
-            <li><a href="#plans" class="hover:underline">Campus Pilots</a></li>
-            <li><a href="#institutions" class="hover:underline">Placement Teams</a></li>
-            <li><a href="#institutions" class="hover:underline">NAAC/NBA Compliance</a></li>
-            <li><a href="#plans" class="hover:underline">Accreditation Data</a></li>
-            <li><a href="javascript:void(0)" onclick="openDemoModal()" class="text-apple-blue font-semibold hover:underline">Request Consult</a></li>
-          </ul>
-        </div>
-
-      </div>
-
-      <div class="pt-8 border-t border-apple-border flex flex-col sm:flex-row items-center justify-between gap-4">
-        <span>© 2026 Pathwisse Operating System. All rights reserved.</span>
-        <div class="flex items-center gap-4 text-xs">
-          <span>Institutional Trust</span>
-          <span>•</span>
-          <span>Zero-Hallucination Evidence</span>
-          <span>•</span>
-          <span>Enterprise SSO</span>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ========================================================================= -->
-  <!-- MODAL: REQUEST DEMO & PILOT FORM (APPLE MODAL DIALOG)                     -->
-  <!-- ========================================================================= -->
-  <div id="demo-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
-    <div class="apple-card max-w-lg w-full p-7 sm:p-9 border border-apple-border shadow-apple-elevated relative bg-white">
-      <button onclick="closeDemoModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
-        ✕
-      </button>
-      
-      <div class="mb-5">
-        <span class="text-xs font-mono font-bold text-apple-blue uppercase">CAMPUS CONSULTATION</span>
-        <h3 class="text-xl font-bold text-navy mt-0.5">Request Institutional Demo</h3>
-        <p class="text-xs text-apple-muted mt-1">Connect with our curriculum directors to review department pilot options.</p>
-      </div>
-
-      <form onsubmit="handleDemoSubmit(event)" class="space-y-3.5 text-left">
-        <div>
-          <label class="block text-xs font-semibold text-apple-text mb-1">Full Name</label>
-          <input required type="text" placeholder="Dr. Sarah Jenkins" class="w-full px-3.5 py-2.5 rounded-btn border border-apple-border text-xs bg-[#F9FAFB] text-apple-text focus:border-apple-blue outline-none shadow-apple-sm">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-apple-text mb-1">University / College Name</label>
-          <input required type="text" placeholder="National Institute of Technology" class="w-full px-3.5 py-2.5 rounded-btn border border-apple-border text-xs bg-[#F9FAFB] text-apple-text focus:border-apple-blue outline-none shadow-apple-sm">
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-apple-text mb-1">Official Email</label>
-            <input required type="email" placeholder="director@college.edu" class="w-full px-3.5 py-2.5 rounded-btn border border-apple-border text-xs bg-[#F9FAFB] text-apple-text focus:border-apple-blue outline-none shadow-apple-sm">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-apple-text mb-1">Role / Department</label>
-            <select class="w-full px-3 py-2.5 rounded-btn border border-apple-border text-xs bg-[#F9FAFB] text-apple-text focus:border-apple-blue outline-none shadow-apple-sm">
-              <option>Placement Director / TPO</option>
-              <option>Dean / Principal</option>
-              <option>Head of Department (CSE/IT/AI)</option>
-              <option>Faculty Lead</option>
-              <option>Student Representative</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-apple-text mb-1">Cohort Scope</label>
-          <select class="w-full px-3 py-2.5 rounded-btn border border-apple-border text-xs bg-[#F9FAFB] text-apple-text focus:border-apple-blue outline-none shadow-apple-sm">
-            <option>100–300 Students (Department Pilot)</option>
-            <option>300–1,000 Students (Faculty-wide)</option>
-            <option>1,000+ Students (Full Campus OS)</option>
-          </select>
-        </div>
-        <button type="submit" class="w-full mt-4 apple-btn py-3 bg-apple-blue hover:bg-blue-600 text-white text-xs font-bold shadow-apple-sm">
-          Submit Institutional Request
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- APPLE SPOTLIGHT COMMAND PALETTE (CMD+K / CTRL+K)                          -->
-  <!-- ========================================================================= -->
-  <div id="cmd-palette" class="fixed inset-0 z-50 hidden flex items-start justify-center pt-24 p-4 bg-slate-900/40 backdrop-blur-md">
-    <div class="apple-card max-w-lg w-full p-4 border border-apple-border shadow-apple-elevated bg-white">
-      <div class="flex items-center gap-2 pb-3 border-b border-apple-border">
-        <svg class="w-4 h-4 text-apple-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-        <input type="text" id="palette-search" placeholder="Type a destination or lab (e.g. GPU, Raft, Math)..." class="flex-1 bg-transparent border-none text-xs text-apple-text outline-none">
-        <kbd class="text-[10px] font-mono text-apple-muted px-1.5 py-0.5 rounded bg-slate-100 font-semibold">ESC</kbd>
-      </div>
-      <div class="pt-3 space-y-1 text-xs">
-        <a href="#overview" onclick="toggleCommandPalette()" class="flex items-center justify-between p-2 rounded-btn hover:bg-slate-100 text-apple-text">
-          <span>Overview & Readiness Index</span>
-          <span class="font-mono text-[10px] text-apple-muted">#overview</span>
-        </a>
-        <a href="#journey" onclick="toggleCommandPalette()" class="flex items-center justify-between p-2 rounded-btn hover:bg-slate-100 text-apple-text">
-          <span>10-Stage Operating Journey</span>
-          <span class="font-mono text-[10px] text-apple-muted">#journey</span>
-        </a>
-        <a href="#instruments" onclick="toggleCommandPalette(); switchInstrument('gpu');" class="flex items-center justify-between p-2 rounded-btn hover:bg-slate-100 text-apple-text">
-          <span>GPU Memory & VRAM Workbench</span>
-          <span class="font-mono text-[10px] text-apple-blue font-semibold">Tool</span>
-        </a>
-        <a href="#instruments" onclick="toggleCommandPalette(); switchInstrument('decoder');" class="flex items-center justify-between p-2 rounded-btn hover:bg-slate-100 text-apple-text">
-          <span>Mathematical Notation Library</span>
-          <span class="font-mono text-[10px] text-apple-blue font-semibold">Tool</span>
-        </a>
-        <a href="#tracks" onclick="toggleCommandPalette()" class="flex items-center justify-between p-2 rounded-btn hover:bg-slate-100 text-apple-text">
-          <span>System Design & Inference Tracks</span>
-          <span class="font-mono text-[10px] text-apple-muted">#tracks</span>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- JAVASCRIPT CONTROLLERS                                                    -->
-  <!-- ========================================================================= -->
-  <script>
-    // 1. Mobile Menu
-    function toggleMobileMenu() {
-      const menu = document.getElementById('mobile-menu');
-      menu.classList.toggle('hidden');
-    }
-
-    // 2. Command Palette
-    function toggleCommandPalette() {
-      const pal = document.getElementById('cmd-palette');
-      pal.classList.toggle('hidden');
-      if (!pal.classList.contains('hidden')) {
-        setTimeout(() => document.getElementById('palette-search').focus(), 50);
-      }
-    }
-    window.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        toggleCommandPalette();
-      }
-      if (e.key === 'Escape') {
-        document.getElementById('cmd-palette').classList.add('hidden');
-        document.getElementById('demo-modal').classList.add('hidden');
-      }
-    });
-
-    // 3. Modal
-    function openDemoModal() {
-      document.getElementById('demo-modal').classList.remove('hidden');
-    }
-    function closeDemoModal() {
-      document.getElementById('demo-modal').classList.add('hidden');
-    }
-    function handleDemoSubmit(e) {
-      e.preventDefault();
-      alert('Thank you! Your institutional inquiry has been submitted. Our Academic Director will reach out within 24 hours.');
-      closeDemoModal();
-    }
-
-    // 4. 10-Stage Operating Model Data & Switcher
-    const stagesData = {
-      1: {
-        badge: "STAGE 01 OF 10",
-        owner: "Ownership: Student + Department Counselor",
-        title: "Career Goal & Competency Profiling",
-        desc: "Students identify target engineering specializations (e.g. Distributed Systems Engineer, LLM Inference Specialist, or AI Research Practitioner). The operating system maps exact skill graphs and industry requirements without vague generalizations.",
-        metric: "100%",
-        metricLabel: "Students with deterministic milestone roadmaps",
-        deliv: ["Role Competency Matrix", "Baseline Diagnostic", "Weeks 1–2"]
-      },
-      2: {
-        badge: "STAGE 02 OF 10",
-        owner: "Ownership: Curriculum Office + AI Engine",
-        title: "Deterministic Skill Mapping",
-        desc: "Translates standard university syllabus into targeted engineering requirements. Identifies gaps between semester courses and high-bar industry benchmarks.",
-        metric: "42",
-        metricLabel: "Core competencies mapped per track",
-        deliv: ["Competency Blueprint", "Course Alignment Matrix", "Weeks 3–4"]
-      },
-      3: {
-        badge: "STAGE 03 OF 10",
-        owner: "Ownership: Faculty & Interactive Platform",
-        title: "Core Mathematical & Systems Foundations",
-        desc: "Deep mastery of underlying principles: LSM trees, append-only logs, matrix calculus, probability densities, and backpropagation mechanics.",
-        metric: "94%",
-        metricLabel: "Concept retention rate through active recall",
-        deliv: ["Math Decoder Drills", "Interactive Foundations", "Weeks 5–8"]
-      },
-      4: {
-        badge: "STAGE 04 OF 10",
-        owner: "Ownership: Student + Automated Test Runners",
-        title: "Hands-on Interactive Labs",
-        desc: "Browser-based sandbox environments. Students calculate KV caches, configure Raft leader elections, and simulate network partitions.",
-        metric: "16+",
-        metricLabel: "Interactive labs completed per learner",
-        deliv: ["GPU Memory Workbench", "Raft Consensus Lab", "Weeks 9–12"]
-      },
-      5: {
-        badge: "STAGE 05 OF 10",
-        owner: "Ownership: Student + Code Review Pipeline",
-        title: "Production Code Builds",
-        desc: "Full end-to-end repository builds: custom storage engines, FlashAttention CUDA bindings, and distributed pub/sub brokers verified against automated test suites.",
-        metric: "3+",
-        metricLabel: "Production-grade repositories shipped",
-        deliv: ["Storage Engine Build", "Distributed Cache", "Weeks 13–16"]
-      },
-      6: {
-        badge: "STAGE 06 OF 10",
-        owner: "Ownership: Industry Mentors + Alumni Network",
-        title: "Structured Code Review & Mentoring",
-        desc: "Senior engineering practitioners review pull requests, architecture decisions, and code cleanliness, mirroring top-tier engineering teams.",
-        metric: "100%",
-        metricLabel: "Builds code-reviewed by human engineers",
-        deliv: ["PR Review Logs", "Architecture Debrief", "Weeks 17–18"]
-      },
-      7: {
-        badge: "STAGE 07 OF 10",
-        owner: "Ownership: Verified Telemetry Engine",
-        title: "Quantified Readiness Indexing",
-        desc: "Real-time 0–100 scoring based on code completeness, test coverage, mathematical drills, and code review feedback.",
-        metric: "88/100",
-        metricLabel: "Average verified readiness of completing cohort",
-        deliv: ["Verifiable Index", "Skill Radar Chart", "Week 19"]
-      },
-      8: {
-        badge: "STAGE 08 OF 10",
-        owner: "Ownership: Placement Cell + HODs",
-        title: "Cohort Benchmarking & Gap Interventions",
-        desc: "Institutional dashboard identifies top-quartile students and alerts mentors to students needing targeted support before hiring drives.",
-        metric: "< 5%",
-        metricLabel: "Unidentified at-risk rate across cohort",
-        deliv: ["Cohort Percentiles", "Intervention Triggers", "Week 20"]
-      },
-      9: {
-        badge: "STAGE 09 OF 10",
-        owner: "Ownership: Placement Directorate & Recruiters",
-        title: "Algorithmic Placement Matching",
-        desc: "Verified profiles and code artifacts are matched directly to hiring partners seeking proven systems and AI engineering talent.",
-        metric: "3.4x",
-        metricLabel: "Higher interview shortlist rate",
-        deliv: ["Verified Candidate Dossier", "Recruiter Shortlists", "Weeks 21–24"]
-      },
-      10: {
-        badge: "STAGE 10 OF 10",
-        owner: "Ownership: Dean / College Leadership",
-        title: "Accreditation & Institutional Reporting",
-        desc: "Continuous exportable reports for NAAC, NBA, and ABET accreditation bodies documenting verifiable outcome-based education metrics.",
-        metric: "100%",
-        metricLabel: "Compliant outcome-based data audit trail",
-        deliv: ["NAAC Criterion 2 & 5 Logs", "Placement Audit Report", "End of Semester"]
-      }
-    };
-
-    function selectStage(num) {
-      document.querySelectorAll('.stage-nav-btn').forEach((btn, idx) => {
-        if (idx + 1 === num) {
-          btn.className = "stage-nav-btn flex-1 p-3 rounded-btn border border-apple-blue bg-apple-blue text-white text-left transition-all shadow-apple-sm";
-          btn.querySelector('span:first-child').className = "text-[10px] font-mono opacity-80 block";
-        } else {
-          btn.className = "stage-nav-btn flex-1 p-3 rounded-btn border border-apple-border bg-white text-apple-text text-left hover:border-slate-300 transition-all shadow-apple-sm";
-          btn.querySelector('span:first-child').className = "text-[10px] font-mono text-apple-muted block";
-        }
-      });
-
-      const d = stagesData[num];
-      document.getElementById('stage-badge').innerText = d.badge;
-      document.getElementById('stage-owner').innerText = d.owner;
-      document.getElementById('stage-title').innerText = d.title;
-      document.getElementById('stage-desc').innerText = d.desc;
-      document.getElementById('stage-metric').innerText = d.metric;
-      document.getElementById('stage-metric-label').innerText = d.metricLabel;
-
-      const delivEl = document.getElementById('stage-deliverables');
-      delivEl.innerHTML = `
-        <div class="p-3 rounded-btn bg-[#F9FAFB] border border-apple-border">
-          <span class="text-[11px] text-apple-muted block">Deliverable</span>
-          <span class="text-xs font-semibold text-apple-text">${d.deliv[0]}</span>
-        </div>
-        <div class="p-3 rounded-btn bg-[#F9FAFB] border border-apple-border">
-          <span class="text-[11px] text-apple-muted block">Verification</span>
-          <span class="text-xs font-semibold text-emerald-600">${d.deliv[1]}</span>
-        </div>
-        <div class="p-3 rounded-btn bg-[#F9FAFB] border border-apple-border">
-          <span class="text-[11px] text-apple-muted block">Time Horizon</span>
-          <span class="text-xs font-semibold text-navy">${d.deliv[2]}</span>
-        </div>
-      `;
-    }
-
-    // 5. Readiness Score Recalculator
-    function recalculateReadiness() {
-      const checks = document.querySelectorAll('.milestone-toggle');
-      let score = 0;
-      checks.forEach(c => {
-        if (c.checked) score += parseInt(c.getAttribute('data-pts') || 0);
-      });
-
-      document.getElementById('sim-score').innerText = score;
-      document.getElementById('demo-readiness-score').innerText = score;
-
-      const verdict = document.getElementById('sim-verdict');
-      if (score >= 85) {
-        verdict.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 mb-4";
-        verdict.innerText = "● Tier-1 Placement Ready";
-      } else if (score >= 60) {
-        verdict.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-apple-blue border border-blue-200 mb-4";
-        verdict.innerText = "● Intermediate Progress";
-      } else {
-        verdict.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200 mb-4";
-        verdict.innerText = "● Needs Intervention";
-      }
-
-      // Update breakdown bars
-      document.getElementById('bar-artifact').style.width = Math.min(100, Math.round(score * 1.05)) + '%';
-      document.getElementById('bar-artifact-val').innerText = Math.min(100, Math.round(score * 1.05)) + '%';
-      
-      document.getElementById('bar-systems').style.width = Math.min(100, Math.round(score * 0.98)) + '%';
-      document.getElementById('bar-systems-val').innerText = Math.min(100, Math.round(score * 0.98)) + '%';
-
-      document.getElementById('bar-math').style.width = Math.min(100, Math.round(score * 0.95)) + '%';
-      document.getElementById('bar-math-val').innerText = Math.min(100, Math.round(score * 0.95)) + '%';
-    }
-
-    function resetReadinessDemo() {
-      const checks = document.querySelectorAll('.milestone-toggle');
-      checks.forEach((c, idx) => c.checked = idx < 4);
-      recalculateReadiness();
-    }
-
-    // 6. GPU Memory Workbench Calculator
-    let currentPrecision = 2.0; // FP16: 2 bytes per param
-
-    function setPrecision(prec) {
-      document.getElementById('prec-fp16').className = "p-2 text-xs rounded-btn border border-apple-border bg-white text-apple-muted font-medium font-mono hover:border-slate-300";
-      document.getElementById('prec-int8').className = "p-2 text-xs rounded-btn border border-apple-border bg-white text-apple-muted font-medium font-mono hover:border-slate-300";
-      document.getElementById('prec-int4').className = "p-2 text-xs rounded-btn border border-apple-border bg-white text-apple-muted font-medium font-mono hover:border-slate-300";
-
-      if (prec === 'fp16') {
-        currentPrecision = 2.0;
-        document.getElementById('prec-fp16').className = "p-2 text-xs rounded-btn border border-apple-blue bg-blue-50 text-navy font-bold font-mono";
-      } else if (prec === 'int8') {
-        currentPrecision = 1.0;
-        document.getElementById('prec-int8').className = "p-2 text-xs rounded-btn border border-apple-blue bg-blue-50 text-navy font-bold font-mono";
-      } else if (prec === 'int4') {
-        currentPrecision = 0.5;
-        document.getElementById('prec-int4').className = "p-2 text-xs rounded-btn border border-apple-blue bg-blue-50 text-navy font-bold font-mono";
-      }
-      updateGpuCalc();
-    }
-
-    function updateGpuCalc() {
-      const paramsB = parseInt(document.getElementById('gpu-param-slider').value);
-      const ctxK = parseInt(document.getElementById('gpu-ctx-slider').value);
-      const batch = parseInt(document.getElementById('gpu-batch-slider').value);
-
-      document.getElementById('gpu-param-val').innerText = `${paramsB} Billion (${paramsB}B)`;
-      document.getElementById('gpu-ctx-val').innerText = `${ctxK}k tokens`;
-      document.getElementById('gpu-batch-val').innerText = `${batch} requests`;
-
-      // Weight memory: params * bytes
-      const weightGB = paramsB * currentPrecision;
-      
-      // KV cache approx: 2 * 32 layers * 4096 hidden * ctx * batch * 2 bytes
-      const kvGB = (0.075 * ctxK * batch * (paramsB / 7)).toFixed(1);
-      
-      const cudaOverhead = 1.2;
-      const total = (weightGB + parseFloat(kvGB) + cudaOverhead).toFixed(1);
-
-      document.getElementById('gpu-total-vram').innerText = total;
-      document.getElementById('gpu-weights-mem').innerText = `${weightGB.toFixed(1)} GB`;
-      document.getElementById('gpu-kv-mem').innerText = `${kvGB} GB`;
-
-      const fitBox = document.getElementById('gpu-fit-box');
-      if (total <= 24) {
-        fitBox.className = "p-3.5 rounded-btn bg-emerald-50 border border-emerald-200 text-xs";
-        fitBox.innerHTML = `
-          <span class="font-semibold text-emerald-800 block">✓ Fits in 1x NVIDIA RTX 4090 / A10G (24GB)</span>
-          <span class="text-emerald-700 text-[11px] block mt-0.5">Headroom: ~${(24 - total).toFixed(1)} GB free for dynamic batching</span>
-        `;
-      } else if (total <= 48) {
-        fitBox.className = "p-3.5 rounded-btn bg-blue-50 border border-blue-200 text-xs";
-        fitBox.innerHTML = `
-          <span class="font-semibold text-blue-800 block">✓ Requires 1x NVIDIA A40 / A6000 (48GB)</span>
-          <span class="text-blue-700 text-[11px] block mt-0.5">Headroom: ~${(48 - total).toFixed(1)} GB free</span>
-        `;
-      } else if (total <= 80) {
-        fitBox.className = "p-3.5 rounded-btn bg-purple-50 border border-purple-200 text-xs";
-        fitBox.innerHTML = `
-          <span class="font-semibold text-purple-800 block">✓ Requires 1x NVIDIA A100 / H100 (80GB)</span>
-          <span class="text-purple-700 text-[11px] block mt-0.5">Headroom: ~${(80 - total).toFixed(1)} GB free</span>
-        `;
-      } else {
-        fitBox.className = "p-3.5 rounded-btn bg-amber-50 border border-amber-200 text-xs";
-        fitBox.innerHTML = `
-          <span class="font-semibold text-amber-800 block">⚠️ Multi-GPU Tensor Parallelism Required</span>
-          <span class="text-amber-700 text-[11px] block mt-0.5">Requires 2x or 4x 80GB GPUs with NVLink interconnect</span>
-        `;
-      }
-    }
-
-    // 7. Instrument Tabs Switcher
-    function switchInstrument(tab) {
-      if (tab === 'gpu') {
-        document.getElementById('inst-gpu-panel').classList.remove('hidden');
-        document.getElementById('inst-decoder-panel').classList.add('hidden');
-        document.getElementById('inst-tab-gpu').className = "px-5 py-2 rounded-btn bg-white text-navy text-xs sm:text-sm font-semibold shadow-apple-sm transition-all";
-        document.getElementById('inst-tab-decoder').className = "px-5 py-2 rounded-btn text-apple-muted hover:text-navy text-xs sm:text-sm font-semibold transition-all";
-      } else {
-        document.getElementById('inst-gpu-panel').classList.add('hidden');
-        document.getElementById('inst-decoder-panel').classList.remove('hidden');
-        document.getElementById('inst-tab-gpu').className = "px-5 py-2 rounded-btn text-apple-muted hover:text-navy text-xs sm:text-sm font-semibold transition-all";
-        document.getElementById('inst-tab-decoder').className = "px-5 py-2 rounded-btn bg-white text-navy text-xs sm:text-sm font-semibold shadow-apple-sm transition-all";
-      }
-    }
-
-    function filterMathSymbols() {
-      const q = document.getElementById('math-search-input').value.toLowerCase();
-      document.querySelectorAll('.math-card').forEach(card => {
-        const text = card.innerText.toLowerCase();
-        card.style.display = text.includes(q) ? 'block' : 'none';
-      });
-    }
-
-    function copyLatex(latex) {
-      navigator.clipboard.writeText(latex);
-      alert(`Copied to clipboard: ${latex}`);
-    }
-
-    // 8. Audience Tab Switcher
-    const audienceData = {
-      students: [
-        { label: "01. CERTAINTY", title: "Deterministic Roadmap", desc: "Know exactly what to study each week without wasting months on superficial beginner tutorials." },
-        { label: "02. CREDIBILITY", title: "Verifiable Portfolio", desc: "Proof-of-work code builds and stress tests that instantly distinguish you from generic applicants." },
-        { label: "03. PLACEMENT READY", title: "Verified Score Badge", desc: "Your 0-100 Readiness Index gives recruiting partners instant confidence in your engineering abilities." }
-      ],
-      placement: [
-        { label: "01. SCREENING SPEED", title: "Instant Talent Filtering", desc: "Filter thousands of students by verified competency scores rather than unverified resumes." },
-        { label: "02. RECRUITER TRUST", title: "Evidence-Backed Dossiers", desc: "Deliver recruiters candidate profiles with verified commit histories and stress test outputs." },
-        { label: "03. HIGHER OFFERS", title: "Premium CTC Placement", desc: "Guide students directly into high-tier systems and AI engineering roles with 2x to 3x higher packages." }
-      ],
-      faculty: [
-        { label: "01. SYLLABUS ALIGNMENT", title: "Automated Curriculum Sync", desc: "Map existing university courses to current industry frameworks without rebuilding syllabi." },
-        { label: "02. EARLY RISK DETECTION", title: "At-Risk Alerts", desc: "Identify students struggling with mathematical prerequisites weeks before semester exams." },
-        { label: "03. AUTOMATED LABS", title: "Zero Grading Burden", desc: "Automated test suites and benchmarks evaluate code builds, saving hundreds of faculty grading hours." }
-      ],
-      leadership: [
-        { label: "01. AUDIT COMPLIANCE", title: "NAAC & NBA Evidence", desc: "Continuous exportable reports documenting outcome-based education metrics for accreditation boards." },
-        { label: "02. INSTITUTIONAL BRAND", title: "Top-Tier Placement Prestige", desc: "Build a reputation as a premier tech institution producing engineers who ship from day one." },
-        { label: "03. SCALABLE GOVERNANCE", title: "Departmental Telemetry", desc: "Track readiness distributions, faculty intervention velocity, and recruiter hiring conversion in one place." }
-      ]
-    };
-
-    function switchAudience(aud) {
-      const tabs = ['students', 'placement', 'faculty', 'leadership'];
-      tabs.forEach(t => {
-        const btn = document.getElementById(`aud-tab-${t}`);
-        if (t === aud) {
-          btn.className = "px-4 py-2 rounded-btn bg-white text-navy text-xs font-bold shadow-apple-sm transition-all";
-        } else {
-          btn.className = "px-4 py-2 rounded-btn text-apple-muted hover:text-navy text-xs font-semibold transition-all";
-        }
-      });
-
-      const cards = audienceData[aud];
-      const container = document.getElementById('audience-content');
-      container.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="p-5 rounded-btn bg-[#FAFBFC] border border-apple-border">
-            <span class="text-xs font-mono text-apple-blue font-bold block mb-1">${cards[0].label}</span>
-            <h4 class="text-sm sm:text-base font-bold text-apple-text">${cards[0].title}</h4>
-            <p class="text-xs text-apple-muted mt-1 leading-relaxed">${cards[0].desc}</p>
-          </div>
-          <div class="p-5 rounded-btn bg-[#FAFBFC] border border-apple-border">
-            <span class="text-xs font-mono text-emerald-600 font-bold block mb-1">${cards[1].label}</span>
-            <h4 class="text-sm sm:text-base font-bold text-apple-text">${cards[1].title}</h4>
-            <p class="text-xs text-apple-muted mt-1 leading-relaxed">${cards[1].desc}</p>
-          </div>
-          <div class="p-5 rounded-btn bg-[#FAFBFC] border border-apple-border">
-            <span class="text-xs font-mono text-apple-amber font-bold block mb-1">${cards[2].label}</span>
-            <h4 class="text-sm sm:text-base font-bold text-apple-text">${cards[2].title}</h4>
-            <p class="text-xs text-apple-muted mt-1 leading-relaxed">${cards[2].desc}</p>
-          </div>
-        </div>
-      `;
-    }
-
-    // Initialize
-    updateGpuCalc();
-    recalculateReadiness();
-  </script>
-</body>
+    <script>
+      // Ask for regional prices now, while the app bundle is still downloading,
+      // so they are ready when the pricing UI mounts. Consumed once by
+      // src/features/pricing/pricingQuoteClient.ts; harmless if never used.
+      (function () {
+        try {
+          var path = location.pathname;
+          if (path !== "/" && path !== "/pricing") return;
+          var currency =
+            new URLSearchParams(location.search).get("currency") === "usd"
+              ? "usd"
+              : "local";
+          window.__fanoutEarlyQuote = {
+            currency: currency,
+            startedAt: Date.now(),
+            response: fetch(
+              "/api/checkout?surface=pricing-quote&currency=" + currency,
+              { credentials: "same-origin" }
+            ).catch(function () {
+              return null;
+            }),
+          };
+        } catch (error) {}
+      })();
+    </script>
+  </body>
 </html>
