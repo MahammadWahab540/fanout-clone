@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";import{t}from"./jsx-runtime-CIkHs51R.js";import n,{t as r}from"./SystemCollectionPage-C1uFeVJT.js";function i(){return(0,a.jsx)(n,{collection:`systems`})}var a;e((()=>{r(),a=t()}))();export{i as default};

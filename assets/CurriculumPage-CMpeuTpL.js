@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";import{f as t,o as n,t as r}from"./dist-BXxUuVPX.js";import{t as i}from"./jsx-runtime-CIkHs51R.js";function a(){let{hash:e}=t();return(0,o.jsx)(n,{to:`/inference-eng/overview${e}`,replace:!0})}var o;e((()=>{r(),o=i()}))();export{a as default};

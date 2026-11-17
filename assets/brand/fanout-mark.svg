@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 68 68"
+  role="img"
+  aria-labelledby="fanout-mark-title fanout-mark-description"
+>
+  <title id="fanout-mark-title">Fanout</title>
+  <desc id="fanout-mark-description">One isometric node branching to three nodes.</desc>
+  <style>
+    .connector-lines {
+      fill: none;
+      stroke: #272727;
+      stroke-dasharray: 2.8 3.8;
+      stroke-linecap: round;
+      stroke-width: 1.6;
+      opacity: 0.36;
+    }
+
+    .connector-junction {
+      fill: #272727;
+      opacity: 0.36;
+    }
+
+    .node {
+      stroke: #272727;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.35;
+    }
+
+    .face-top {
+      fill: #ffffff;
+    }
+
+    .face-left {
+      fill: #f7f7f8;
+    }
+
+    .face-right {
+      fill: #f4f4f5;
+    }
+
+    .status {
+      fill: #0f9d58;
+      stroke: #ffffff;
+      stroke-width: 0.85;
+    }
+
+    .origin {
+      fill: #6e6e6e;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .connector-lines {
+        stroke: #f2f4f7;
+      }
+
+      .connector-junction {
+        fill: #f2f4f7;
+      }
+
+      .node {
+        stroke: #f2f4f7;
+      }
+
+      .face-top,
+      .face-left,
+      .face-right {
+        stroke: #f2f4f7;
+      }
+
+      .face-top {
+        fill: #191a1c;
+      }
+
+      .face-left {
+        fill: #111213;
+      }
+
+      .face-right {
+        fill: #202123;
+      }
+
+      .status {
+        fill: #4ed08a;
+        stroke: #191a1c;
+      }
+
+      .origin {
+        fill: #a9b0ba;
+      }
+    }
+  </style>
+
+  <g transform="translate(3 8)">
+    <g aria-hidden="true">
+      <path
+        d="M10 25h16"
+        class="connector-lines"
+        fill="none"
+        stroke="#272727"
+        stroke-opacity="0.36"
+        stroke-dasharray="2.8 3.8"
+        stroke-linecap="round"
+        stroke-width="1.6"
+      />
+      <path
+        d="M26 25l14-15"
+        class="connector-lines"
+        fill="none"
+        stroke="#272727"
+        stroke-opacity="0.36"
+        stroke-dasharray="2.8 3.8"
+        stroke-linecap="round"
+        stroke-width="1.6"
+      />
+      <path
+        d="M26 25h19"
+        class="connector-lines"
+        fill="none"
+        stroke="#272727"
+        stroke-opacity="0.36"
+        stroke-dasharray="2.8 3.8"
+        stroke-linecap="round"
+        stroke-width="1.6"
+      />
+      <path
+        d="M26 25l14 15"
+        class="connector-lines"
+        fill="none"
+        stroke="#272727"
+        stroke-opacity="0.36"
+        stroke-dasharray="2.8 3.8"
+        stroke-linecap="round"
+        stroke-width="1.6"
+      />
+      <circle
+        cx="26"
+        cy="25"
+        r="1.25"
+        class="connector-junction"
+        fill="#272727"
+        fill-opacity="0.36"
+      />
+    </g>
+
+    <g
+      transform="translate(2 18)"
+      class="node"
+      stroke="#272727"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1.35"
+    >
+      <path d="M1 4.5 8 .75l7 3.75L8 8.25Z" class="face-top" fill="#ffffff" stroke="#272727" />
+      <path d="m1 4.5 7 3.75V14l-7-3.75Z" class="face-left" fill="#f7f7f8" stroke="#272727" />
+      <path d="m8 8.25 7-3.75v5.75L8 14Z" class="face-right" fill="#f4f4f5" stroke="#272727" />
+      <ellipse cx="13" cy="4.45" rx="0.9" ry="0.55" class="status" fill="#0f9d58" stroke="#ffffff" stroke-width="0.85" />
+      <ellipse cx="8" cy="4.5" rx="1.5" ry="0.75" class="origin" fill="#6e6e6e" stroke="none" />
+    </g>
+    <g
+      transform="translate(36 3)"
+      class="node"
+      stroke="#272727"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1.35"
+    >
+      <path d="M1 4.5 8 .75l7 3.75L8 8.25Z" class="face-top" fill="#ffffff" stroke="#272727" />
+      <path d="m1 4.5 7 3.75V14l-7-3.75Z" class="face-left" fill="#f7f7f8" stroke="#272727" />
+      <path d="m8 8.25 7-3.75v5.75L8 14Z" class="face-right" fill="#f4f4f5" stroke="#272727" />
+      <ellipse cx="13" cy="4.45" rx="0.9" ry="0.55" class="status" fill="#0f9d58" stroke="#ffffff" stroke-width="0.85" />
+    </g>
+    <g
+      transform="translate(44 18)"
+      class="node"
+      stroke="#272727"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1.35"
+    >
+      <path d="M1 4.5 8 .75l7 3.75L8 8.25Z" class="face-top" fill="#ffffff" stroke="#272727" />
+      <path d="m1 4.5 7 3.75V14l-7-3.75Z" class="face-left" fill="#f7f7f8" stroke="#272727" />
+      <path d="m8 8.25 7-3.75v5.75L8 14Z" class="face-right" fill="#f4f4f5" stroke="#272727" />
+      <ellipse cx="13" cy="4.45" rx="0.9" ry="0.55" class="status" fill="#0f9d58" stroke="#ffffff" stroke-width="0.85" />
+    </g>
+    <g
+      transform="translate(36 33)"
+      class="node"
+      stroke="#272727"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1.35"
+    >
+      <path d="M1 4.5 8 .75l7 3.75L8 8.25Z" class="face-top" fill="#ffffff" stroke="#272727" />
+      <path d="m1 4.5 7 3.75V14l-7-3.75Z" class="face-left" fill="#f7f7f8" stroke="#272727" />
+      <path d="m8 8.25 7-3.75v5.75L8 14Z" class="face-right" fill="#f4f4f5" stroke="#272727" />
+      <ellipse cx="13" cy="4.45" rx="0.9" ry="0.55" class="status" fill="#0f9d58" stroke="#ffffff" stroke-width="0.85" />
+    </g>
+  </g>
+</svg>

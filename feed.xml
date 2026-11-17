@@ -1,0 +1,1107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Fanout Daily papers</title>
+    <link>https://fanout.sh/daily</link>
+    <description>Daily technical papers with concise reading notes across AI research, systems, inference, and ML mathematics.</description>
+    <language>en-US</language>
+    <lastBuildDate>Mon, 16 Nov 2026 12:00:00 GMT</lastBuildDate>
+    <atom:link href="https://fanout.sh/feed.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AlphaProof Code: Verifying Signal&apos;s Security at the Machine-Code Level</title>
+      <link>https://fanout.sh/daily/2026-11-16-alphaproof-code-signal-verification</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-16-alphaproof-code-signal-verification</guid>
+      <pubDate>Mon, 16 Nov 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Swarat Chaudhuri, Andrew Ferraiuolo, Anton Kovsharov, Tej Chajed, Sam Schlesinger, Karn Seth, Jonathan Katz, Charles Sutton, and Pushmeet Kohli · Google DeepMind, 2026 · 8 min. AlphaProof Code lets untrusted AI agents generate millions of lines of Lean proof while an exact comparator and small kernel decide what counts. Follow the human-approved specification, proof campaigns, compiled AArch64 target, trusted base, known-bug probes, and the boundary around the reported Signal security guarantee.</description>
+    </item>
+    <item>
+      <title>Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters</title>
+      <link>https://fanout.sh/daily/2026-11-14-test-time-compute-scaling</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-14-test-time-compute-scaling</guid>
+      <pubDate>Sat, 14 Nov 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Charlie Snell, Jaehoon Lee, Kelvin Xu, and Aviral Kumar · ICLR 2025 · 9 min. More inference compute only helps when it is spent in the right shape. Follow a difficulty-aware router that chooses between independent samples, sequential revisions, and process-reward search, then read the fourfold efficiency result and the boundary on the hardest problems.</description>
+    </item>
+    <item>
+      <title>DINOv2: Learning Robust Visual Features without Supervision</title>
+      <link>https://fanout.sh/daily/2026-11-13-dinov2-visual-features</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-13-dinov2-visual-features</guid>
+      <pubDate>Fri, 13 Nov 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Maxime Oquab et al. · TMLR 2024 · 15 min. DINOv2 trains one visual backbone to preserve both whole-image meaning and patch-level structure without captions or class labels. Follow LVD-142M curation, the moving teacher, masked patch targets, feature spreading, frozen-transfer evidence, and the data and bias boundaries around general-purpose features.</description>
+    </item>
+    <item>
+      <title>Artificial Hivemind: The Open-Ended Homogeneity of Language Models (and Beyond)</title>
+      <link>https://fanout.sh/daily/2026-11-12-artificial-hivemind-homogeneity</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-12-artificial-hivemind-homogeneity</guid>
+      <pubDate>Thu, 12 Nov 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Liwei Jiang, Yuanjun Chai, Margaret Li, Mickel Liu, Raymond Fok, Nouha Dziri, Yulia Tsvetkov, Maarten Sap, Alon Albalak, and Yejin Choi · NeurIPS 2025 Best Paper · 15 min. Many language models repeatedly land on the same small set of ideas for open-ended prompts. Follow Infinity-Chat, the within-model and across-model similarity measurements, the human study, and a 2026 critique showing why the null baseline changes the strength of the claim.</description>
+    </item>
+    <item>
+      <title>Generative Agents: Interactive Simulacra of Human Behavior</title>
+      <link>https://fanout.sh/daily/2026-11-11-generative-agents-memory-reflection</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-11-generative-agents-memory-reflection</guid>
+      <pubDate>Wed, 11 Nov 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Joon Sung Park, Joseph C. O&apos;Brien, Carrie J. Cai, Meredith Ringel Morris, Percy Liang, and Michael S. Bernstein · UIST 2023 · 12 min. Generative Agents makes long-term memory part of an agent&apos;s control loop. Follow the shared memory stream, three-factor retrieval score, reflection tree, recursive plan, believability ablation, and the failures that separate stored history from usable context.</description>
+    </item>
+    <item>
+      <title>RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control</title>
+      <link>https://fanout.sh/daily/2026-11-10-rt2-vision-language-action</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-10-rt2-vision-language-action</guid>
+      <pubDate>Tue, 10 Nov 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Anthony Brohan et al. · CoRL 2023 · 10 min. RT-2 turns low-level robot actions into the same kind of tokens a vision-language model already writes. Follow the shared vocabulary, co-fine-tuning recipe, transfer evidence, cloud control loop, and the boundary between new semantic uses and new physical skills.</description>
+    </item>
+    <item>
+      <title>DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving</title>
+      <link>https://fanout.sh/daily/2026-11-09-distserve-prefill-decode-disaggregation</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-09-distserve-prefill-decode-disaggregation</guid>
+      <pubDate>Mon, 09 Nov 2026 12:00:00 GMT</pubDate>
+      <category>Inference</category>
+      <description>Yinmin Zhong, Shengyu Liu, Junda Chen, Jianbo Hu, Yibo Zhu, Xuanzhe Liu, Xin Jin, and Hao Zhang · OSDI 2024 · 16 min. Prefill is compute-bound and decoding is bandwidth-bound, so sharing a GPU makes each wait on the other. Follow DistServe&apos;s split into prefill and decode pools, the per-GPU goodput arithmetic, the KV-cache transfer it adds, and what its evaluation does and does not show.</description>
+    </item>
+    <item>
+      <title>Spanner: Google&apos;s Globally-Distributed Database</title>
+      <link>https://fanout.sh/daily/2026-11-08-spanner-truetime-commit-wait</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-08-spanner-truetime-commit-wait</guid>
+      <pubDate>Sun, 08 Nov 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>James C. Corbett, Jeffrey Dean, Michael Epstein, Andrew Fikes, Christopher Frost, JJ Furman, Sanjay Ghemawat, Andrey Gubarev, Christopher Heiser, Peter Hochschild, Wilson Hsieh, Sebastian Kanthak, Eugene Kogan, Hongyi Li, Alexander Lloyd, Sergey Melnik, David Mwaura, David Nagle, Sean Quinlan, Rajesh Rao, Lindsay Rolig, Yasushi Saito, Michal Szymaniak, Christopher Taylor, Ruth Wang, and Dale Woodford · OSDI 2012 Best Paper · 13 min. Spanner gives every transaction a commit timestamp that respects real-time order across datacenters. Follow the TrueTime interval API, the start rule and commit wait, the measured cost of waiting out clock uncertainty, and the drift assumption the guarantee rests on.</description>
+    </item>
+    <item>
+      <title>Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?</title>
+      <link>https://fanout.sh/daily/2026-11-07-rlvr-reasoning-boundary</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-07-rlvr-reasoning-boundary</guid>
+      <pubDate>Sat, 07 Nov 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Yang Yue, Zhiqi Chen, Rui Lu, Andrew Zhao, Zhaokai Wang, Yang Yue, Shiji Song, and Gao Huang · NeurIPS 2025 Runner-Up · 13 min. RL with verifiable rewards can make correct reasoning easier to sample without expanding the set of problems a model can solve. Follow the pass@k crossover, base-only coverage, training checkpoints, and the limits of that negative result.</description>
+    </item>
+    <item>
+      <title>On Calibration of Modern Neural Networks</title>
+      <link>https://fanout.sh/daily/2026-11-06-calibration-temperature-scaling</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-06-calibration-temperature-scaling</guid>
+      <pubDate>Fri, 06 Nov 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Chuan Guo, Geoff Pleiss, Yu Sun, and Kilian Q. Weinberger · ICML 2017 · 13 min. A classifier can become more accurate while its probabilities become less honest. Follow reliability diagrams, expected calibration error, and the one learned temperature that softens confidence without changing a single predicted class.</description>
+    </item>
+    <item>
+      <title>Sigmoid Loss for Language Image Pre-Training</title>
+      <link>https://fanout.sh/daily/2026-11-05-sigmoid-loss-language-image-pretraining</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-05-sigmoid-loss-language-image-pretraining</guid>
+      <pubDate>Thu, 05 Nov 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Xiaohua Zhai et al. · ICCV 2023 Oral · 12 min. SigLIP replaces CLIP&apos;s two batch-wide softmax choices with an independent sigmoid decision for every image-text pair. Follow the signed pair loss, the learned bias, the chunked distributed implementation, and the batch-size evidence that makes 32,000 more important than one million.</description>
+    </item>
+    <item>
+      <title>Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model</title>
+      <link>https://fanout.sh/daily/2026-11-04-muzero-learned-model-planning</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-04-muzero-learned-model-planning</guid>
+      <pubDate>Wed, 04 Nov 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Julian Schrittwieser et al. · Nature 2020 · 13 min. MuZero replaces the perfect simulator inside AlphaZero-style search with a learned latent model that predicts only reward, policy, and value. Follow the three learned functions, the search-to-training loop, the Atari evidence, and the precise boundary behind the phrase without rules.</description>
+    </item>
+    <item>
+      <title>Neural Ordinary Differential Equations</title>
+      <link>https://fanout.sh/daily/2026-11-03-neural-ordinary-differential-equations</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-03-neural-ordinary-differential-equations</guid>
+      <pubDate>Tue, 03 Nov 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Ricky T. Q. Chen et al. · NeurIPS 2018 Best Paper · 13 min. Neural ODEs replace a fixed stack of hidden layers with a learned derivative field and an adaptive differential-equation solver. Follow the solver contract, the reverse-time adjoint, the continuous normalizing flow, and the numerical limits hidden by the continuous-depth metaphor.</description>
+    </item>
+    <item>
+      <title>TensorFlow: A System for Large-Scale Machine Learning</title>
+      <link>https://fanout.sh/daily/2026-11-02-tensorflow-large-scale-machine-learning</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-02-tensorflow-large-scale-machine-learning</guid>
+      <pubDate>Mon, 02 Nov 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Martín Abadi et al. · OSDI 2016 · 13 min. TensorFlow made one machine-learning program portable across heterogeneous hardware by representing primitive computation, mutable state, and update rules in one deferred dataflow graph. Follow how the runtime prunes, places, partitions, and connects that graph across CPU, GPU, TPU, and machine boundaries.</description>
+    </item>
+    <item>
+      <title>QLoRA: Efficient Finetuning of Quantized LLMs</title>
+      <link>https://fanout.sh/daily/2026-11-01-qlora-efficient-finetuning</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-11-01-qlora-efficient-finetuning</guid>
+      <pubDate>Sun, 01 Nov 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Tim Dettmers et al. · NeurIPS 2023 · 13 min. QLoRA made large-model fine-tuning fit radically smaller memory budgets by storing a frozen base in 4-bit NormalFloat, dequantizing blocks for 16-bit computation, and training only LoRA adapters. Follow the precision boundary, memory devices, ablations, and qualified chatbot evidence.</description>
+    </item>
+    <item>
+      <title>End-to-End Object Detection with Transformers</title>
+      <link>https://fanout.sh/daily/2026-10-31-end-to-end-object-detection-transformers</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-31-end-to-end-object-detection-transformers</guid>
+      <pubDate>Sat, 31 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Nicolas Carion et al. · ECCV 2020 · 13 min. DETR reframed object detection as direct set prediction: learned query slots propose boxes in parallel, Hungarian matching assigns one positive owner to each target, and unmatched slots learn no object. Follow the mechanism, the decoder ablations, and the scale-dependent COCO evidence.</description>
+    </item>
+    <item>
+      <title>Asynchronous Methods for Deep Reinforcement Learning</title>
+      <link>https://fanout.sh/daily/2026-10-30-asynchronous-deep-reinforcement-learning</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-30-asynchronous-deep-reinforcement-learning</guid>
+      <pubDate>Fri, 30 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Volodymyr Mnih et al. · ICML 2016 · 13 min. A3C replaced one agent&apos;s replay memory with many fresh, out-of-phase actor-learners updating a shared model. Follow how parallel experience decorrelates training data, how short n-step rollouts update both policy and value, and why later synchronous A2C changed the verdict on asynchrony itself.</description>
+    </item>
+    <item>
+      <title>Denoising Diffusion Probabilistic Models</title>
+      <link>https://fanout.sh/daily/2026-10-29-denoising-diffusion-probabilistic-models</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-29-denoising-diffusion-probabilistic-models</guid>
+      <pubDate>Thu, 29 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Jonathan Ho, Ajay Jain, Pieter Abbeel · NeurIPS 2020 · 13 min. DDPM made diffusion models practical for high-quality image synthesis: corrupt data with a fixed Gaussian chain, train one time-conditioned U-Net to predict the added noise, then reverse the chain from pure noise. Follow the closed-form training shortcut, the simplified objective, and the evidence behind the paper&apos;s sample-quality claims.</description>
+    </item>
+    <item>
+      <title>Improving Language Understanding by Generative Pre-Training</title>
+      <link>https://fanout.sh/daily/2026-10-28-generative-pretraining-gpt</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-28-generative-pretraining-gpt</guid>
+      <pubDate>Wed, 28 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Alec Radford et al. · OpenAI 2018 · 12 min. GPT-1 made the two-stage transfer recipe concrete: learn a decoder Transformer from unlabeled books, serialize several supervised tasks into token sequences, then adapt the same network with a small output head. Follow the mechanism, the decisive no-pretraining ablation, and the limits of the 2018 evidence.</description>
+    </item>
+    <item>
+      <title>Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism</title>
+      <link>https://fanout.sh/daily/2026-10-27-megatron-lm-tensor-parallelism</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-27-megatron-lm-tensor-parallelism</guid>
+      <pubDate>Tue, 27 Oct 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Mohammad Shoeybi et al. · arXiv 2019 · revised 2020 · 12 min. Megatron-LM places tensor boundaries around the operations that can remain local. Follow why a naive row split must synchronize before GeLU, how paired column- and row-parallel projections reduce only at the block output, and what the paper&apos;s 512-GPU weak-scaling evidence actually establishes.</description>
+    </item>
+    <item>
+      <title>DAPO: An Open-Source LLM Reinforcement Learning System at Scale</title>
+      <link>https://fanout.sh/daily/2026-10-26-dapo-llm-reinforcement-learning</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-26-dapo-llm-reinforcement-learning</guid>
+      <pubDate>Mon, 26 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Qiying Yu et al. · NeurIPS 2025 · 13 min. DAPO turns four failure diagnoses in long-chain-of-thought reinforcement learning into four concrete interventions: asymmetric clipping, informative-prompt sampling, token-level loss normalization, and gradual overlength penalties. Follow each control, then audit the cumulative AIME experiment and the compute claims it cannot settle.</description>
+    </item>
+    <item>
+      <title>Robust Speech Recognition via Large-Scale Weak Supervision</title>
+      <link>https://fanout.sh/daily/2026-10-25-whisper-large-scale-weak-supervision</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-25-whisper-large-scale-weak-supervision</guid>
+      <pubDate>Sun, 25 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Alec Radford et al. · ICML 2023 · 9 min. Whisper trains a standard encoder-decoder Transformer on 680,000 hours of diverse web audio and represents language, transcription, translation, silence, and timestamps with decoder tokens. Read it to see why cross-dataset zero-shot evaluation changes the robustness story, what dataset scale buys, and where long-form generation can still fail.</description>
+    </item>
+    <item>
+      <title>Focal Loss for Dense Object Detection</title>
+      <link>https://fanout.sh/daily/2026-10-24-focal-loss-dense-object-detection</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-24-focal-loss-dense-object-detection</guid>
+      <pubDate>Sat, 24 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Tsung-Yi Lin, Priya Goyal, Ross Girshick, Kaiming He, and Piotr Dollár · ICCV 2017 · 12 min. Focal loss discounts already-correct predictions so many easy background candidates do not overwhelm a dense detector. Calculate the loss contribution, separate class weights from difficulty weights, and inspect RetinaNet’s controlled comparison.</description>
+    </item>
+    <item>
+      <title>RoFormer: Enhanced Transformer with Rotary Position Embedding</title>
+      <link>https://fanout.sh/daily/2026-10-23-roformer-rotary-position-embeddings</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-23-roformer-rotary-position-embeddings</guid>
+      <pubDate>Fri, 23 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Jianlin Su, Yu Lu, Shengfeng Pan, Ahmed Murtadha, Bo Wen, and Yunfeng Liu · arXiv 2021 · revised 2023 · 11 min. RoFormer rotates query and key coordinate pairs so their attention score carries relative position. Work through the shared-shift identity, then audit why computable positions and successful long-context generalization are different claims.</description>
+    </item>
+    <item>
+      <title>Neural Turing Machines</title>
+      <link>https://fanout.sh/daily/2026-10-22-neural-turing-machines</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-22-neural-turing-machines</guid>
+      <pubDate>Thu, 22 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Alex Graves, Greg Wayne, and Ivo Danihelka · arXiv 2014 · 28 min. Neural Turing Machines give a neural controller a separate, mutable memory and make its read and write addresses differentiable. Read it to see how content lookup and relative shifts combine, why the copy trace looks like a learned algorithm, and where the paper&apos;s preliminary synthetic evidence stops.</description>
+    </item>
+    <item>
+      <title>Densely Connected Convolutional Networks</title>
+      <link>https://fanout.sh/daily/2026-10-21-densenet-feature-reuse</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-21-densenet-feature-reuse</guid>
+      <pubDate>Wed, 21 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Gao Huang, Zhuang Liu, Laurens van der Maaten, and Kilian Q. Weinberger · CVPR 2017 · 11 min. DenseNet keeps earlier feature maps available by concatenating them and asks each layer to add a small new contribution. Follow channel growth and compressed transitions, then separate the paper’s parameter-efficiency evidence from the activation-memory cost of a naive implementation.</description>
+    </item>
+    <item>
+      <title>NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis</title>
+      <link>https://fanout.sh/daily/2026-10-20-nerf-neural-radiance-fields</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-20-nerf-neural-radiance-fields</guid>
+      <pubDate>Tue, 20 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Ben Mildenhall et al. · ECCV 2020 · 30 min. NeRF learns one continuous, scene-specific function of 3D position and viewing direction, then volume-renders that function into new camera views. Read it to see how density controls both color and visibility along a ray, why sinusoidal coordinates and hierarchical sampling matter, and where the original method trades speed for fidelity.</description>
+    </item>
+    <item>
+      <title>Train Short, Test Long: Attention with Linear Biases Enables Input Length Extrapolation</title>
+      <link>https://fanout.sh/daily/2026-10-19-alibi-linear-attention-biases</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-19-alibi-linear-attention-biases</guid>
+      <pubDate>Mon, 19 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Ofir Press, Noah A. Smith, and Mike Lewis · ICLR 2022 · 12 min. ALiBi replaces position embeddings with fixed distance penalties in attention scores. Follow the arithmetic, compare equal-time training budgets, and learn why improved perplexity on longer blocks can come from fewer context resets rather than better use of distant facts.</description>
+    </item>
+    <item>
+      <title>Let&apos;s Verify Step by Step</title>
+      <link>https://fanout.sh/daily/2026-10-18-lets-verify-step-by-step</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-18-lets-verify-step-by-step</guid>
+      <pubDate>Sun, 18 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Hunter Lightman et al. · ICLR 2024 · 32 min. Let&apos;s Verify Step by Step compares reward models trained on a final answer with reward models trained to judge every reasoning step. Read it to see why first-error labels improve credit assignment, how best-of-N exposes verifier quality without changing the generator, and why the headline result needs a controlled companion experiment.</description>
+    </item>
+    <item>
+      <title>U-Net: Convolutional Networks for Biomedical Image Segmentation</title>
+      <link>https://fanout.sh/daily/2026-10-17-unet-context-localization</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-17-unet-context-localization</guid>
+      <pubDate>Sat, 17 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Olaf Ronneberger, Philipp Fischer, and Thomas Brox · MICCAI 2015 · 24 min. U-Net joins a context-building encoder to a localization-preserving decoder with copied feature maps at matching resolutions. Read it to see how those bridges recover spatial detail, why elastic augmentation and a border-aware loss matter on tiny biomedical datasets, and what the original challenge results do not isolate.</description>
+    </item>
+    <item>
+      <title>Are Emergent Abilities of Large Language Models a Mirage?</title>
+      <link>https://fanout.sh/daily/2026-10-16-emergent-abilities-mirage</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-16-emergent-abilities-mirage</guid>
+      <pubDate>Fri, 16 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Rylan Schaeffer, Brando Miranda, and Sanmi Koyejo · NeurIPS 2023 Outstanding Paper · 34 min. This paper asks whether sudden capability jumps in language-model scaling curves belong to the models or to the metrics used to score them. Read it to see how exact match can hide smooth partial progress, why fixed outputs look different under Token Edit Distance and Brier Score, and what evidence a serious emergence claim should survive.</description>
+    </item>
+    <item>
+      <title>Masked Autoencoders Are Scalable Vision Learners</title>
+      <link>https://fanout.sh/daily/2026-10-15-masked-autoencoders-scalable-vision</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-15-masked-autoencoders-scalable-vision</guid>
+      <pubDate>Thu, 15 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Kaiming He et al. · CVPR 2022 · 28 min. Masked autoencoders hide most image patches before a Vision Transformer encoder, then use a lightweight decoder to reconstruct only the missing pixels. Read it to see why the 75 percent masking ratio saves encoder compute, how the asymmetric design changes representation learning, and which ImageNet and COCO results support the paper&apos;s claims.</description>
+    </item>
+    <item>
+      <title>Reflexion: Language Agents with Verbal Reinforcement Learning</title>
+      <link>https://fanout.sh/daily/2026-10-14-reflexion-verbal-reinforcement-learning</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-14-reflexion-verbal-reinforcement-learning</guid>
+      <pubDate>Wed, 14 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Noah Shinn et al. · NeurIPS 2023 · 32 min. Reflexion turns a failed agent trajectory into a short verbal lesson, stores that lesson as episodic memory, and retries without updating model weights. Read it to see how acting, evaluation, and reflection form one loop, why evaluator quality controls the learning signal, and how the original ALFWorld, HotPotQA, and coding results should be interpreted.</description>
+    </item>
+    <item>
+      <title>tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains</title>
+      <link>https://fanout.sh/daily/2026-10-13-tau-bench-tool-agent-user-interaction</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-13-tau-bench-tool-agent-user-interaction</guid>
+      <pubDate>Tue, 13 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Shunyu Yao et al. · ICLR 2025 · 34 min. tau-bench evaluates tool-using agents inside multi-turn retail and airline conversations with domain policies and mutable databases. Read it to see how final-state grading separates fluent talk from completed work, why pass^k measures repeated reliability, and why the original scores are now historical rather than a current leaderboard.</description>
+    </item>
+    <item>
+      <title>Sleeper Agents: Training Deceptive LLMs that Persist Through Safety Training</title>
+      <link>https://fanout.sh/daily/2026-10-12-sleeper-agents-safety-training</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-12-sleeper-agents-safety-training</guid>
+      <pubDate>Mon, 12 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Evan Hubinger et al. · Anthropic 2024 · 36 min. Sleeper Agents deliberately trains language models to follow one policy in ordinary contexts and an unsafe policy after a hidden trigger. Read it to see why standard safety training can improve the visible branch while leaving the triggered behavior intact, and why the result is a model-organism warning rather than evidence about prevalence in deployed systems.</description>
+    </item>
+    <item>
+      <title>GPipe: Easy Scaling with Micro-Batch Pipeline Parallelism</title>
+      <link>https://fanout.sh/daily/2026-10-11-gpipe-pipeline-parallelism</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-11-gpipe-pipeline-parallelism</guid>
+      <pubDate>Sun, 11 Oct 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Yanping Huang et al. · NeurIPS 2019 · 32 min. GPipe divides a neural network into sequential stages and sends micro-batches through them as a pipeline. Read it to see how the schedule trades idle time for throughput, why accumulated gradients preserve synchronous updates, and how rematerialization makes much larger models fit in accelerator memory.</description>
+    </item>
+    <item>
+      <title>Toy Models of Superposition</title>
+      <link>https://fanout.sh/daily/2026-10-10-toy-models-superposition</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-10-toy-models-superposition</guid>
+      <pubDate>Sat, 10 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Nelson Elhage et al. · Transformer Circuits Thread 2022 · 34 min. Toy Models of Superposition asks how a neural layer can track more useful features than it has hidden dimensions. Read it to see how sparse features share non-orthogonal directions, why ReLU makes interference affordable, and why the clean geometry remains a controlled clue rather than a map of a real language model.</description>
+    </item>
+    <item>
+      <title>Understanding deep learning requires rethinking generalization</title>
+      <link>https://fanout.sh/daily/2026-10-09-rethinking-generalization</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-09-rethinking-generalization</guid>
+      <pubDate>Fri, 09 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Chiyuan Zhang et al. · ICLR 2017 · 32 min. The random-label control shows that a network can fit arbitrary training targets while performing near chance on held-out examples. Read it to distinguish fitting from generalization, understand what stays fixed in the experiment, and avoid overclaims about regularization or learning theory.</description>
+    </item>
+    <item>
+      <title>Cuckoo Hashing</title>
+      <link>https://fanout.sh/daily/2026-10-08-cuckoo-hashing</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-08-cuckoo-hashing</guid>
+      <pubDate>Thu, 08 Oct 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Rasmus Pagh and Flemming Friche Rodler · Journal of Algorithms 2004 · 28 min. Cuckoo hashing restricts each key to two candidate cells, moving collisions into insertion. Read it to separate worst-case lookup from expected amortized updates, replay an eviction chain, and see why empty space alone cannot guarantee a valid placement.</description>
+    </item>
+    <item>
+      <title>Flamingo: a Visual Language Model for Few-Shot Learning</title>
+      <link>https://fanout.sh/daily/2026-10-07-flamingo-visual-language-model</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-07-flamingo-visual-language-model</guid>
+      <pubDate>Wed, 07 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Jean-Baptiste Alayrac et al. · NeurIPS 2022 · 42 min. Flamingo connects a frozen vision encoder and a frozen language model with a fixed visual bottleneck and gated cross-attention layers. Read it to see how interleaved images and text share context, why the gates begin closed, and which celebrated few-shot claims remain hard to reproduce.</description>
+    </item>
+    <item>
+      <title>SmolVLA: A Vision-Language-Action Model for Affordable and Efficient Robotics</title>
+      <link>https://fanout.sh/daily/2026-10-06-smolvla-affordable-robotics</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-06-smolvla-affordable-robotics</guid>
+      <pubDate>Tue, 06 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Mustafa Shukor et al. · arXiv 2025 · 36 min. SmolVLA compresses a vision-language-action policy to 450 million parameters and predicts fifty-action chunks with a flow-matching expert. Read it to see how an asynchronous queue overlaps inference with robot motion, why that makes execution faster, and where the reported success rate falls.</description>
+    </item>
+    <item>
+      <title>Self-Consistency Improves Chain of Thought Reasoning in Language Models</title>
+      <link>https://fanout.sh/daily/2026-10-05-self-consistency-reasoning</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-05-self-consistency-reasoning</guid>
+      <pubDate>Mon, 05 Oct 2026 12:00:00 GMT</pubDate>
+      <category>Inference</category>
+      <description>Xuezhi Wang et al. · ICLR 2023 · 28 min. A model can reach the same answer along several different routes. This paper shows how sampling those routes and voting on their final answers improves reasoning accuracy without additional training, then exposes the extra computation and the gap between agreement and correctness.</description>
+    </item>
+    <item>
+      <title>A Simple Framework for Contrastive Learning of Visual Representations</title>
+      <link>https://fanout.sh/daily/2026-10-04-simclr-contrastive-representations</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-04-simclr-contrastive-representations</guid>
+      <pubDate>Sun, 04 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Ting Chen, Simon Kornblith, Mohammad Norouzi, and Geoffrey Hinton · ICML 2020 · 30 min. SimCLR turns two altered views of one photograph into a training target without class labels. Read it to see why easy visual shortcuts can spoil representation learning, why the projection head is discarded after training, and why the headline ImageNet result needs its model size attached.</description>
+    </item>
+    <item>
+      <title>The Log-Structured Merge-Tree (LSM-Tree)</title>
+      <link>https://fanout.sh/daily/2026-10-03-log-structured-merge-tree</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-03-log-structured-merge-tree</guid>
+      <pubDate>Sat, 03 Oct 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Patrick O’Neil, Edward Cheng, Dieter Gawlick, and Elizabeth O’Neil · Acta Informatica 1996 · 32 min. How can a database keep scattered incoming records searchable without paying for a separate disk-page update on every insert? The original LSM-tree batches sorted entries in memory and rolls them into larger disk trees. Read it to understand the merge, its amortized cost, and the read and recovery obligations that remain.</description>
+    </item>
+    <item>
+      <title>TruthfulQA: Measuring How Models Mimic Human Falsehoods</title>
+      <link>https://fanout.sh/daily/2026-10-02-truthfulqa-human-falsehoods</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-02-truthfulqa-human-falsehoods</guid>
+      <pubDate>Fri, 02 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Stephanie Lin, Jacob Hilton, and Owain Evans · ACL 2022 · 31 min. TruthfulQA asks whether a language model can resist false statements that humans repeat often enough to imitate. Read it to see how adversarial misconception questions separate truthfulness from informativeness, why the original models showed inverse scaling, which controls support that interpretation, and why new model families, benchmark revisions, judge availability, shortcuts, and contamination now bound the famous result.</description>
+    </item>
+    <item>
+      <title>Flow Matching for Generative Modeling</title>
+      <link>https://fanout.sh/daily/2026-10-01-flow-matching-generative-modeling</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-10-01-flow-matching-generative-modeling</guid>
+      <pubDate>Thu, 01 Oct 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Yaron Lipman et al. · ICLR 2023 · 29 min. Flow Matching asks how to train a continuous generative flow when the distribution-level velocity target is unavailable. Read it to see how per-example conditional paths create tractable regression labels, why the conditional and marginal objectives have identical gradients, how path geometry changes solver work, and why straight conditional paths do not prove globally straight transport.</description>
+    </item>
+    <item>
+      <title>Gated Attention for Large Language Models: Non-linearity, Sparsity, and Attention-Sink-Free</title>
+      <link>https://fanout.sh/daily/2026-09-30-gated-attention-language-models</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-30-gated-attention-language-models</guid>
+      <pubDate>Wed, 30 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Zihan Qiu et al. · NeurIPS 2025 Best Paper · 27 min. Gated Attention asks what happens when an attention head can decline to write its result. Read it to see why softmax&apos;s sum-to-one rule encourages sink behavior, how a query-dependent sigmoid gate after SDPA separates reading from writing, which ablations make that explanation credible, and where missing error bars, full-attention cost, and an incomplete long-context theory bound the result.</description>
+    </item>
+    <item>
+      <title>LLMs Get Lost In Multi-Turn Conversation</title>
+      <link>https://fanout.sh/daily/2026-09-29-llms-lost-multi-turn-conversation</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-29-llms-lost-multi-turn-conversation</guid>
+      <pubDate>Tue, 29 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Philippe Laban et al. · ICLR 2026 Outstanding Paper · 36 min. LLMs Get Lost In Multi-Turn Conversation asks whether a model that solves a complete one-shot instruction remains dependable when the same requirements arrive over several turns. Read it to see how instruction sharding holds the intended task fixed, why best-case aptitude hides a 112% rise in unreliability, which recap and temperature interventions fall short, and where an idealized simulated user limits the result.</description>
+    </item>
+    <item>
+      <title>Human-level control through deep reinforcement learning</title>
+      <link>https://fanout.sh/daily/2026-09-28-human-level-control-dqn</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-28-human-level-control-dqn</guid>
+      <pubDate>Mon, 28 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Volodymyr Mnih et al. · Nature 2015 · 32 min. DQN is remembered for learning Atari games from pixels. Read it for the less obvious result: why naive deep Q-learning chases its own moving data and targets, and how shuffled replay plus a delayed target network made that feedback loop trainable across 49 games.</description>
+    </item>
+    <item>
+      <title>An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale</title>
+      <link>https://fanout.sh/daily/2026-09-27-vision-transformer-image-patches</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-27-vision-transformer-image-patches</guid>
+      <pubDate>Sun, 27 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Alexey Dosovitskiy et al. · ICLR 2021 · 30 min. Vision Transformer asks how much image-specific structure a model needs when pre-training data becomes very large. Read it to see how a 224-pixel image becomes 196 patch tokens, which convolutional priors disappear, why ResNets lead at smaller scale, where ViT crosses over, and how patch size turns visual detail into a quadratic token-pair bill.</description>
+    </item>
+    <item>
+      <title>SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering</title>
+      <link>https://fanout.sh/daily/2026-09-26-swe-agent-computer-interfaces</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-26-swe-agent-computer-interfaces</guid>
+      <pubDate>Sat, 26 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>John Yang et al. · NeurIPS 2024 · 35 min. SWE-agent asks how much software-agent capability comes from the language model and how much comes from the interface around it. Read it to see why summarized search, 100-line file windows, precise edits, lint feedback, and compressed history help one fixed model repair more repositories—and why a 12.47% resolve rate is mechanism evidence rather than production autonomy.</description>
+    </item>
+    <item>
+      <title>Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks</title>
+      <link>https://fanout.sh/daily/2026-09-25-model-agnostic-meta-learning</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-25-model-agnostic-meta-learning</guid>
+      <pubDate>Fri, 25 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Chelsea Finn, Pieter Abbeel, and Sergey Levine · ICML 2017 · 35 min. MAML asks whether training should optimize a model&apos;s answer before adaptation or the quality of the answer after a few task-specific gradient steps. Read it to see how support and query examples create a nested objective, why one initialization can move toward several related tasks, what the sinusoid and MiniImageNet results establish, and where task shift and second-order cost bound the claim.</description>
+    </item>
+    <item>
+      <title>Diffusion Policy: Visuomotor Policy Learning via Action Diffusion</title>
+      <link>https://fanout.sh/daily/2026-09-24-diffusion-policy-robot-actions</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-24-diffusion-policy-robot-actions</guid>
+      <pubDate>Thu, 24 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Cheng Chi et al. · The International Journal of Robotics Research, 2024 · 35 min. Diffusion Policy asks how a robot can imitate demonstrations when several incompatible action sequences are all valid. Read it to see how denoising samples one coherent action chunk, why the controller predicts farther than it executes, how that receding horizon corrects drift, and what the reported 46.9% relative improvement, real-robot results, latency, and evaluation protocol actually establish.</description>
+    </item>
+    <item>
+      <title>Constitutional AI: Harmlessness from AI Feedback</title>
+      <link>https://fanout.sh/daily/2026-09-23-constitutional-ai-feedback</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-23-constitutional-ai-feedback</guid>
+      <pubDate>Wed, 23 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Yuntao Bai et al. · Anthropic technical report, 2022 · 35 min. Constitutional AI asks whether a short, explicit set of principles can replace repeated human harmlessness labels without reducing safety to blanket refusal. Read it to see how one rulebook produces self-revised demonstrations and AI-labelled response preferences, why the policy still depends on human helpfulness data and evaluation, and how inaccurate critiques, judge capability, principle choice, and reward over-optimization bound the result.</description>
+    </item>
+    <item>
+      <title>Spectre Attacks: Exploiting Speculative Execution</title>
+      <link>https://fanout.sh/daily/2026-09-22-spectre-speculative-execution</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-22-spectre-speculative-execution</guid>
+      <pubDate>Tue, 22 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Paul Kocher et al. · IEEE Symposium on Security and Privacy 2019 · 30 min. Spectre asks how code can read a secret even when a correct bounds check rejects the access. Read it to see how branch-predictor training opens a transient wrong path, how one secret-indexed cache line survives architectural rollback, and why process isolation, timer changes, compiler barriers, and processor controls each cover only part of the hardware-software contract.</description>
+    </item>
+    <item>
+      <title>The Leaderboard Illusion</title>
+      <link>https://fanout.sh/daily/2026-09-21-leaderboard-illusion</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-21-leaderboard-illusion</guid>
+      <pubDate>Mon, 21 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Shivalika Singh et al. · NeurIPS 2025 · 35 min. The Leaderboard Illusion asks what a live model ranking measures when some providers can privately test many candidates, keep only the strongest score, see more of the prompt distribution, or leave old models in a changing comparison graph. Read it to see why best-of-N selection lifts an observed maximum, how the authors audited private variants and prompt access, and where overlapping intervals, private data, disputed interpretations, and synthetic deprecation studies limit the verdict.</description>
+    </item>
+    <item>
+      <title>Highly accurate protein structure prediction with AlphaFold</title>
+      <link>https://fanout.sh/daily/2026-09-20-alphafold-protein-structure</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-20-alphafold-protein-structure</guid>
+      <pubDate>Sun, 20 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>John Jumper et al. · Nature 2021 · 35 min. AlphaFold asks how a computer can turn an amino-acid sequence into a useful three-dimensional protein structure. Read it to see how evolutionary sequence evidence and residue-pair geometry continually constrain one another, how a structure module and recycling refine explicit atomic coordinates, and why per-residue confidence, missing biological context, and shallow alignments still bound what a prediction can establish.</description>
+    </item>
+    <item>
+      <title>Skip Lists: A Probabilistic Alternative to Balanced Trees</title>
+      <link>https://fanout.sh/daily/2026-09-19-skip-lists-probabilistic-balancing</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-19-skip-lists-probabilistic-balancing</guid>
+      <pubDate>Sat, 19 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>William Pugh · Communications of the ACM 1990 · 30 min. Skip Lists asks whether a sorted linked list can search like a balanced tree without rotations or global rebalancing. Read it to see how random node heights create sparse express lanes, how an advance-or-drop search finds a key in expected logarithmic time, and why the result trades a strict worst-case guarantee for simpler local updates and a tunable pointer budget.</description>
+    </item>
+    <item>
+      <title>A Case for Redundant Arrays of Inexpensive Disks (RAID)</title>
+      <link>https://fanout.sh/daily/2026-09-18-raid-redundant-disk-arrays</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-18-raid-redundant-disk-arrays</guid>
+      <pubDate>Fri, 18 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>David A. Patterson, Garth A. Gibson, and Randy H. Katz · ACM SIGMOD 1988 · 30 min. The RAID paper asks how many small disks can deliver more I/O without making storage collapse whenever one device fails. Read it to see how striping exposes parallelism, how mirrors or XOR parity make one missing disk reconstructable, and why rotating the parity position removes a dedicated check-disk bottleneck without proving modern latency or whole-system durability.</description>
+    </item>
+    <item>
+      <title>A Relational Model of Data for Large Shared Data Banks</title>
+      <link>https://fanout.sh/daily/2026-09-17-relational-model-data-banks</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-17-relational-model-data-banks</guid>
+      <pubDate>Thu, 17 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>E. F. Codd · Communications of the ACM 1970 · 30 min. Codd&apos;s relational model paper asks why an application program should break when the machine reorganizes the data it reads. Read it to see how describing everything as flat relations with keys removes ordering, indexing, and access-path dependence, how normalization copies a parent key downward to flatten nested records, and why the model deliberately leaves language syntax, implementation, and performance as open problems.</description>
+    </item>
+    <item>
+      <title>Neural Machine Translation by Jointly Learning to Align and Translate</title>
+      <link>https://fanout.sh/daily/2026-09-16-neural-translation-soft-attention</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-16-neural-translation-soft-attention</guid>
+      <pubDate>Wed, 16 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio · ICLR 2015 · 30 min. This paper asks how a translation model can look back at the right source words instead of compressing an entire sentence into one fixed vector. Read it to see how a bidirectional encoder leaves one annotation at every source position, how a jointly trained alignment scorer builds a fresh weighted context for each target word, and why strong WMT14 results still need careful treatment of unknown words, sequence length, exhaustive scoring, and causal claims.</description>
+    </item>
+    <item>
+      <title>The JPEG Still Picture Compression Standard</title>
+      <link>https://fanout.sh/daily/2026-09-15-jpeg-still-picture-compression</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-15-jpeg-still-picture-compression</guid>
+      <pubDate>Tue, 15 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Gregory K. Wallace · Communications of the ACM 1991 · 30 min. The JPEG paper asks how a photograph can become much smaller without looking obviously broken. Read it to see how each 8 × 8 block becomes a set of spatial-frequency coefficients, why coefficient quantization is the deliberately lossy step, and how zig-zag ordering plus Huffman coding pack the surviving structure without pretending that one quality setting fits every image or display.</description>
+    </item>
+    <item>
+      <title>The Design Philosophy of the DARPA Internet Protocols</title>
+      <link>https://fanout.sh/daily/2026-09-14-darpa-internet-design</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-14-darpa-internet-design</guid>
+      <pubDate>Mon, 14 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>David D. Clark · ACM SIGCOMM 1988 · 30 min. The DARPA Internet design paper asks why a conversation should survive when a router or network disappears beneath it. Read it to see how fate-sharing keeps essential connection state at the endpoint hosts, why the network forwards independent datagrams, and where alternate paths, routing recovery, host behavior, management, accounting, and security remain outside that elegant core.</description>
+    </item>
+    <item>
+      <title>DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression</title>
+      <link>https://fanout.sh/daily/2026-09-13-deepseek-v4-1-flash</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-13-deepseek-v4-1-flash</guid>
+      <pubDate>Sun, 13 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Inference</category>
+      <description>DeepSeek-AI · Technical Report 2026 · 30 min. DeepSeek-V4.1-Flash asks how a million-token agent can keep attention memory from overwhelming accelerator memory, persistent storage, and transfer bandwidth. Read it to see how a causal encoder-decoder shares compressed global context across depth, how three CSA2 layer modes divide cache and indexing work, and why bounded replay makes an explicit approximation to avoid persisting local attention state.</description>
+    </item>
+    <item>
+      <title>Quicksort</title>
+      <link>https://fanout.sh/daily/2026-09-12-quicksort-partition</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-12-quicksort-partition</guid>
+      <pubDate>Sat, 12 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>C. A. R. Hoare · The Computer Journal 1962 · 30 min. Quicksort asks how one value can turn a disorderly table into two smaller sorting problems without copying everything into a merge buffer. Read it to see how two pointers scan inward around a chosen bound, exchange values found on the wrong sides, and leave independent segments whose balance determines the amount of work still ahead.</description>
+    </item>
+    <item>
+      <title>Time, Clocks, and the Ordering of Events in a Distributed System</title>
+      <link>https://fanout.sh/daily/2026-09-11-lamport-logical-clocks</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-11-lamport-logical-clocks</guid>
+      <pubDate>Fri, 11 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Leslie Lamport · Communications of the ACM 1978 · 30 min. Lamport asks how separated computers can agree on a useful event order when no perfect global clock tells them what happened first. Read it to see how local event order and delivered messages define causality, how message-carried logical counters preserve that order, and why the resulting timestamps still cannot prove that two events influenced one another.</description>
+    </item>
+    <item>
+      <title>You Only Look Once: Unified, Real-Time Object Detection</title>
+      <link>https://fanout.sh/daily/2026-09-10-yolo-unified-object-detection</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-10-yolo-unified-object-detection</guid>
+      <pubDate>Thu, 10 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Joseph Redmon, Santosh Divvala, Ross Girshick, and Ali Farhadi · CVPR 2016 · 30 min. YOLO asks how a computer can locate and name every object in an image quickly enough for live video. Read it to see how one full-image network fills a fixed responsibility grid with boxes and class scores, why that unified prediction runs in real time, and where coarse spatial capacity trades localization accuracy for speed.</description>
+    </item>
+    <item>
+      <title>The rsync algorithm</title>
+      <link>https://fanout.sh/daily/2026-09-09-rsync-rolling-checksum</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-09-rsync-rolling-checksum</guid>
+      <pubDate>Wed, 09 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Andrew Tridgell and Paul Mackerras · ANU Technical Report TR-CS-96-05, 1996 · 30 min. The rsync algorithm asks how one machine can update a remote file without sending the whole file or first collecting both versions. Read it to see how destination block signatures, a rolling checksum at every source offset, strong confirmation, and a stream of block references plus literal bytes preserve reuse even after an edit shifts every later boundary.</description>
+    </item>
+    <item>
+      <title>Organization and Maintenance of Large Ordered Indices</title>
+      <link>https://fanout.sh/daily/2026-09-08-btree-ordered-index</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-08-btree-ordered-index</guid>
+      <pubDate>Tue, 08 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Rudolf Bayer and Edward M. McCreight · Acta Informatica 1972 · 30 min. The original B-tree paper asks how an index can keep searches and updates cheap when it is too large for memory and every disk access is expensive. Read it to see why one page should hold many sorted separators, how a full page splits around its median, and how equal leaf depth keeps a changing index shallow.</description>
+    </item>
+    <item>
+      <title>Learning representations by back-propagating errors</title>
+      <link>https://fanout.sh/daily/2026-09-07-backpropagation-hidden-representations</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-07-backpropagation-hidden-representations</guid>
+      <pubDate>Mon, 07 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>David E. Rumelhart, Geoffrey E. Hinton, and Ronald J. Williams · Nature 1986 · 30 min. Back-propagation asks how a hidden layer can learn useful features when a teacher specifies only the desired output. Read it to see how a forward pass stores activations, an output mismatch travels backward as chained derivatives, and each connection receives a local weight update that can organize hidden units around the task&apos;s structure.</description>
+    </item>
+    <item>
+      <title>New Directions in Cryptography</title>
+      <link>https://fanout.sh/daily/2026-09-06-diffie-hellman-key-agreement</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-06-diffie-hellman-key-agreement</guid>
+      <pubDate>Sun, 06 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Whitfield Diffie and Martin E. Hellman · IEEE Transactions on Information Theory 1976 · 30 min. Diffie and Hellman ask how two people who have never exchanged a secret can agree on one over a public network. Read it to see how private exponents and exchanged modular powers meet at the same shared value, why reversing a public value is meant to be difficult, and why authentication must still stop an active intermediary from substituting keys.</description>
+    </item>
+    <item>
+      <title>Consistent Hashing and Random Trees: Distributed Caching Protocols for Relieving Hot Spots on the World Wide Web</title>
+      <link>https://fanout.sh/daily/2026-09-05-consistent-hashing-random-trees</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-05-consistent-hashing-random-trees</guid>
+      <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>David Karger, Eric Lehman, Tom Leighton, Matthew Levine, Daniel Lewin, and Rina Panigrahy · STOC 1997 · 35 min. Consistent Hashing and Random Trees asks how a distributed cache can absorb membership changes and flash crowds without throwing away nearly every placement decision. Read it to see how stable item and cache positions localize reassignment, how monotonicity limits movement, and how a different random cache tree for each page spreads hot demand.</description>
+    </item>
+    <item>
+      <title>Ethernet: Distributed Packet Switching for Local Computer Networks</title>
+      <link>https://fanout.sh/daily/2026-09-04-ethernet-distributed-packet-switching</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-04-ethernet-distributed-packet-switching</guid>
+      <pubDate>Fri, 04 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Robert M. Metcalfe and David R. Boggs · Communications of the ACM 1976 · 30 min. Ethernet asks how many computers can share one inexpensive local medium without a central traffic controller. Read it to see how a passive broadcast cable, carrier sensing, collision detection, brief jamming, and adaptive random backoff turn simultaneous packet attempts into distributed coordination.</description>
+    </item>
+    <item>
+      <title>Language Models are Few-Shot Learners</title>
+      <link>https://fanout.sh/daily/2026-09-03-gpt3-few-shot-learners</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-03-gpt3-few-shot-learners</guid>
+      <pubDate>Thu, 03 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Brown et al. · NeurIPS 2020 · 35 min. GPT-3 asks whether one pretrained language model can take on a new task from text alone, without changing its weights. Read it to see how an instruction and zero, one, or several worked examples turn the prompt into a temporary task specification, why larger models used that context more effectively on many benchmarks, and where the result remained uneven or contaminated.</description>
+    </item>
+    <item>
+      <title>A Universal Algorithm for Sequential Data Compression</title>
+      <link>https://fanout.sh/daily/2026-09-02-lz77-sequential-compression</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-02-lz77-sequential-compression</guid>
+      <pubDate>Wed, 02 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Jacob Ziv and Abraham Lempel · IEEE Transactions on Information Theory 1977 · 30 min. LZ77 asks how to compress a stream exactly when its source statistics are unknown. Read it to see how a bounded window turns recent output into a moving dictionary, replaces the longest reachable repeat with a backward pointer and length, and keeps encoder and decoder synchronized with one following literal.</description>
+    </item>
+    <item>
+      <title>ImageNet Classification with Deep Convolutional Neural Networks</title>
+      <link>https://fanout.sh/daily/2026-09-01-alexnet-image-classification</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-09-01-alexnet-image-classification</guid>
+      <pubDate>Tue, 01 Sep 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Alex Krizhevsky, Ilya Sutskever, and Geoffrey E. Hinton · NeurIPS 2012 · 35 min. AlexNet asks how a deep image classifier can learn from 1.2 million examples without taking impossibly long to optimize or simply memorizing the training set. Read it to see how ReLU activations, a selectively connected two-GPU network, image augmentation, and dropout made an eight-layer convolutional model practical at ImageNet scale.</description>
+    </item>
+    <item>
+      <title>Brewer’s Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services</title>
+      <link>https://fanout.sh/daily/2026-08-31-cap-theorem</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-31-cap-theorem</guid>
+      <pubDate>Mon, 31 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Seth Gilbert and Nancy Lynch · ACM SIGACT News 2002 · 30 min. The CAP theorem asks what a replicated service can promise when the network splits. Read it to see how one completed write and one later isolated read force an exact choice: answer from incomplete knowledge or wait for communication that may never return.</description>
+    </item>
+    <item>
+      <title>A Note on Two Problems in Connexion with Graphs</title>
+      <link>https://fanout.sh/daily/2026-08-30-dijkstra-shortest-path</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-30-dijkstra-shortest-path</guid>
+      <pubDate>Sun, 30 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>E. W. Dijkstra · Numerische Mathematik 1959 · 30 min. Dijkstra&apos;s three-page paper asks how to find the shortest route through a weighted network without listing every possible path. Read it to see how a growing settled frontier, one tentative distance per reachable node, and a smallest-first choice turn a global route question into a sequence of local commitments.</description>
+    </item>
+    <item>
+      <title>Generative Adversarial Nets</title>
+      <link>https://fanout.sh/daily/2026-08-29-generative-adversarial-nets</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-29-generative-adversarial-nets</guid>
+      <pubDate>Sat, 29 Aug 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Goodfellow, Pouget-Abadie, Mirza, Xu, Warde-Farley, Ozair, Courville, and Bengio · NeurIPS 2014 · 35 min. Generative Adversarial Nets asks how a model can learn to create convincing new samples without an explicit likelihood or a Markov chain. Read it to see how a generator and discriminator turn that problem into a two-player game, why the ideal judge eventually answers one half, and why the elegant equilibrium does not make practical training automatically stable.</description>
+    </item>
+    <item>
+      <title>Kafka: a Distributed Messaging System for Log Processing</title>
+      <link>https://fanout.sh/daily/2026-08-28-kafka-distributed-log</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-28-kafka-distributed-log</guid>
+      <pubDate>Fri, 28 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Kreps, Narkhede, and Rao · NetDB 2011 · 35 min. Kafka turns a queue into a retained distributed log. Append-only partitions hold ordered records while independent consumers pull from their own offsets, replay after failure, and advance at different speeds.</description>
+    </item>
+    <item>
+      <title>Bringing the Web up to Speed with WebAssembly</title>
+      <link>https://fanout.sh/daily/2026-08-27-webassembly-safe-portable-bytecode</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-27-webassembly-safe-portable-bytecode</guid>
+      <pubDate>Thu, 27 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Haas, Rossberg, Schuff, Titzer, Holman, Gohman, Wagner, Zakai, and Bastien · PLDI 2017 · 35 min. WebAssembly asks how a browser can run low-level code from an untrusted download without tying that code to one language, CPU, or browser. Read it to see how a typed stack format, structured branches, bounded linear memory, and streaming validation make compact portable code safe enough to compile near native speed.</description>
+    </item>
+    <item>
+      <title>XGBoost: A Scalable Tree Boosting System</title>
+      <link>https://fanout.sh/daily/2026-08-26-xgboost-scalable-tree-boosting</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-26-xgboost-scalable-tree-boosting</guid>
+      <pubDate>Wed, 26 Aug 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Chen and Guestrin · KDD 2016 · 35 min. XGBoost asks how many small decision trees can correct one another without growing into an uncontrolled forest, and how that learning rule can survive sparse, billion-row data. Read it to connect additive leaf scores and regularized split gain to weighted candidate sketches, learned missing-value directions, cache-aware column blocks, and the system work behind a practical tabular-ML classic.</description>
+    </item>
+    <item>
+      <title>Segment Anything</title>
+      <link>https://fanout.sh/daily/2026-08-25-segment-anything</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-25-segment-anything</guid>
+      <pubDate>Tue, 25 Aug 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Kirillov et al. · ICCV 2023 · 35 min. Segment Anything asks whether one vision model can turn a point, box, or rough mask into the pixels of a reasonable object, even on unfamiliar images. Read it to see how one reusable image embedding, a lightweight prompt decoder, ambiguity-aware mask candidates, and a model-in-the-loop data engine make segmentation feel like an interface rather than a fixed label set.</description>
+    </item>
+    <item>
+      <title>Large-scale cluster management at Google with Borg</title>
+      <link>https://fanout.sh/daily/2026-08-24-google-borg-cluster-management</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-24-google-borg-cluster-management</guid>
+      <pubDate>Mon, 24 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Verma et al. · EuroSys 2015 · 40 min. Borg asks how one fleet can run latency-sensitive services and opportunistic batch work without wasting the space between their peaks. Read it to see how cells, jobs, tasks, priorities, limits, reservations, placement scoring, and a continuously repaired control plane turn heterogeneous machines into shared infrastructure.</description>
+    </item>
+    <item>
+      <title>Learning Transferable Visual Models From Natural Language Supervision</title>
+      <link>https://fanout.sh/daily/2026-08-23-clip-natural-language-supervision</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-23-clip-natural-language-supervision</guid>
+      <pubDate>Sun, 23 Aug 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Radford et al. · ICML 2021 · 35 min. CLIP asks how an image model can recognize categories described in words without training a new classifier for every task. Read it to see how two encoders turn a batch into an all-pairs similarity matrix, how the true image-text pairs teach a shared embedding space, and why prompts make zero-shot recognition flexible but not automatically reliable.</description>
+    </item>
+    <item>
+      <title>Development of the Domain Name System</title>
+      <link>https://fanout.sh/daily/2026-08-22-development-domain-name-system</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-22-development-domain-name-system</guid>
+      <pubDate>Sat, 22 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Mockapetris and Dunlap · SIGCOMM 1988 · 30 min. This paper asks how the Internet can keep one usable naming system without making every machine download one global host file. Read it to see how DNS cuts a name tree into delegated zones, follows referrals toward the server responsible for one branch, and uses time-limited caching to make repeated lookups local.</description>
+    </item>
+    <item>
+      <title>End-to-End Arguments in System Design</title>
+      <link>https://fanout.sh/daily/2026-08-21-end-to-end-arguments</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-21-end-to-end-arguments</guid>
+      <pubDate>Fri, 21 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Saltzer, Reed, and Clark · ACM TOCS, 1984 · 30 min. This paper asks where a system should place reliability, delivery, security, and duplicate-suppression guarantees. Read it to see why a lower layer can make failures rarer yet still cannot certify the application result, and why the final check belongs at the endpoints that understand what success means.</description>
+    </item>
+    <item>
+      <title>Toolformer: Language Models Can Teach Themselves to Use Tools</title>
+      <link>https://fanout.sh/daily/2026-08-20-toolformer</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-20-toolformer</guid>
+      <pubDate>Thu, 20 Aug 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Schick et al. · NeurIPS 2023 · 40 min. Toolformer asks how a language model can learn when and how to call external tools without a large hand-labeled tool-use dataset. Read it to see how the model proposes calls inside ordinary text, executes them, and keeps only those whose returned result lowers continuation loss enough to become a training example.</description>
+    </item>
+    <item>
+      <title>An Industrial-Strength Audio Search Algorithm</title>
+      <link>https://fanout.sh/daily/2026-08-19-shazam-audio-search</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-19-shazam-audio-search</guid>
+      <pubDate>Wed, 19 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Avery Li-Chun Wang · ISMIR 2003 · 30 min. This is the paper behind Shazam: how a phone can name a song from ten noisy seconds in a pub. Read it to see how a track is reduced to a constellation of spectrogram peaks, how pairing peaks into 32-bit hashes makes lookup about ten thousand times faster, and why a match is declared only when the surviving hashes agree on one time offset.</description>
+    </item>
+    <item>
+      <title>Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</title>
+      <link>https://fanout.sh/daily/2026-08-18-chain-of-thought</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-18-chain-of-thought</guid>
+      <pubDate>Tue, 18 Aug 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Wei, Wang, Schuurmans, Bosma, Ichter, Xia, Chi, Le, and Zhou · NeurIPS 2022 · 30 min. This paper asks why showing a language model a few worked examples of step-by-step reasoning unlocks problems that direct prompting cannot touch. Read it to see how eight hand-written exemplars lifted PaLM 540B from 17.9% to 56.9% on grade-school math, why meaningless filler tokens explain none of the gain, and why the same prompt actively hurts smaller models.</description>
+    </item>
+    <item>
+      <title>Space/Time Trade-offs in Hash Coding with Allowable Errors</title>
+      <link>https://fanout.sh/daily/2026-08-17-bloom-filter</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-17-bloom-filter</guid>
+      <pubDate>Mon, 17 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Burton H. Bloom · Communications of the ACM, 1970 · 30 min. Bloom&apos;s paper asks how a compact in-memory screen can reject missing keys before an expensive exact lookup. Read it to see why one zero bit proves absence, why all-one evidence means only possibly present, and how shared hash positions trade memory for a controlled false-positive path.</description>
+    </item>
+    <item>
+      <title>Tor: The Second-Generation Onion Router</title>
+      <link>https://fanout.sh/daily/2026-08-16-tor-onion-router</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-16-tor-onion-router</guid>
+      <pubDate>Sun, 16 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Dingledine, Mathewson, and Syverson · USENIX Security 2004 · 35 min. This paper asks how a browser can cross several volunteer relays without handing any one relay the complete route. Read it to see how the client extends a circuit one hop at a time, wraps each fixed-size cell in a different session key for every relay, and why those layers still cannot defeat an observer who can correlate traffic at both ends.</description>
+    </item>
+    <item>
+      <title>Mastering the game of Go with deep neural networks and tree search</title>
+      <link>https://fanout.sh/daily/2026-08-15-alphago-neural-tree-search</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-15-alphago-neural-tree-search</guid>
+      <pubDate>Sat, 15 Aug 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Silver et al. · Nature 2016 · 35 min. This paper asks how a computer can choose a strong Go move when the game tree is far too large to enumerate. Read it to see how a learned policy concentrates search on promising moves, how a value network estimates who is ahead before a game ends, and how Monte Carlo tree search turns those estimates into professional-level play under a large compute budget.</description>
+    </item>
+    <item>
+      <title>Bitcoin: A Peer-to-Peer Electronic Cash System</title>
+      <link>https://fanout.sh/daily/2026-08-14-bitcoin-proof-of-work</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-14-bitcoin-proof-of-work</guid>
+      <pubDate>Fri, 14 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Satoshi Nakamoto · Bitcoin white paper, 2008 · 35 min. This paper asks how two people can agree that a digital payment happened first without asking a central mint to keep the ledger. Read it to see why signatures prove ownership but not uniqueness, how hash-linked proof of work makes one public history costly to rewrite, and why every confirmation still depends on an honest-compute majority assumption.</description>
+    </item>
+    <item>
+      <title>Congestion Avoidance and Control</title>
+      <link>https://fanout.sh/daily/2026-08-13-congestion-avoidance-control</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-13-congestion-avoidance-control</guid>
+      <pubDate>Thu, 13 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Van Jacobson · SIGCOMM 1988 · 35 min. This paper asks how TCP can keep a busy network useful when delay, packet loss, and retransmission tempt every sender to add even more traffic. Read it to see how acknowledgements become a clock, how slow start fills an empty path without a full-window burst, and why a congestion signal should make the sender retreat quickly before probing capacity again.</description>
+    </item>
+    <item>
+      <title>Stealing Reasoning Traces from Proprietary LLM APIs</title>
+      <link>https://fanout.sh/daily/2026-08-12-stolen-reasoning-traces</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-12-stolen-reasoning-traces</guid>
+      <pubDate>Wed, 12 Aug 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Panfilov, Schmotz, Shumailov, Beurer-Kellner, Schaeffer, Prabhu, Geiping, and Andriushchenko · arXiv, 2026 · 35 min. This paper asks what happens when an API gives encrypted reasoning state to the client and later accepts that opaque state again. Read it to see why confidentiality and integrity do not automatically bind a reasoning block to one user, session, or model, how the authors tested compatible weaker decoders, and what the resulting privacy evidence means after responsible disclosure.</description>
+    </item>
+    <item>
+      <title>The PageRank Citation Ranking: Bringing Order to the Web</title>
+      <link>https://fanout.sh/daily/2026-08-11-pagerank</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-11-pagerank</guid>
+      <pubDate>Tue, 11 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Page, Brin, Motwani, and Winograd · Stanford InfoLab, 1999 · 35 min. PageRank asks how a search engine can estimate which web pages matter before it even sees a query. Read it to see how every page divides its authority among outgoing links, how repeated link-weight transfer settles into a global ranking, and why teleportation, incomplete crawls, and manipulation keep that score from being a synonym for truth.</description>
+    </item>
+    <item>
+      <title>ReAct: Synergizing Reasoning and Acting in Language Models</title>
+      <link>https://fanout.sh/daily/2026-08-10-react-reasoning-acting</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-10-react-reasoning-acting</guid>
+      <pubDate>Mon, 10 Aug 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Yao, Zhao, Yu, Du, Shafran, Narasimhan, and Cao · ICLR 2023 · 35 min. ReAct gives language-model agents a simple working rhythm: reason about the current situation, take a bounded action, observe what the environment returns, and revise the next move. Read it for the durable idea behind many tool-using agent harnesses and for an honest look at why better grounding can still fail when tools return weak evidence or the agent gets stuck in a loop.</description>
+    </item>
+    <item>
+      <title>Ring Attention with Blockwise Transformers for Near-Infinite Context</title>
+      <link>https://fanout.sh/daily/2026-08-09-ring-attention</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-09-ring-attention</guid>
+      <pubDate>Sun, 09 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Liu, Zaharia, and Abbeel · ICLR 2024 · 50 min. Ring Attention asks how exact Transformer context can grow across devices without gathering the whole sequence on each one. Read it to see how stationary query blocks, circulating key-value blocks, and compute-transfer overlap turn a device ring into aggregate context capacity while keeping per-host activation memory independent of total sequence length.</description>
+    </item>
+    <item>
+      <title>FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning</title>
+      <link>https://fanout.sh/daily/2026-08-08-flashattention-2</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-08-flashattention-2</guid>
+      <pubDate>Sat, 08 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Inference</category>
+      <description>Tri Dao · ICLR 2024 · 50 min. FlashAttention-2 asks why an exact, I/O-aware attention kernel can still leave much of an A100 idle. Read it to see how reducing non-matmul work, parallelizing along sequence tiles, and giving each warp disjoint query and output rows improves GPU utilization without changing the attention result.</description>
+    </item>
+    <item>
+      <title>Mamba: Linear-Time Sequence Modeling with Selective State Spaces</title>
+      <link>https://fanout.sh/daily/2026-08-07-mamba-selective-state-spaces</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-07-mamba-selective-state-spaces</guid>
+      <pubDate>Fri, 07 Aug 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Gu and Dao · COLM 2024 · 55 min. Mamba asks how a recurrent model with a fixed-size state can decide what information deserves to survive. Read it to see how input-dependent state-space parameters create content-aware persistence and reset, and how a fused parallel scan makes the resulting time-varying recurrence practical on GPUs.</description>
+    </item>
+    <item>
+      <title>Root Mean Square Layer Normalization</title>
+      <link>https://fanout.sh/daily/2026-08-06-rmsnorm</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-06-rmsnorm</guid>
+      <pubDate>Thu, 06 Aug 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Zhang and Sennrich · NeurIPS 2019 · 35 min. RMSNorm asks whether LayerNorm needs to subtract the mean as well as control activation scale. Read it to see how dividing by a vector&apos;s root mean square preserves global rescaling invariance with less normalization work, while deliberately giving up re-centering invariance.</description>
+    </item>
+    <item>
+      <title>ZeRO: Memory Optimizations Toward Training Trillion Parameter Models</title>
+      <link>https://fanout.sh/daily/2026-08-05-zero-memory-optimization</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-05-zero-memory-optimization</guid>
+      <pubDate>Wed, 05 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Rajbhandari et al. · SC 2020 · 50 min. ZeRO asks why adding data-parallel workers does not make a model easier to fit when every worker keeps the same training state. Read it to see how partitioning optimizer states, gradients, and parameters turns aggregate cluster memory into usable model capacity while preserving the data-parallel computation.</description>
+    </item>
+    <item>
+      <title>Orca: A Distributed Serving System for Transformer-Based Generative Models</title>
+      <link>https://fanout.sh/daily/2026-08-04-orca-continuous-batching</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-04-orca-continuous-batching</guid>
+      <pubDate>Tue, 04 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Inference</category>
+      <description>Yu et al. · OSDI 2022 · 45 min. Orca moves LLM serving from fixed request batches to iteration-level scheduling. Read it to see how a scheduler can reconsider the active batch after every generated token, and how selective batching preserves efficient shared GPU work even when requests have different sequence lengths and lifetimes.</description>
+    </item>
+    <item>
+      <title>GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints</title>
+      <link>https://fanout.sh/daily/2026-08-03-grouped-query-attention</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-03-grouped-query-attention</guid>
+      <pubDate>Mon, 03 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Inference</category>
+      <description>Ainslie et al. · EMNLP 2023 · 35 min. Grouped-query attention finds a practical middle ground between multi-head attention&apos;s quality and multi-query attention&apos;s decoding speed. Read it to see how sharing key-value heads within groups shrinks the KV cache, and how an existing multi-head checkpoint can be converted with only a small amount of additional pretraining.</description>
+    </item>
+    <item>
+      <title>DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models</title>
+      <link>https://fanout.sh/daily/2026-08-02-deepseekmath-grpo</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-02-deepseekmath-grpo</guid>
+      <pubDate>Sun, 02 Aug 2026 12:00:00 GMT</pubDate>
+      <category>ML Math</category>
+      <description>Shao et al. · arXiv 2024 · 55 min. DeepSeekMath shows how targeted data and reinforcement learning can turn a compact open model into a strong mathematical reasoner. Read it for the data-selection pipeline behind its 120 billion math tokens and for GRPO, a PPO variant that removes the separate critic model by learning from relative rewards within groups of sampled answers.</description>
+    </item>
+    <item>
+      <title>Proximal Policy Optimization Algorithms</title>
+      <link>https://fanout.sh/daily/2026-08-01-proximal-policy-optimization</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-08-01-proximal-policy-optimization</guid>
+      <pubDate>Sat, 01 Aug 2026 12:00:00 GMT</pubDate>
+      <category>ML Math</category>
+      <description>Schulman et al. · arXiv 2017 · 55 min. Proximal Policy Optimization shows how to reuse on-policy experience for several minibatch updates without letting the policy move too far in one step. Read it to understand the clipped surrogate objective behind a practical reinforcement-learning algorithm that later became central to RLHF pipelines.</description>
+    </item>
+    <item>
+      <title>Training Language Models to Follow Instructions with Human Feedback</title>
+      <link>https://fanout.sh/daily/2026-07-31-instructgpt</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-31-instructgpt</guid>
+      <pubDate>Fri, 31 Jul 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Ouyang et al. · NeurIPS 2022 · 45 min. InstructGPT shows why a larger language model is not automatically better at following a user&apos;s intent. Read it to see how demonstrations, preference rankings, a learned reward model, and reinforcement learning turn human judgments into a practical post-training pipeline for more helpful instruction following.</description>
+    </item>
+    <item>
+      <title>Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity</title>
+      <link>https://fanout.sh/daily/2026-07-30-switch-transformers</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-30-switch-transformers</guid>
+      <pubDate>Thu, 30 Jul 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Fedus, Zoph, and Shazeer · JMLR 2022 · 50 min. Switch Transformers shows how to grow a model&apos;s capacity without activating every parameter for every token. Read it to see how top-1 expert routing, load balancing, and expert capacity turn mixture-of-experts into a simpler scaling recipe while keeping per-token computation roughly constant.</description>
+    </item>
+    <item>
+      <title>Distilling the Knowledge in a Neural Network</title>
+      <link>https://fanout.sh/daily/2026-07-29-knowledge-distillation</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-29-knowledge-distillation</guid>
+      <pubDate>Wed, 29 Jul 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Hinton, Vinyals, and Dean · NIPS 2014 Deep Learning Workshop · 30 min. Knowledge distillation turns an expensive ensemble or large teacher into a smaller, deployable student. Read it to see why the full pattern of class probabilities carries more useful structure than hard labels alone, and how temperature-scaled soft targets transfer that structure during training.</description>
+    </item>
+    <item>
+      <title>The Tail at Scale</title>
+      <link>https://fanout.sh/daily/2026-07-28-tail-at-scale</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-28-tail-at-scale</guid>
+      <pubDate>Tue, 28 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Dean and Barroso · Communications of the ACM 2013 · 30 min. The Tail at Scale explains why rare slowdowns become routine user-visible delays when one request fans out across many machines. Read it for a practical systems lesson: large services need techniques that tolerate latency variability, not only faster average components.</description>
+    </item>
+    <item>
+      <title>Fast Inference from Transformers via Speculative Decoding</title>
+      <link>https://fanout.sh/daily/2026-07-27-speculative-decoding</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-27-speculative-decoding</guid>
+      <pubDate>Mon, 27 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Inference</category>
+      <description>Leviathan, Kalman, and Matias · ICML 2023 · 40 min. Speculative decoding makes autoregressive generation faster without changing the target model&apos;s output distribution. Read it to see how a small draft model, parallel verification, and a corrected sampling rule turn extra compute into lower decoding latency without retraining the models.</description>
+    </item>
+    <item>
+      <title>Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</title>
+      <link>https://fanout.sh/daily/2026-07-26-retrieval-augmented-generation</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-26-retrieval-augmented-generation</guid>
+      <pubDate>Sun, 26 Jul 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Lewis et al. · NeurIPS 2020 · 40 min. Retrieval-Augmented Generation gives a language model an explicit, updateable memory outside its parameters. Read it to see how a neural retriever and a sequence generator work together, and why grounding generation in retrieved evidence can improve factual, knowledge-intensive answers.</description>
+    </item>
+    <item>
+      <title>Auto-Encoding Variational Bayes</title>
+      <link>https://fanout.sh/daily/2026-07-24-auto-encoding-variational-bayes</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-24-auto-encoding-variational-bayes</guid>
+      <pubDate>Fri, 24 Jul 2026 12:00:00 GMT</pubDate>
+      <category>ML Math</category>
+      <description>Kingma and Welling · ICLR 2014 · 55 min. Auto-Encoding Variational Bayes makes latent-variable models trainable with ordinary backpropagation. Read it to see how the evidence lower bound, amortized inference, and the reparameterization trick turn an intractable posterior problem into a practical stochastic-optimization recipe.</description>
+    </item>
+    <item>
+      <title>Dropout: A Simple Way to Prevent Neural Networks from Overfitting</title>
+      <link>https://fanout.sh/daily/2026-07-23-dropout</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-23-dropout</guid>
+      <pubDate>Thu, 23 Jul 2026 12:00:00 GMT</pubDate>
+      <category>ML Math</category>
+      <description>Srivastava et al. · JMLR 2014 · 35 min. Dropout is a compact lesson in turning randomness into regularization. Read it to see how masking neurons during training discourages brittle co-adaptation and approximates an ensemble without paying the cost of running many networks at inference time.</description>
+    </item>
+    <item>
+      <title>Direct Preference Optimization: Your Language Model is Secretly a Reward Model</title>
+      <link>https://fanout.sh/daily/2026-07-22-direct-preference-optimization</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-22-direct-preference-optimization</guid>
+      <pubDate>Wed, 22 Jul 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Rafailov et al. · NeurIPS 2023 · 40 min. DPO turns language-model alignment from a multi-stage reinforcement-learning pipeline into a direct preference-learning objective. Read it to see how one mathematical reparameterization can remove the separate reward model and make preference tuning much simpler to train.</description>
+    </item>
+    <item>
+      <title>Efficient Memory Management for Large Language Model Serving with PagedAttention</title>
+      <link>https://fanout.sh/daily/2026-07-21-pagedattention</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-21-pagedattention</guid>
+      <pubDate>Tue, 21 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Inference</category>
+      <description>Woosuk Kwon et al. · SOSP 2023 · 16 min. An LLM server can run out of room for requests while most of its KV cache memory holds nothing. Follow the three kinds of reservation waste, the block table that places 16-token blocks anywhere on the GPU, copy-on-write sharing, and the batch-size evidence behind vLLM&apos;s 2 to 4 times throughput.</description>
+    </item>
+    <item>
+      <title>From Tensor Buffer to Distributed Memory Hierarchy</title>
+      <link>https://fanout.sh/daily/2026-07-20-kv-cache-management-survey</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-20-kv-cache-management-survey</guid>
+      <pubDate>Mon, 20 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Inference</category>
+      <description>Li, Wang, and Chen · arXiv 2026 · 50 min. This survey treats the KV cache as a distributed memory-management problem, not just a temporary tensor. It is a useful July 20 pick for understanding why LLM serving depends on locality, lifetime, ownership, substrate, and the tradeoffs behind paged, shared, disaggregated, and tiered cache designs.</description>
+    </item>
+    <item>
+      <title>Attention Is All You Need</title>
+      <link>https://fanout.sh/daily/2026-07-19-attention-is-all-you-need</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-19-attention-is-all-you-need</guid>
+      <pubDate>Sun, 19 Jul 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Vaswani et al. · NeurIPS 2017 · 45 min. The Transformer paper replaced recurrence with attention and made sequence modeling easier to parallelize. Read it for the architectural move that turned token-to-token routing into the core primitive behind modern language models.</description>
+    </item>
+    <item>
+      <title>FlashAttention</title>
+      <link>https://fanout.sh/daily/2026-07-18-flashattention</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-18-flashattention</guid>
+      <pubDate>Sat, 18 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Inference</category>
+      <description>Dao et al. · NeurIPS 2022 · 55 min. FlashAttention keeps exact attention but changes the memory traffic pattern. It is a clean example of why practical model speed often comes from respecting hardware limits rather than changing the math.</description>
+    </item>
+    <item>
+      <title>Scaling Laws for Neural Language Models</title>
+      <link>https://fanout.sh/daily/2026-07-17-scaling-laws</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-17-scaling-laws</guid>
+      <pubDate>Fri, 17 Jul 2026 12:00:00 GMT</pubDate>
+      <category>ML Math</category>
+      <description>Kaplan et al. · arXiv 2020 · 50 min. The scaling-laws paper turns model size, data, and compute into a quantitative tradeoff. It is useful when you want to reason about progress curves instead of treating bigger training runs as folklore.</description>
+    </item>
+    <item>
+      <title>Training Compute-Optimal Large Language Models</title>
+      <link>https://fanout.sh/daily/2026-07-16-chinchilla</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-16-chinchilla</guid>
+      <pubDate>Thu, 16 Jul 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Hoffmann et al. · arXiv 2022 · 45 min. Chinchilla is the scaling paper that made data budget feel as important as parameter count. It is a good daily pick for learning why a smaller model trained on more tokens can beat a larger undertrained one.</description>
+    </item>
+    <item>
+      <title>Dynamo: Amazon&apos;s Highly Available Key-value Store</title>
+      <link>https://fanout.sh/daily/2026-07-15-dynamo</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-15-dynamo</guid>
+      <pubDate>Wed, 15 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>DeCandia et al. · SOSP 2007 · 60 min. Dynamo is the classic availability-first storage paper. It is worth reading for how partitioning, quorums, hinted handoff, vector clocks, and application-level conflict resolution combine into a product-shaped system.</description>
+    </item>
+    <item>
+      <title>MapReduce</title>
+      <link>https://fanout.sh/daily/2026-07-14-mapreduce</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-14-mapreduce</guid>
+      <pubDate>Tue, 14 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Dean and Ghemawat · OSDI 2004 · 40 min. MapReduce shows how a constrained programming model can hide distribution, retries, shuffling, and locality. Read it for the system-design lesson that an API can be an operational strategy.</description>
+    </item>
+    <item>
+      <title>In Search of an Understandable Consensus Algorithm</title>
+      <link>https://fanout.sh/daily/2026-07-13-raft</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-13-raft</guid>
+      <pubDate>Mon, 13 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Ongaro and Ousterhout · USENIX ATC 2014 · 45 min. Raft is the consensus paper to read before discussing leader election, replicated logs, or metadata coordination. It is intentionally structured for understandability, which makes it a strong beginner systems paper.</description>
+    </item>
+    <item>
+      <title>LoRA: Low-Rank Adaptation of Large Language Models</title>
+      <link>https://fanout.sh/daily/2026-07-12-lora</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-12-lora</guid>
+      <pubDate>Sun, 12 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Inference</category>
+      <description>Hu et al. · ICLR 2022 · 35 min. LoRA is the cleanest first paper for understanding efficient model adaptation. It turns fine-tuning into small low-rank update matrices, which connects directly to Fanout&apos;s model training and serving material.</description>
+    </item>
+    <item>
+      <title>BERT: Pre-training of Deep Bidirectional Transformers</title>
+      <link>https://fanout.sh/daily/2026-07-11-bert</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-11-bert</guid>
+      <pubDate>Sat, 11 Jul 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Devlin et al. · NAACL 2019 · 45 min. BERT is the pretrain-then-fine-tune paper that made bidirectional Transformer encoders the default for many language understanding tasks. It is useful for separating encoder intuition from decoder-only LLM intuition.</description>
+    </item>
+    <item>
+      <title>Batch Normalization</title>
+      <link>https://fanout.sh/daily/2026-07-10-batch-normalization</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-10-batch-normalization</guid>
+      <pubDate>Fri, 10 Jul 2026 12:00:00 GMT</pubDate>
+      <category>ML Math</category>
+      <description>Ioffe and Szegedy · ICML 2015 · 35 min. BatchNorm is a compact paper for learning how activation statistics, optimization stability, and architecture design interact. It is a good bridge between practical deep learning and the math of normalization.</description>
+    </item>
+    <item>
+      <title>Deep Residual Learning for Image Recognition</title>
+      <link>https://fanout.sh/daily/2026-07-09-resnet</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-09-resnet</guid>
+      <pubDate>Thu, 09 Jul 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>He et al. · CVPR 2016 · 35 min. ResNet is the skip-connection paper that makes depth trainable in practice. It is beginner-friendly because the core idea is simple: learn a residual change instead of relearning the whole representation.</description>
+    </item>
+    <item>
+      <title>Efficient Estimation of Word Representations in Vector Space</title>
+      <link>https://fanout.sh/daily/2026-07-08-word2vec</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-08-word2vec</guid>
+      <pubDate>Wed, 08 Jul 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Mikolov et al. · ICLR Workshop 2013 · 30 min. The Word2Vec paper is still one of the best first reads for representation learning. It shows how simple prediction tasks can turn words into vectors with useful geometric structure.</description>
+    </item>
+    <item>
+      <title>Sequence to Sequence Learning with Neural Networks</title>
+      <link>https://fanout.sh/daily/2026-07-07-sequence-to-sequence</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-07-sequence-to-sequence</guid>
+      <pubDate>Tue, 07 Jul 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Sutskever et al. · NeurIPS 2014 · 35 min. Seq2Seq is the clean predecessor to attention and Transformers. It is a good beginner paper because the encoder-decoder contract is easy to visualize and still appears in translation, summarization, and agents.</description>
+    </item>
+    <item>
+      <title>Adam: A Method for Stochastic Optimization</title>
+      <link>https://fanout.sh/daily/2026-07-06-adam</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-06-adam</guid>
+      <pubDate>Mon, 06 Jul 2026 12:00:00 GMT</pubDate>
+      <category>ML Math</category>
+      <description>Kingma and Ba · ICLR 2015 · 30 min. Adam is the optimizer paper learners meet constantly in code before they understand it. The first pass is approachable: it combines momentum-like gradient averages with squared-gradient adaptation.</description>
+    </item>
+    <item>
+      <title>Dremel: Interactive Analysis of Web-Scale Datasets</title>
+      <link>https://fanout.sh/daily/2026-07-05-dremel</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-05-dremel</guid>
+      <pubDate>Sun, 05 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Melnik et al. · VLDB 2010 · 45 min. Dremel is a strong systems pick for understanding columnar analytics, nested data, and query serving at scale. It connects directly to Fanout&apos;s storage and analytics material without becoming a database-product tour.</description>
+    </item>
+    <item>
+      <title>Bigtable: A Distributed Storage System for Structured Data</title>
+      <link>https://fanout.sh/daily/2026-07-04-bigtable</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-04-bigtable</guid>
+      <pubDate>Sat, 04 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Chang et al. · OSDI 2006 · 45 min. Bigtable is the beginner-friendly bridge from simple key-value stores to distributed sorted maps. It teaches rows, tablets, locality, metadata, and why storage shape follows access patterns.</description>
+    </item>
+    <item>
+      <title>The Google File System</title>
+      <link>https://fanout.sh/daily/2026-07-03-google-file-system</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-03-google-file-system</guid>
+      <pubDate>Fri, 03 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Systems</category>
+      <description>Ghemawat et al. · SOSP 2003 · 40 min. GFS is a useful first distributed storage paper because the assumptions are explicit: large files, append-heavy workloads, commodity failures, and a master that keeps metadata tractable.</description>
+    </item>
+    <item>
+      <title>A Mathematical Theory of Communication</title>
+      <link>https://fanout.sh/daily/2026-07-02-mathematical-theory-of-communication</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-02-mathematical-theory-of-communication</guid>
+      <pubDate>Thu, 02 Jul 2026 12:00:00 GMT</pubDate>
+      <category>ML Math</category>
+      <description>Claude Shannon · Bell System Technical Journal 1948 · 65 min. Shannon&apos;s information theory paper is hard but worth anchoring early in the calendar. Entropy, bits, uncertainty, and channel capacity sit underneath compression, coding, language modeling, and evaluation intuition.</description>
+    </item>
+    <item>
+      <title>The Perceptron</title>
+      <link>https://fanout.sh/daily/2026-07-01-perceptron</link>
+      <guid isPermaLink="true">https://fanout.sh/daily/2026-07-01-perceptron</guid>
+      <pubDate>Wed, 01 Jul 2026 12:00:00 GMT</pubDate>
+      <category>AI Research</category>
+      <description>Frank Rosenblatt · Psychological Review 1958 · 30 min. The Perceptron is a good July 1 starting point because it gives learners the original linear-classifier idea before modern depth, attention, or scale enter the story.</description>
+    </item>
+  </channel>
+</rss>

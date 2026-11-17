@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Pathwisse — Employability Operating System for Higher Education</title>
+  <meta name="description" content="Guide every student from career choice to placement readiness. Measurable employability operating system uniting technical learning, verified labs, and institutional analytics." />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231F3861'/%3E%3Cpath d='M8 20L16 8l8 12h-5l-3-5-3 5H8z' fill='%2322D3EE'/%3E%3Ccircle cx='16' cy='18' r='2.5' fill='%23FFFFFF'/%3E%3C/svg%3E" />
+
+  <!-- Fonts: Outfit (Display) + Inter (Body) + IBM Plex Mono (Code/Metrics) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Outfit', 'sans-serif'],
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            pathwisse: {
+              DEFAULT: '#1F3861',      // Institutional Navy
+              dark: '#0B111E',         // Deep Navy
+              light: '#64748B',        // Muted Steel Blue
+              accent: '#0284C7',       // Clear Cyan-Blue
+              cyan: '#06B6D4',         // Bright Cyan
+              sky: '#38BDF8',          // Soft Sky
+              surface: '#FFFFFF',      // Card Surface
+              canvas: '#F7FAFF',       // Pale Blue-Gray
+              border: '#E2E8F0',       // Border
+              borderLight: '#F1F5F9',  // Subtle Border
+            },
+            status: {
+              success: '#10B981',
+              warning: '#F97316',
+              danger: '#EF4444',
+              info: '#3B82F6',
+              violet: '#8B5CF6'
+            }
+          },
+          borderRadius: {
+            'card': '20px',
+            'panel': '24px',
+            'hero': '32px',
+          },
+          boxShadow: {
+            'soft': '0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03)',
+            'elevated': '0 12px 32px -4px rgba(11, 17, 30, 0.08), 0 4px 12px -2px rgba(11, 17, 30, 0.04)',
+            'floating': '0 24px 48px -12px rgba(11, 17, 30, 0.12), 0 8px 24px -4px rgba(11, 17, 30, 0.06)',
+            'glow': '0 0 24px rgba(2, 132, 199, 0.18)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Pathwisse Design System Utilities */
+    :root {
+      --canvas: #F7FAFF;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --card-border: rgba(226, 232, 240, 0.85);
+      --text-main: #0B111E;
+      --text-muted: #64748B;
+    }
+
+    .dark {
+      --canvas: #090D16;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --card-border: rgba(30, 41, 59, 0.8);
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+    }
+
+    body {
+      background-color: var(--canvas);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    h1, h2, h3, h4, .font-display {
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: -0.02em;
+    }
+
+    .font-mono {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* Translucent Glass Surface */
+    .glass-panel {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+    }
+
+    /* Ambient Institutional Background Mesh */
+    .bg-mesh {
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(31, 56, 97, 0.06) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.05) 0px, transparent 50%);
+    }
+
+    .dark .bg-mesh {
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(30, 58, 138, 0.2) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(15, 23, 42, 0.8) 0px, transparent 50%);
+    }
+
+    /* Subtle Technical Grid Lines */
+    .bg-tech-grid {
+      background-size: 32px 32px;
+      background-image: linear-gradient(to right, rgba(226, 232, 240, 0.4) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(226, 232, 240, 0.4) 1px, transparent 1px);
+    }
+    .dark .bg-tech-grid {
+      background-image: linear-gradient(to right, rgba(30, 41, 59, 0.3) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(30, 41, 59, 0.3) 1px, transparent 1px);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.4);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 0.6);
+    }
+
+    /* Micro Animations */
+    @keyframes pulse-soft {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.02); }
+    }
+    .animate-pulse-soft {
+      animation: pulse-soft 3s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-mesh bg-tech-grid flex flex-col">
+
+  <!-- ========================================================================= -->
+  <!-- 1. GLOBAL NAVIGATION SHELL                                                -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 z-50 glass-panel border-b border-slate-200/80 dark:border-slate-800 transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo & Positioning -->
+      <a href="/" class="flex items-center gap-3.5 group">
+        <div class="w-10 h-10 rounded-xl bg-pathwisse flex items-center justify-center shadow-md group-hover:bg-pathwisse-dark transition-colors duration-200">
+          <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="text-xl font-bold font-display tracking-tight text-pathwisse-dark dark:text-white">Pathwisse</span>
+            <span class="text-[10px] font-mono uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/60 text-pathwisse-accent dark:text-blue-300">OS 2.4</span>
+          </div>
+          <span class="text-[11px] text-pathwisse-light dark:text-slate-400 font-medium hidden sm:block">Employability Operating System</span>
+        </div>
+      </a>
+
+      <!-- Desktop Primary Navigation -->
+      <nav class="hidden lg:flex items-center gap-1.5 text-sm font-medium">
+        <a href="#overview" class="px-3.5 py-2 rounded-lg text-pathwisse-dark dark:text-slate-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-colors">Overview</a>
+        <a href="#journey" class="px-3.5 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-pathwisse-dark dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-colors">10-Stage Model</a>
+        <a href="#readiness" class="px-3.5 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-pathwisse-dark dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-colors">Readiness Engine</a>
+        <a href="#capabilities" class="px-3.5 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-pathwisse-dark dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-colors">Pathways & Labs</a>
+        <a href="#audiences" class="px-3.5 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-pathwisse-dark dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-colors">Institutions</a>
+        <a href="#pricing" class="px-3.5 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-pathwisse-dark dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-colors">Plans</a>
+      </nav>
+
+      <!-- Right CTAs & Tools -->
+      <div class="flex items-center gap-3">
+        <!-- Quick Search Command Button -->
+        <button onclick="toggleCommandPalette()" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 text-xs text-slate-500 dark:text-slate-400 hover:border-slate-300 transition-colors shadow-sm">
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <span>Search pathways...</span>
+          <kbd class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-[10px] font-mono">⌘K</kbd>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button onclick="toggleTheme()" class="p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors shadow-sm" aria-label="Toggle Theme">
+          <svg id="theme-icon-sun" class="w-4 h-4 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+          <svg id="theme-icon-moon" class="w-4 h-4 block dark:hidden text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        </button>
+
+        <!-- Primary Institutional CTA -->
+        <button onclick="openDemoModal()" class="px-4 py-2 rounded-xl bg-pathwisse text-white text-sm font-semibold hover:bg-pathwisse-dark hover:shadow-glow transition-all duration-200 shadow-sm flex items-center gap-2">
+          <span>Request Demo</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </button>
+
+        <!-- Mobile Menu Trigger -->
+        <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 px-4 pt-3 pb-6 space-y-2">
+      <a href="#overview" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Overview</a>
+      <a href="#journey" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">10-Stage Model</a>
+      <a href="#readiness" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Readiness Engine</a>
+      <a href="#capabilities" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Pathways & Labs</a>
+      <a href="#audiences" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Institutions</a>
+      <a href="#pricing" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Plans</a>
+      <button onclick="openDemoModal()" class="w-full mt-2 px-4 py-2.5 rounded-xl bg-pathwisse text-white text-sm font-semibold text-center">Request Institutional Demo</button>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. HERO SECTION: ASYMMETRIC INSTITUTIONAL COCKPIT                         -->
+  <!-- ========================================================================= -->
+  <section id="overview" class="relative pt-12 pb-20 lg:pt-16 lg:pb-28 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        
+        <!-- Left: Declarative Institutional Copy -->
+        <div class="lg:col-span-6 space-y-6 text-left">
+          
+          <!-- Eyebrow Badge -->
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200/80 dark:border-blue-800/60 shadow-sm">
+            <span class="flex h-2 w-2 rounded-full bg-pathwisse-accent animate-ping"></span>
+            <span class="text-xs font-semibold tracking-wider uppercase text-pathwisse-accent dark:text-sky-400 font-mono">EMPLOYABILITY OPERATING SYSTEM</span>
+          </div>
+
+          <!-- Declarative Title -->
+          <h1 class="text-4xl sm:text-5xl lg:text-[3.4rem] font-extrabold text-pathwisse-dark dark:text-white leading-[1.12] tracking-tight">
+            Guide every student from <span class="text-pathwisse-accent underline decoration-sky-300 dark:decoration-sky-600 decoration-wavy decoration-2">career choice</span> to placement readiness.
+          </h1>
+
+          <!-- Supporting Copy -->
+          <p class="text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-normal max-w-xl">
+            Pathwisse unifies curriculum paths, interactive engineering labs, verified project evidence, and real-time institutional intelligence into one verifiable student progress cockpit.
+          </p>
+
+          <!-- Core Value Micro-Pillars -->
+          <div class="grid grid-cols-3 gap-3 pt-1">
+            <div class="p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 shadow-sm">
+              <span class="text-xs text-slate-500 dark:text-slate-400 block font-mono font-medium">Readiness Metric</span>
+              <span class="text-base font-bold font-display text-pathwisse dark:text-white">88 / 100</span>
+            </div>
+            <div class="p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 shadow-sm">
+              <span class="text-xs text-slate-500 dark:text-slate-400 block font-mono font-medium">Verification</span>
+              <span class="text-base font-bold font-display text-emerald-600 dark:text-emerald-400">100% Code-Led</span>
+            </div>
+            <div class="p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 shadow-sm">
+              <span class="text-xs text-slate-500 dark:text-slate-400 block font-mono font-medium">Pilot Timeline</span>
+              <span class="text-base font-bold font-display text-pathwisse-accent">4 Weeks</span>
+            </div>
+          </div>
+
+          <!-- Action CTAs -->
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <button onclick="openDemoModal()" class="px-6 py-3.5 rounded-xl bg-pathwisse text-white text-base font-semibold hover:bg-pathwisse-dark hover:shadow-elevated transition-all duration-200 flex items-center gap-2.5 shadow-md">
+              <span>Request Institutional Demo</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </button>
+            <a href="#journey" class="px-5 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-pathwisse-dark dark:text-white text-base font-semibold hover:bg-slate-50 dark:hover:bg-slate-750 transition-colors shadow-sm flex items-center gap-2">
+              <svg class="w-4 h-4 text-pathwisse-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+              <span>Explore 10-Stage Model</span>
+            </a>
+          </div>
+
+          <!-- Trust Badges -->
+          <div class="pt-4 flex items-center gap-5 text-xs text-slate-500 dark:text-slate-400">
+            <div class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+              <span>NAAC & NBA Audit Compliant</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+              <span>Zero-Hallucination Evidence</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: The Live Readiness Cockpit Visualization -->
+        <div class="lg:col-span-6">
+          <div class="relative rounded-card p-6 sm:p-7 glass-panel shadow-floating border border-slate-200/90 dark:border-slate-800">
+            
+            <!-- Cockpit Header: Institutional Context -->
+            <div class="flex items-center justify-between pb-5 border-b border-slate-100 dark:border-slate-800">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950 flex items-center justify-center text-pathwisse-accent font-bold font-mono text-sm">
+                  PW
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-pathwisse-dark dark:text-white">Apex Institute of Technology</h3>
+                  <span class="text-xs text-slate-500 dark:text-slate-400">Computer Science & AI • Cohort 2026</span>
+                </div>
+              </div>
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                ● Telemetry Live
+              </span>
+            </div>
+
+            <!-- Central Readiness Gauge & Velocity -->
+            <div class="py-6 grid grid-cols-1 sm:grid-cols-12 gap-5 items-center">
+              <div class="sm:col-span-6 text-center sm:text-left">
+                <span class="text-xs font-mono uppercase tracking-wider font-semibold text-slate-500 dark:text-slate-400">Verified Readiness Index</span>
+                <div class="flex items-baseline justify-center sm:justify-start gap-2 mt-1">
+                  <span id="demo-readiness-score" class="text-5xl font-black font-display text-pathwisse dark:text-sky-300">88</span>
+                  <span class="text-xl font-bold text-slate-400">/ 100</span>
+                </div>
+                <div class="mt-2 text-xs text-slate-600 dark:text-slate-300 flex items-center justify-center sm:justify-start gap-1.5">
+                  <span class="text-emerald-600 dark:text-emerald-400 font-semibold font-mono">▲ +14 pts</span>
+                  <span>vs 30-day baseline • Top 8% percentile</span>
+                </div>
+              </div>
+
+              <!-- Interactive Simulator Trigger -->
+              <div class="sm:col-span-6 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800">
+                <div class="flex items-center justify-between text-xs mb-2">
+                  <span class="font-medium text-slate-700 dark:text-slate-300">Live Skill Submissions</span>
+                  <span class="font-mono text-pathwisse-accent font-semibold">14/16 Verified</span>
+                </div>
+                <!-- Progress Ring / Bar -->
+                <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-pathwisse to-pathwisse-accent h-2.5 rounded-full transition-all duration-500" style="width: 88%"></div>
+                </div>
+                <div class="mt-2.5 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+                  <span>Target: Tier-1 SDE / ML</span>
+                  <span class="text-emerald-600 dark:text-emerald-400 font-medium">Placement Cleared</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4 Competency Breakdown Rows -->
+            <div class="space-y-2.5 pt-2">
+              <div class="p-3 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-100 dark:border-slate-750 flex items-center justify-between shadow-xs">
+                <div class="flex items-center gap-3">
+                  <div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+                  <div>
+                    <span class="text-xs font-semibold text-slate-800 dark:text-slate-200 block">System Design & Scalability</span>
+                    <span class="text-[11px] text-slate-500">LSM-Trees, Raft Consensus, Cache Invalidation</span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="text-xs font-mono font-bold text-pathwisse dark:text-white">92%</span>
+                  <span class="text-[10px] text-emerald-600 block">Verified</span>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-100 dark:border-slate-750 flex items-center justify-between shadow-xs">
+                <div class="flex items-center gap-3">
+                  <div class="w-2.5 h-2.5 rounded-full bg-purple-500"></div>
+                  <div>
+                    <span class="text-xs font-semibold text-slate-800 dark:text-slate-200 block">Inference & LLM Architecture</span>
+                    <span class="text-[11px] text-slate-500">KV-Cache Budgeting, PagedAttention Lab</span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="text-xs font-mono font-bold text-pathwisse dark:text-white">86%</span>
+                  <span class="text-[10px] text-emerald-600 block">Verified</span>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-100 dark:border-slate-750 flex items-center justify-between shadow-xs">
+                <div class="flex items-center gap-3">
+                  <div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                  <div>
+                    <span class="text-xs font-semibold text-slate-800 dark:text-slate-200 block">Machine Learning Mathematics</span>
+                    <span class="text-[11px] text-slate-500">Eigendecomposition, Hessian Matrix Drills</span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="text-xs font-mono font-bold text-pathwisse dark:text-white">84%</span>
+                  <span class="text-[10px] text-emerald-600 block">Verified</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cockpit Footer: Next Prescriptive Action -->
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+              <span class="text-slate-500 dark:text-slate-400">Next Action: <strong class="text-pathwisse-dark dark:text-white font-medium">Distributed KV Cache Lab Submission</strong></span>
+              <a href="#instruments" class="text-pathwisse-accent font-semibold hover:underline flex items-center gap-1">
+                <span>Open Lab</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 3. BRAND PRINCIPLES / PHILOSOPHY                                          -->
+  <!-- ========================================================================= -->
+  <section class="py-16 bg-white/70 dark:bg-slate-900/60 border-y border-slate-200/80 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-xs font-mono uppercase tracking-widest text-pathwisse-accent font-semibold">FOUNDATIONAL ARCHITECTURE</span>
+        <h2 class="text-3xl font-bold text-pathwisse-dark dark:text-white mt-1">Built on institutional principles, not hype.</h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mt-2">Every feature in the operating system exists to replace fragmented guesswork with reliable student progression.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Principle 1 -->
+        <div class="p-6 rounded-card glass-panel border border-slate-200/80 dark:border-slate-800 shadow-soft hover:shadow-elevated transition-all">
+          <div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/80 text-pathwisse-accent flex items-center justify-center font-bold text-xl font-display mb-4">
+            01
+          </div>
+          <h3 class="text-xl font-bold text-pathwisse-dark dark:text-white mb-2">System, not scramble</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            Eliminates last-minute placement panic. Progression is mapped from year two through graduation in a deliberate, continuous sequence rather than disconnected 2-week cram bootcamps.
+          </p>
+        </div>
+
+        <!-- Principle 2 -->
+        <div class="p-6 rounded-card glass-panel border border-slate-200/80 dark:border-slate-800 shadow-soft hover:shadow-elevated transition-all">
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 flex items-center justify-center font-bold text-xl font-display mb-4">
+            02
+          </div>
+          <h3 class="text-xl font-bold text-pathwisse-dark dark:text-white mb-2">Evidence beats claims</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            Certificates of completion are replaced with verifiable engineering artifacts: code repositories, stress-test logs, and real lab benchmarks reviewed against production standards.
+          </p>
+        </div>
+
+        <!-- Principle 3 -->
+        <div class="p-6 rounded-card glass-panel border border-slate-200/80 dark:border-slate-800 shadow-soft hover:shadow-elevated transition-all">
+          <div class="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-950/80 text-purple-600 flex items-center justify-center font-bold text-xl font-display mb-4">
+            03
+          </div>
+          <h3 class="text-xl font-bold text-pathwisse-dark dark:text-white mb-2">Support the quiet</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            Passive struggle is caught early. Predictive telemetry surfaces students stalling on foundational math or system design concepts before semester exams, triggering supportive faculty intervention.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 4. THE 10-STAGE OPERATING MODEL (INTERACTIVE TIMELINE)                     -->
+  <!-- ========================================================================= -->
+  <section id="journey" class="py-20 lg:py-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div>
+          <span class="text-xs font-mono uppercase tracking-widest text-pathwisse-accent font-semibold">THE OPERATING JOURNEY</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-pathwisse-dark dark:text-white mt-1">The 10-Stage Employability Pipeline</h2>
+          <p class="text-base text-slate-600 dark:text-slate-400 mt-2 max-w-xl">
+            A cohesive operational flow that transforms unstructured ambition into verified placement readiness. Select any stage to inspect its deliverables.
+          </p>
+        </div>
+        <div class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+          Standard Cycle: 2 to 4 Academic Semesters
+        </div>
+      </div>
+
+      <!-- Horizontal Step Rail for Desktop -->
+      <div class="overflow-x-auto pb-4 mb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div class="flex items-center gap-2 min-w-[980px]">
+          <button onclick="selectStage(1)" id="stage-btn-1" class="stage-nav-btn flex-1 p-3 rounded-xl border border-pathwisse bg-pathwisse text-white text-left transition-all shadow-sm">
+            <span class="text-[10px] font-mono opacity-80 block">STAGE 01</span>
+            <span class="text-xs font-bold block mt-0.5">Career Goal</span>
+          </button>
+          <div class="w-4 h-0.5 bg-slate-300 dark:bg-slate-700"></div>
+          <button onclick="selectStage(2)" id="stage-btn-2" class="stage-nav-btn flex-1 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-left hover:border-slate-300 transition-all">
+            <span class="text-[10px] font-mono opacity-70 block">STAGE 02</span>
+            <span class="text-xs font-bold block mt-0.5">Skill Mapping</span>
+          </button>
+          <div class="w-4 h-0.5 bg-slate-300 dark:bg-slate-700"></div>
+          <button onclick="selectStage(3)" id="stage-btn-3" class="stage-nav-btn flex-1 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-left hover:border-slate-300 transition-all">
+            <span class="text-[10px] font-mono opacity-70 block">STAGE 03</span>
+            <span class="text-xs font-bold block mt-0.5">Core Math & Arch</span>
+          </button>
+          <div class="w-4 h-0.5 bg-slate-300 dark:bg-slate-700"></div>
+          <button onclick="selectStage(4)" id="stage-btn-4" class="stage-nav-btn flex-1 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-left hover:border-slate-300 transition-all">
+            <span class="text-[10px] font-mono opacity-70 block">STAGE 04</span>
+            <span class="text-xs font-bold block mt-0.5">Interactive Labs</span>
+          </button>
+          <div class="w-4 h-0.5 bg-slate-300 dark:bg-slate-700"></div>
+          <button onclick="selectStage(5)" id="stage-btn-5" class="stage-nav-btn flex-1 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-left hover:border-slate-300 transition-all">
+            <span class="text-[10px] font-mono opacity-70 block">STAGE 05</span>
+            <span class="text-xs font-bold block mt-0.5">Verified Builds</span>
+          </button>
+          <div class="w-4 h-0.5 bg-slate-300 dark:bg-slate-700"></div>
+          <button onclick="selectStage(6)" id="stage-btn-6" class="stage-nav-btn flex-1 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-left hover:border-slate-300 transition-all">
+            <span class="text-[10px] font-mono opacity-70 block">STAGE 06</span>
+            <span class="text-xs font-bold block mt-0.5">Code Review</span>
+          </button>
+          <div class="w-4 h-0.5 bg-slate-300 dark:bg-slate-700"></div>
+          <button onclick="selectStage(7)" id="stage-btn-7" class="stage-nav-btn flex-1 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-left hover:border-slate-300 transition-all">
+            <span class="text-[10px] font-mono opacity-70 block">STAGE 07</span>
+            <span class="text-xs font-bold block mt-0.5">Readiness Index</span>
+          </button>
+          <div class="w-4 h-0.5 bg-slate-300 dark:bg-slate-700"></div>
+          <button onclick="selectStage(8)" id="stage-btn-8" class="stage-nav-btn flex-1 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-left hover:border-slate-300 transition-all">
+            <span class="text-[10px] font-mono opacity-70 block">STAGE 08</span>
+            <span class="text-xs font-bold block mt-0.5">Benchmarking</span>
+          </button>
+          <div class="w-4 h-0.5 bg-slate-300 dark:bg-slate-700"></div>
+          <button onclick="selectStage(9)" id="stage-btn-9" class="stage-nav-btn flex-1 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-left hover:border-slate-300 transition-all">
+            <span class="text-[10px] font-mono opacity-70 block">STAGE 09</span>
+            <span class="text-xs font-bold block mt-0.5">Matching</span>
+          </button>
+          <div class="w-4 h-0.5 bg-slate-300 dark:bg-slate-700"></div>
+          <button onclick="selectStage(10)" id="stage-btn-10" class="stage-nav-btn flex-1 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-left hover:border-slate-300 transition-all">
+            <span class="text-[10px] font-mono opacity-70 block">STAGE 10</span>
+            <span class="text-xs font-bold block mt-0.5">Audit Report</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Stage Detail Display Card -->
+      <div id="stage-detail-card" class="p-8 rounded-panel glass-panel border border-slate-200 dark:border-slate-800 shadow-elevated">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-8 space-y-4">
+            <div class="flex items-center gap-2">
+              <span id="stage-badge" class="px-2.5 py-1 rounded bg-blue-100 dark:bg-blue-900/60 text-pathwisse-accent dark:text-sky-300 text-xs font-mono font-bold">STAGE 01 OF 10</span>
+              <span id="stage-owner" class="text-xs text-slate-500 font-medium">Ownership: Student + Department Counselor</span>
+            </div>
+            <h3 id="stage-title" class="text-2xl sm:text-3xl font-bold text-pathwisse-dark dark:text-white">Career Goal & Competency Profiling</h3>
+            <p id="stage-desc" class="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+              Students identify target engineering specializations (e.g. Distributed Systems Engineer, LLM Inference Specialist, or AI Research Practitioner). The operating system maps exact skill graphs and industry requirements without vague generalizations.
+            </p>
+            <div id="stage-deliverables" class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+              <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700">
+                <span class="text-[11px] text-slate-500 block">Deliverable</span>
+                <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">Role Competency Matrix</span>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700">
+                <span class="text-[11px] text-slate-500 block">Verification</span>
+                <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Baseline Diagnostic</span>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700">
+                <span class="text-[11px] text-slate-500 block">Time Horizon</span>
+                <span class="text-xs font-semibold text-pathwisse">Weeks 1–2</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-4 bg-slate-50 dark:bg-slate-900/90 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 text-center">
+            <span class="text-xs font-mono uppercase text-slate-400 block mb-3">Institutional Metric Impact</span>
+            <div class="text-4xl font-extrabold text-pathwisse-dark dark:text-white font-display mb-1" id="stage-metric">100%</div>
+            <span class="text-xs text-slate-600 dark:text-slate-400 block" id="stage-metric-label">Students with deterministic milestone roadmaps</span>
+            <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+              <span class="inline-flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                <span>Accreditation Ready</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 5. VERIFIED READINESS ENGINE: QUANTIFIED SCORING                          -->
+  <!-- ========================================================================= -->
+  <section id="readiness" class="py-20 bg-white/60 dark:bg-slate-900/60 border-y border-slate-200/80 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-xs font-mono uppercase tracking-widest text-pathwisse-accent font-semibold">VERIFIED TELEMETRY</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-pathwisse-dark dark:text-white mt-1">Readiness is a quantified score — never a guess.</h2>
+        <p class="text-base text-slate-600 dark:text-slate-400 mt-2">
+          We combine code test suites, architectural write-ups, and interactive labs into a tamper-proof index for recruiters and placement cells.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Interactive Simulator Left -->
+        <div class="lg:col-span-7 glass-panel p-6 sm:p-8 rounded-panel border border-slate-200 dark:border-slate-800 shadow-soft">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+            <div>
+              <h3 class="text-lg font-bold text-pathwisse-dark dark:text-white">Readiness Score Simulator</h3>
+              <p class="text-xs text-slate-500">Toggle student milestones to see live recalculation</p>
+            </div>
+            <button onclick="resetReadinessDemo()" class="text-xs text-pathwisse-accent hover:underline font-mono">Reset</button>
+          </div>
+
+          <!-- Interactive Milestone Checkboxes -->
+          <div class="space-y-3.5 mt-5" id="milestones-container">
+            
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 dark:border-slate-750 bg-white dark:bg-slate-850 hover:bg-slate-50 cursor-pointer transition-colors">
+              <input type="checkbox" checked onchange="recalculateReadiness()" class="milestone-toggle mt-1 h-4 w-4 rounded text-pathwisse focus:ring-pathwisse-accent" data-pts="25">
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-800 dark:text-slate-100">LSM-Tree Storage Engine Implementation</span>
+                  <span class="text-xs font-mono font-bold text-pathwisse-accent">+25 pts</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">MemTable, WAL, SSTable sparse indexing, compaction benchmarks passed</p>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 dark:border-slate-750 bg-white dark:bg-slate-850 hover:bg-slate-50 cursor-pointer transition-colors">
+              <input type="checkbox" checked onchange="recalculateReadiness()" class="milestone-toggle mt-1 h-4 w-4 rounded text-pathwisse focus:ring-pathwisse-accent" data-pts="25">
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-800 dark:text-slate-100">LLM Inference & KV Cache Arithmetic Lab</span>
+                  <span class="text-xs font-mono font-bold text-pathwisse-accent">+25 pts</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">FlashAttention-2 and continuous batching capacity calculations submitted</p>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 dark:border-slate-750 bg-white dark:bg-slate-850 hover:bg-slate-50 cursor-pointer transition-colors">
+              <input type="checkbox" checked onchange="recalculateReadiness()" class="milestone-toggle mt-1 h-4 w-4 rounded text-pathwisse focus:ring-pathwisse-accent" data-pts="20">
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-800 dark:text-slate-100">Distributed Consensus (Raft/Paxos) Simulator</span>
+                  <span class="text-xs font-mono font-bold text-pathwisse-accent">+20 pts</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">Leader election and log replication stress test pass rate > 98%</p>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 dark:border-slate-750 bg-white dark:bg-slate-850 hover:bg-slate-50 cursor-pointer transition-colors">
+              <input type="checkbox" checked onchange="recalculateReadiness()" class="milestone-toggle mt-1 h-4 w-4 rounded text-pathwisse focus:ring-pathwisse-accent" data-pts="18">
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-800 dark:text-slate-100">ML Math Decoder Drills (Linear Algebra & Hessians)</span>
+                  <span class="text-xs font-mono font-bold text-pathwisse-accent">+18 pts</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">Matrix calculus and attention weight gradient derivations verified</p>
+              </div>
+            </label>
+
+            <label class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 dark:border-slate-750 bg-white dark:bg-slate-850 hover:bg-slate-50 cursor-pointer transition-colors">
+              <input type="checkbox" onchange="recalculateReadiness()" class="milestone-toggle mt-1 h-4 w-4 rounded text-pathwisse focus:ring-pathwisse-accent" data-pts="12">
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-800 dark:text-slate-100">Production Code Review & Mock Interview</span>
+                  <span class="text-xs font-mono font-bold text-slate-400">+12 pts (Pending)</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">Live technical walkthrough with alumni engineering mentors</p>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <!-- Live Score Output Card Right -->
+        <div class="lg:col-span-5 space-y-5">
+          <div class="glass-panel p-6 sm:p-7 rounded-panel border border-slate-200 dark:border-slate-800 shadow-elevated">
+            <span class="text-xs font-mono uppercase tracking-wider font-semibold text-slate-500">Calculated Index</span>
+            
+            <div class="flex items-baseline gap-3 my-2">
+              <span id="sim-score" class="text-6xl font-black font-display text-pathwisse dark:text-sky-300">88</span>
+              <span class="text-2xl font-bold text-slate-400">/ 100</span>
+            </div>
+
+            <div id="sim-verdict" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 mb-4">
+              ● Tier-1 Placement Ready
+            </div>
+
+            <!-- Score breakdown bars -->
+            <div class="space-y-3 pt-3 border-t border-slate-200 dark:border-slate-800 text-xs">
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-slate-600 dark:text-slate-400">Code Artifact Quality</span>
+                  <span id="bar-artifact-val" class="font-mono font-bold text-slate-800 dark:text-slate-200">92%</span>
+                </div>
+                <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                  <div id="bar-artifact" class="bg-pathwisse h-1.5 rounded-full transition-all duration-300" style="width: 92%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-slate-600 dark:text-slate-400">Systems & Scale Rigor</span>
+                  <span id="bar-systems-val" class="font-mono font-bold text-slate-800 dark:text-slate-200">86%</span>
+                </div>
+                <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                  <div id="bar-systems" class="bg-pathwisse-accent h-1.5 rounded-full transition-all duration-300" style="width: 86%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-slate-600 dark:text-slate-400">Mathematical Fluency</span>
+                  <span id="bar-math-val" class="font-mono font-bold text-slate-800 dark:text-slate-200">84%</span>
+                </div>
+                <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                  <div id="bar-math" class="bg-cyan-500 h-1.5 rounded-full transition-all duration-300" style="width: 84%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500">
+              Score includes automated unit/load testing telemetry, plagiarism screening, and timestamped commit signatures.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 6. INTERACTIVE INSTRUMENTS: GPU WORKBENCH & MATH DECODER                  -->
+  <!-- ========================================================================= -->
+  <section id="instruments" class="py-20 lg:py-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-xs font-mono uppercase tracking-widest text-pathwisse-accent font-semibold">HANDS-ON INSTRUMENTATION</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-pathwisse-dark dark:text-white mt-1">Built-in Engineering Labs & Calculators</h2>
+        <p class="text-base text-slate-600 dark:text-slate-400 mt-2">
+          Theoretical learning fails in production interviews. Pathwisse equips students with real interactive instruments used daily by senior infrastructure engineers.
+        </p>
+      </div>
+
+      <!-- Instrument Tabs -->
+      <div class="flex justify-center mb-10">
+        <div class="inline-flex p-1.5 rounded-2xl bg-slate-200/80 dark:bg-slate-800/80 border border-slate-300/80 dark:border-slate-700">
+          <button onclick="switchInstrument('gpu')" id="inst-tab-gpu" class="px-5 py-2.5 rounded-xl bg-white dark:bg-slate-900 text-pathwisse-dark dark:text-white text-sm font-semibold shadow-sm transition-all">
+            ⚡ GPU Memory & VRAM Workbench
+          </button>
+          <button onclick="switchInstrument('decoder')" id="inst-tab-decoder" class="px-5 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-pathwisse-dark dark:hover:text-white text-sm font-semibold transition-all">
+            📐 Mathematical Notation Decoder
+          </button>
+        </div>
+      </div>
+
+      <!-- Instrument 1: GPU Memory Workbench -->
+      <div id="inst-gpu-panel" class="glass-panel p-6 sm:p-8 rounded-panel border border-slate-200 dark:border-slate-800 shadow-elevated">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <div class="lg:col-span-7 space-y-6">
+            <div>
+              <span class="text-xs font-mono text-pathwisse-accent font-bold uppercase">LLM INFERENCE ENGINEERING INSTRUMENT</span>
+              <h3 class="text-2xl font-bold text-pathwisse-dark dark:text-white mt-1">GPU VRAM & KV Cache Budget Estimator</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Calculate exact weight footprint, attention key-value caches across batch sizes, and check for Out-Of-Memory (OOM) boundaries.</p>
+            </div>
+
+            <!-- Controls -->
+            <div class="space-y-4">
+              <!-- Parameter Count Slider -->
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-1 text-slate-700 dark:text-slate-300">
+                  <span>Model Size (Parameters)</span>
+                  <span id="gpu-param-val" class="font-mono text-pathwisse-accent">7 Billion (7B)</span>
+                </div>
+                <input type="range" id="gpu-param-slider" min="1" max="70" value="7" step="1" oninput="updateGpuCalc()" class="w-full accent-pathwisse">
+                <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                  <span>1B</span>
+                  <span>7B (Mistral/Llama)</span>
+                  <span>13B</span>
+                  <span>34B</span>
+                  <span>70B (Llama 3)</span>
+                </div>
+              </div>
+
+              <!-- Quantization Selector -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Weight Precision / Quantization</label>
+                <div class="grid grid-cols-3 gap-2">
+                  <button type="button" onclick="setPrecision('fp16')" id="prec-fp16" class="p-2 text-xs rounded-lg border border-pathwisse bg-blue-50 dark:bg-blue-950/80 text-pathwisse-dark dark:text-white font-bold font-mono">FP16 (2 B/p)</button>
+                  <button type="button" onclick="setPrecision('int8')" id="prec-int8" class="p-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium font-mono hover:border-slate-300">INT8 (1 B/p)</button>
+                  <button type="button" onclick="setPrecision('int4')" id="prec-int4" class="p-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium font-mono hover:border-slate-300">INT4 AWQ (0.5 B/p)</button>
+                </div>
+              </div>
+
+              <!-- Context Window & Batch -->
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <div class="flex justify-between text-xs font-semibold mb-1 text-slate-700 dark:text-slate-300">
+                    <span>Context Length</span>
+                    <span id="gpu-ctx-val" class="font-mono text-pathwisse-accent">4k tokens</span>
+                  </div>
+                  <input type="range" id="gpu-ctx-slider" min="1" max="32" value="4" step="1" oninput="updateGpuCalc()" class="w-full accent-pathwisse">
+                </div>
+                <div>
+                  <div class="flex justify-between text-xs font-semibold mb-1 text-slate-700 dark:text-slate-300">
+                    <span>Batch Size (Concurrent)</span>
+                    <span id="gpu-batch-val" class="font-mono text-pathwisse-accent">4 requests</span>
+                  </div>
+                  <input type="range" id="gpu-batch-slider" min="1" max="32" value="4" step="1" oninput="updateGpuCalc()" class="w-full accent-pathwisse">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Output VRAM Visualization Right -->
+          <div class="lg:col-span-5 bg-slate-50 dark:bg-slate-900/90 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+            <span class="text-xs font-mono uppercase text-slate-400 font-semibold block">Total Estimated VRAM</span>
+            
+            <div class="flex items-baseline gap-2">
+              <span id="gpu-total-vram" class="text-5xl font-black font-display text-pathwisse dark:text-sky-300">16.4</span>
+              <span class="text-xl font-bold text-slate-400">GB</span>
+            </div>
+
+            <!-- VRAM Breakdown -->
+            <div class="space-y-2 text-xs pt-3 border-t border-slate-200 dark:border-slate-800">
+              <div class="flex justify-between">
+                <span class="text-slate-500">Model Weights:</span>
+                <span id="gpu-weights-mem" class="font-mono font-bold text-slate-800 dark:text-slate-200">14.0 GB</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">KV Cache Allocation:</span>
+                <span id="gpu-kv-mem" class="font-mono font-bold text-slate-800 dark:text-slate-200">1.2 GB</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">CUDA & PagedAttention Headroom:</span>
+                <span class="font-mono font-bold text-slate-800 dark:text-slate-200">1.2 GB</span>
+              </div>
+            </div>
+
+            <!-- Target Hardware Fit -->
+            <div id="gpu-fit-box" class="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-xs">
+              <span class="font-semibold text-emerald-800 dark:text-emerald-300 block">✓ Fits in 1x NVIDIA RTX 4090 / A10G (24GB)</span>
+              <span class="text-emerald-600 dark:text-emerald-400 text-[11px] block mt-0.5">Headroom: ~7.6 GB free for dynamic batch expansion</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Instrument 2: Mathematical Notation Decoder (Hidden by default) -->
+      <div id="inst-decoder-panel" class="hidden glass-panel p-6 sm:p-8 rounded-panel border border-slate-200 dark:border-slate-800 shadow-elevated">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <span class="text-xs font-mono text-pathwisse-accent font-bold uppercase">AI RESEARCH TRANSLATOR</span>
+            <h3 class="text-2xl font-bold text-pathwisse-dark dark:text-white mt-1">Research Paper Math Decoder</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">Search any confusing mathematical symbol to get instant plain-English intuition and code implementations.</p>
+          </div>
+          <input type="text" id="math-search-input" oninput="filterMathSymbols()" placeholder="Search symbol (e.g. gradient, kl, norm)..." class="w-full sm:w-64 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-800 dark:text-white">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="math-grid">
+          <!-- Card 1 -->
+          <div class="math-card p-4 rounded-xl bg-white dark:bg-slate-850 border border-slate-200 dark:border-slate-750">
+            <div class="flex items-center justify-between">
+              <span class="text-2xl font-bold font-mono text-pathwisse dark:text-sky-300">∇_θ L</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300">Optimization</span>
+            </div>
+            <h4 class="text-sm font-bold text-slate-800 dark:text-white mt-2">Gradient with respect to Parameters</h4>
+            <p class="text-xs text-slate-500 mt-1">Vector of partial derivatives showing the direction of steepest loss ascent.</p>
+            <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between text-[11px] font-mono text-slate-400">
+              <span>\nabla_\theta \mathcal{L}</span>
+              <button onclick="copyLatex('\\nabla_\\theta \\mathcal{L}')" class="text-pathwisse-accent hover:underline">Copy LaTeX</button>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="math-card p-4 rounded-xl bg-white dark:bg-slate-850 border border-slate-200 dark:border-slate-750">
+            <div class="flex items-center justify-between">
+              <span class="text-2xl font-bold font-mono text-pathwisse dark:text-sky-300">D_KL (P || Q)</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-50 dark:bg-purple-900 text-purple-700 dark:text-purple-300">Information Theory</span>
+            </div>
+            <h4 class="text-sm font-bold text-slate-800 dark:text-white mt-2">Kullback–Leibler Divergence</h4>
+            <p class="text-xs text-slate-500 mt-1">Quantifies relative entropy / distribution drift, used critically in RLHF and VAEs.</p>
+            <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between text-[11px] font-mono text-slate-400">
+              <span>D_{KL}(P \parallel Q)</span>
+              <button onclick="copyLatex('D_{KL}(P \\parallel Q)')" class="text-pathwisse-accent hover:underline">Copy LaTeX</button>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="math-card p-4 rounded-xl bg-white dark:bg-slate-850 border border-slate-200 dark:border-slate-750">
+            <div class="flex items-center justify-between">
+              <span class="text-2xl font-bold font-mono text-pathwisse dark:text-sky-300">W_Q · W_K^T</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300">Transformers</span>
+            </div>
+            <h4 class="text-sm font-bold text-slate-800 dark:text-white mt-2">Attention Affinity Matrix</h4>
+            <p class="text-xs text-slate-500 mt-1">Dot-product similarity projection measuring cross-token alignment before scaling.</p>
+            <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between text-[11px] font-mono text-slate-400">
+              <span>W_Q W_K^T / \sqrt{d_k}</span>
+              <button onclick="copyLatex('W_Q W_K^T / \\sqrt{d_k}')" class="text-pathwisse-accent hover:underline">Copy LaTeX</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 7. CORE PLATFORM PATHWAYS & CATALOG                                       -->
+  <!-- ========================================================================= -->
+  <section id="capabilities" class="py-20 bg-white/70 dark:bg-slate-900/60 border-y border-slate-200/80 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="text-xs font-mono uppercase tracking-widest text-pathwisse-accent font-semibold">CURRICULUM SPECIFICATIONS</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-pathwisse-dark dark:text-white mt-1">Four Industry-Verified Tracks</h2>
+        <p class="text-base text-slate-600 dark:text-slate-400 mt-2">Structured engineering depth designed directly for high-growth tech firms.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Track 1: System Design -->
+        <div class="p-6 rounded-card glass-panel border border-slate-200 dark:border-slate-800 shadow-soft hover:shadow-elevated transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-4 font-bold font-mono">
+              SYS
+            </div>
+            <h3 class="text-lg font-bold text-pathwisse-dark dark:text-white">System Design In Depth</h3>
+            <span class="text-xs font-mono text-slate-500 block mb-3">18 Modules • 8 Labs</span>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              LSM-Trees vs B-Trees, append-only logs, distributed consensus (Raft/Paxos), sharding strategies, and company architecture deep-dives.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-emerald-600 font-medium">● 3 Verified Builds</span>
+            <button onclick="openDemoModal()" class="text-pathwisse-accent font-semibold hover:underline">Syllabus →</button>
+          </div>
+        </div>
+
+        <!-- Track 2: Inference Engineering -->
+        <div class="p-6 rounded-card glass-panel border border-slate-200 dark:border-slate-800 shadow-soft hover:shadow-elevated transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950 flex items-center justify-center text-purple-600 dark:text-purple-400 mb-4 font-bold font-mono">
+              INF
+            </div>
+            <h3 class="text-lg font-bold text-pathwisse-dark dark:text-white">LLM Inference Engineering</h3>
+            <span class="text-xs font-mono text-slate-500 block mb-3">14 Modules • 6 Labs</span>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Memory-bandwidth bottlenecks, KV cache arithmetic, PagedAttention, continuous batching, FlashAttention-2, and multi-GPU tensor parallelism.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-emerald-600 font-medium">● 2 Verified Builds</span>
+            <button onclick="openDemoModal()" class="text-pathwisse-accent font-semibold hover:underline">Syllabus →</button>
+          </div>
+        </div>
+
+        <!-- Track 3: AI Research -->
+        <div class="p-6 rounded-card glass-panel border border-slate-200 dark:border-slate-800 shadow-soft hover:shadow-elevated transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-cyan-100 dark:bg-cyan-950 flex items-center justify-center text-cyan-600 dark:text-cyan-400 mb-4 font-bold font-mono">
+              AIR
+            </div>
+            <h3 class="text-lg font-bold text-pathwisse-dark dark:text-white">AI Research & Models</h3>
+            <span class="text-xs font-mono text-slate-500 block mb-3">16 Modules • 10 Labs</span>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Self-attention mechanics, transformer decoder from scratch, pre-training scaling laws, SFT pipelines, RLHF, and DPO alignment.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-emerald-600 font-medium">● 4 Verified Builds</span>
+            <button onclick="openDemoModal()" class="text-pathwisse-accent font-semibold hover:underline">Syllabus →</button>
+          </div>
+        </div>
+
+        <!-- Track 4: ML Math -->
+        <div class="p-6 rounded-card glass-panel border border-slate-200 dark:border-slate-800 shadow-soft hover:shadow-elevated transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-4 font-bold font-mono">
+              MTH
+            </div>
+            <h3 class="text-lg font-bold text-pathwisse-dark dark:text-white">ML Mathematics In Depth</h3>
+            <span class="text-xs font-mono text-slate-500 block mb-3">12 Modules • 50+ Drills</span>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Vector spaces, linear maps, eigendecomposition, SVD, multivariable gradients, Hessians, probability densities, and information theory.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-emerald-600 font-medium">● 2 Verified Builds</span>
+            <button onclick="openDemoModal()" class="text-pathwisse-accent font-semibold hover:underline">Syllabus →</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 8. AUDIENCE OUTCOMES TABS: STUDENTS, PLACEMENT, LEADERSHIP                -->
+  <!-- ========================================================================= -->
+  <section id="audiences" class="py-20 lg:py-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-xs font-mono uppercase tracking-widest text-pathwisse-accent font-semibold">STAKEHOLDER VALUE</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-pathwisse-dark dark:text-white mt-1">One Shared Operating Picture</h2>
+        <p class="text-base text-slate-600 dark:text-slate-400 mt-2">Connecting students, placement officers, faculty mentors, and deans.</p>
+      </div>
+
+      <div class="flex justify-center mb-8">
+        <div class="inline-flex p-1.5 rounded-2xl bg-slate-200/80 dark:bg-slate-800/80 border border-slate-300/80 dark:border-slate-700">
+          <button onclick="switchAudience('students')" id="aud-tab-students" class="px-4 py-2 rounded-xl bg-white dark:bg-slate-900 text-pathwisse-dark dark:text-white text-xs font-bold shadow-sm transition-all">For Students</button>
+          <button onclick="switchAudience('placement')" id="aud-tab-placement" class="px-4 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-pathwisse-dark text-xs font-semibold transition-all">For Placement Teams</button>
+          <button onclick="switchAudience('faculty')" id="aud-tab-faculty" class="px-4 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-pathwisse-dark text-xs font-semibold transition-all">For Faculty & HODs</button>
+          <button onclick="switchAudience('leadership')" id="aud-tab-leadership" class="px-4 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-pathwisse-dark text-xs font-semibold transition-all">For Leadership</button>
+        </div>
+      </div>
+
+      <div id="audience-content" class="p-8 rounded-panel glass-panel border border-slate-200 dark:border-slate-800 shadow-elevated">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-750">
+            <span class="text-xs font-mono text-pathwisse-accent font-bold block mb-1">01. CERTAINTY</span>
+            <h4 class="text-base font-bold text-slate-800 dark:text-white">Deterministic Roadmap</h4>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">Know exactly what to study each week without wasting months on superficial beginner tutorials.</p>
+          </div>
+          <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-750">
+            <span class="text-xs font-mono text-emerald-600 font-bold block mb-1">02. CREDIBILITY</span>
+            <h4 class="text-base font-bold text-slate-800 dark:text-white">Verifiable Portfolio</h4>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">Proof-of-work code builds and stress tests that instantly distinguish you from generic applicants.</p>
+          </div>
+          <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-750">
+            <span class="text-xs font-mono text-purple-600 font-bold block mb-1">03. PLACEMENT READY</span>
+            <h4 class="text-base font-bold text-slate-800 dark:text-white">Verified Score Badge</h4>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">Your 0-100 Readiness Index gives recruiting partners instant confidence in your engineering abilities.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 9. PRICING & INSTITUTIONAL PLANS                                          -->
+  <!-- ========================================================================= -->
+  <section id="pricing" class="py-20 bg-white/70 dark:bg-slate-900/60 border-y border-slate-200/80 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="text-xs font-mono uppercase tracking-widest text-pathwisse-accent font-semibold">INSTITUTIONAL PARTNERSHIPS</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-pathwisse-dark dark:text-white mt-1">Controlled Pilots & Full Campus Rollouts</h2>
+        <p class="text-base text-slate-600 dark:text-slate-400 mt-2">Transparent pricing backed by verified student outcomes and full operational support.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+        
+        <!-- Tier 1: Department Pilot -->
+        <div class="p-8 rounded-card glass-panel border border-slate-200 dark:border-slate-800 shadow-soft flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-mono font-bold text-slate-500 uppercase">PILOT PROGRAM</span>
+            <h3 class="text-2xl font-bold text-pathwisse-dark dark:text-white mt-1">Campus Pilot</h3>
+            <p class="text-xs text-slate-500 mt-1">Ideal for 1 department or 1 selected cohort of 100–300 students.</p>
+            <div class="my-6">
+              <span class="text-4xl font-extrabold text-pathwisse-dark dark:text-white font-display">4–8</span>
+              <span class="text-sm text-slate-500 font-medium">Weeks Structured Trial</span>
+            </div>
+            <ul class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+              <li class="flex items-center gap-2">✓ Full access to 1 chosen track (e.g. System Design)</li>
+              <li class="flex items-center gap-2">✓ Interactive Labs & Code Build Suites</li>
+              <li class="flex items-center gap-2">✓ Baseline diagnostic & readiness scoring</li>
+              <li class="flex items-center gap-2">✓ Placement cell analytics dashboard</li>
+            </ul>
+          </div>
+          <button onclick="openDemoModal()" class="w-full mt-8 py-3 rounded-xl border border-slate-300 dark:border-slate-700 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+            Request Pilot Access
+          </button>
+        </div>
+
+        <!-- Tier 2: Campus OS (Featured) -->
+        <div class="p-8 rounded-card glass-panel border-2 border-pathwisse-accent shadow-glow relative flex flex-col justify-between bg-blue-50/20 dark:bg-blue-950/20">
+          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-pathwisse-accent text-white text-[10px] font-mono font-bold uppercase tracking-wider shadow-sm">
+            RECOMMENDED INSTITUTIONAL TIER
+          </div>
+          <div>
+            <span class="text-xs font-mono font-bold text-pathwisse-accent uppercase">FULL IMPLEMENTATION</span>
+            <h3 class="text-2xl font-bold text-pathwisse-dark dark:text-white mt-1">Full Campus OS</h3>
+            <p class="text-xs text-slate-500 mt-1">Full institution-wide deployment across multiple years and branches.</p>
+            <div class="my-6">
+              <span class="text-4xl font-extrabold text-pathwisse-dark dark:text-white font-display">Annual</span>
+              <span class="text-sm text-slate-500 font-medium">Campus License</span>
+            </div>
+            <ul class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+              <li class="flex items-center gap-2">✓ All 4 tracks (Systems, Inference, AI, ML Math)</li>
+              <li class="flex items-center gap-2">✓ Unlimited student seats & cohort workspaces</li>
+              <li class="flex items-center gap-2">✓ NAAC / NBA compliant exportable audit logs</li>
+              <li class="flex items-center gap-2">✓ Dedicated academic success manager</li>
+              <li class="flex items-center gap-2">✓ Custom LMS and single sign-on (SSO) integration</li>
+            </ul>
+          </div>
+          <button onclick="openDemoModal()" class="w-full mt-8 py-3 rounded-xl bg-pathwisse text-white font-semibold text-sm hover:bg-pathwisse-dark shadow-md transition-colors">
+            Schedule Institutional Review
+          </button>
+        </div>
+
+        <!-- Tier 3: Independent Learner -->
+        <div class="p-8 rounded-card glass-panel border border-slate-200 dark:border-slate-800 shadow-soft flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-mono font-bold text-slate-500 uppercase">INDIVIDUAL ENROLLMENT</span>
+            <h3 class="text-2xl font-bold text-pathwisse-dark dark:text-white mt-1">Student Pro</h3>
+            <p class="text-xs text-slate-500 mt-1">Self-paced access for students outside participating universities.</p>
+            <div class="my-6">
+              <span class="text-4xl font-extrabold text-pathwisse-dark dark:text-white font-display">$39</span>
+              <span class="text-sm text-slate-500 font-medium">/ month</span>
+            </div>
+            <ul class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+              <li class="flex items-center gap-2">✓ Complete access to all 4 curricula</li>
+              <li class="flex items-center gap-2">✓ All interactive labs & math decoders</li>
+              <li class="flex items-center gap-2">✓ Automated code build test runners</li>
+              <li class="flex items-center gap-2">✓ Public verified readiness portfolio link</li>
+            </ul>
+          </div>
+          <button onclick="openDemoModal()" class="w-full mt-8 py-3 rounded-xl border border-slate-300 dark:border-slate-700 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+            Get Pro Access
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 10. FINAL CONVERSION BLOCK                                                -->
+  <!-- ========================================================================= -->
+  <section class="py-20 lg:py-24">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="p-10 sm:p-14 rounded-hero bg-gradient-to-br from-pathwisse to-pathwisse-dark text-white text-center shadow-floating relative overflow-hidden">
+        <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-sky-500/10 blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 -top-20 w-80 h-80 rounded-full bg-blue-400/10 blur-3xl pointer-events-none"></div>
+        
+        <span class="text-xs font-mono uppercase tracking-widest text-sky-300 font-semibold block mb-2">INSTITUTIONAL CONSULTATION</span>
+        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight max-w-2xl mx-auto leading-tight">
+          Ready to institutionalize student placement readiness?
+        </h2>
+        <p class="text-base text-blue-100 max-w-xl mx-auto mt-4">
+          Join universities transforming unstructured training into verified, quantifiable student outcomes. Deploy a pilot within 4 weeks.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-4 mt-8">
+          <button onclick="openDemoModal()" class="px-7 py-3.5 rounded-xl bg-white text-pathwisse-dark font-bold text-sm hover:bg-blue-50 transition-colors shadow-lg">
+            Request Institutional Demo
+          </button>
+          <a href="#overview" class="px-6 py-3.5 rounded-xl border border-white/30 text-white font-semibold text-sm hover:bg-white/10 transition-colors">
+            Explore Features
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 11. INSTITUTIONAL FOOTER                                                  -->
+  <!-- ========================================================================= -->
+  <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/90 py-12 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+        
+        <div class="col-span-2 space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-pathwisse flex items-center justify-center text-white font-bold text-xs">
+              PW
+            </div>
+            <span class="text-base font-bold font-display text-pathwisse-dark dark:text-white">Pathwisse</span>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
+            Employability Operating System for higher education. Bridging technical learning, verified lab evidence, and institutional placement outcomes.
+          </p>
+          <span class="text-[11px] text-slate-400 block font-mono">Reference: pathwisse.com</span>
+        </div>
+
+        <div>
+          <span class="font-bold text-slate-800 dark:text-slate-200 block mb-2.5 font-mono">PLATFORM</span>
+          <ul class="space-y-2">
+            <li><a href="#overview" class="hover:underline">Overview</a></li>
+            <li><a href="#journey" class="hover:underline">10-Stage Model</a></li>
+            <li><a href="#readiness" class="hover:underline">Readiness Engine</a></li>
+            <li><a href="#instruments" class="hover:underline">GPU Workbench</a></li>
+            <li><a href="#instruments" class="hover:underline">Math Decoder</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <span class="font-bold text-slate-800 dark:text-slate-200 block mb-2.5 font-mono">CURRICULUM</span>
+          <ul class="space-y-2">
+            <li><a href="#capabilities" class="hover:underline">System Design</a></li>
+            <li><a href="#capabilities" class="hover:underline">Inference Engineering</a></li>
+            <li><a href="#capabilities" class="hover:underline">AI Research & Models</a></li>
+            <li><a href="#capabilities" class="hover:underline">ML Mathematics</a></li>
+            <li><a href="#capabilities" class="hover:underline">Daily Research Papers</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <span class="font-bold text-slate-800 dark:text-slate-200 block mb-2.5 font-mono">INSTITUTIONS</span>
+          <ul class="space-y-2">
+            <li><a href="#pricing" class="hover:underline">Campus Pilots</a></li>
+            <li><a href="#audiences" class="hover:underline">Placement Teams</a></li>
+            <li><a href="#audiences" class="hover:underline">NAAC/NBA Compliance</a></li>
+            <li><a href="#pricing" class="hover:underline">Accreditation Data</a></li>
+            <li><a href="javascript:void(0)" onclick="openDemoModal()" class="text-pathwisse-accent font-semibold hover:underline">Request Consult</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <span>© 2026 Pathwisse Operating System. All rights reserved.</span>
+        <div class="flex items-center gap-4 text-xs">
+          <span>Institutional Trust</span>
+          <span>•</span>
+          <span>Zero-Hallucination Evidence</span>
+          <span>•</span>
+          <span>Enterprise SSO</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: REQUEST DEMO & PILOT FORM                                          -->
+  <!-- ========================================================================= -->
+  <div id="demo-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="glass-panel max-w-lg w-full rounded-panel p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-floating relative bg-white dark:bg-slate-900">
+      <button onclick="closeDemoModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:hover:text-white">
+        ✕
+      </button>
+      
+      <div class="mb-5">
+        <span class="text-xs font-mono font-bold text-pathwisse-accent uppercase">CAMPUS CONSULTATION</span>
+        <h3 class="text-xl font-bold text-pathwisse-dark dark:text-white mt-0.5">Request Institutional Demo</h3>
+        <p class="text-xs text-slate-500 mt-1">Connect with our curriculum directors to review department pilot options.</p>
+      </div>
+
+      <form onsubmit="handleDemoSubmit(event)" class="space-y-3.5 text-left">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
+          <input required type="text" placeholder="Dr. Sarah Jenkins" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-xs bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">University / College Name</label>
+          <input required type="text" placeholder="National Institute of Technology" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-xs bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Official Email</label>
+            <input required type="email" placeholder="director@college.edu" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-xs bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Role / Department</label>
+            <select class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-xs bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white">
+              <option>Placement Director / TPO</option>
+              <option>Dean / Principal</option>
+              <option>Head of Department (CSE/IT/AI)</option>
+              <option>Faculty Lead</option>
+              <option>Student Representative</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Cohort Scope</label>
+          <select class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-xs bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white">
+            <option>100–300 Students (Department Pilot)</option>
+            <option>300–1,000 Students (Faculty-wide)</option>
+            <option>1,000+ Students (Full Campus OS)</option>
+          </select>
+        </div>
+        <button type="submit" class="w-full mt-4 py-3 rounded-xl bg-pathwisse text-white text-xs font-bold hover:bg-pathwisse-dark shadow-sm">
+          Submit Institutional Request
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- COMMAND PALETTE (CMD+K / CTRL+K)                                          -->
+  <!-- ========================================================================= -->
+  <div id="cmd-palette" class="fixed inset-0 z-50 hidden flex items-start justify-center pt-24 p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="glass-panel max-w-lg w-full rounded-2xl p-4 border border-slate-200 dark:border-slate-700 shadow-floating bg-white dark:bg-slate-900">
+      <div class="flex items-center gap-2 pb-3 border-b border-slate-200 dark:border-slate-800">
+        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <input type="text" id="palette-search" placeholder="Type a destination or lab (e.g. GPU, Raft, Math)..." class="flex-1 bg-transparent border-none text-xs text-slate-800 dark:text-white outline-none">
+        <kbd class="text-[10px] font-mono text-slate-400 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">ESC</kbd>
+      </div>
+      <div class="pt-3 space-y-1 text-xs">
+        <a href="#overview" onclick="toggleCommandPalette()" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+          <span>Overview & Readiness Index</span>
+          <span class="font-mono text-[10px] text-slate-400">#overview</span>
+        </a>
+        <a href="#journey" onclick="toggleCommandPalette()" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+          <span>10-Stage Operating Journey</span>
+          <span class="font-mono text-[10px] text-slate-400">#journey</span>
+        </a>
+        <a href="#instruments" onclick="toggleCommandPalette(); switchInstrument('gpu');" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+          <span>GPU Memory & VRAM Workbench</span>
+          <span class="font-mono text-[10px] text-slate-400">Tool</span>
+        </a>
+        <a href="#instruments" onclick="toggleCommandPalette(); switchInstrument('decoder');" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+          <span>Mathematical Notation Library</span>
+          <span class="font-mono text-[10px] text-slate-400">Tool</span>
+        </a>
+        <a href="#capabilities" onclick="toggleCommandPalette()" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+          <span>System Design & Inference Tracks</span>
+          <span class="font-mono text-[10px] text-slate-400">#capabilities</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT CONTROLLERS                                                    -->
+  <!-- ========================================================================= -->
+  <script>
+    // 1. Theme Management (Defaults to clean Pathwisse light mode)
+    function toggleTheme() {
+      const html = document.documentElement;
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        localStorage.setItem('pathwisse-theme', 'light');
+      } else {
+        html.classList.add('dark');
+        localStorage.setItem('pathwisse-theme', 'dark');
+      }
+    }
+
+    // 2. Mobile Menu
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    // 3. Command Palette
+    function toggleCommandPalette() {
+      const pal = document.getElementById('cmd-palette');
+      pal.classList.toggle('hidden');
+      if (!pal.classList.contains('hidden')) {
+        setTimeout(() => document.getElementById('palette-search').focus(), 50);
+      }
+    }
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        toggleCommandPalette();
+      }
+      if (e.key === 'Escape') {
+        document.getElementById('cmd-palette').classList.add('hidden');
+        document.getElementById('demo-modal').classList.add('hidden');
+      }
+    });
+
+    // 4. Modal
+    function openDemoModal() {
+      document.getElementById('demo-modal').classList.remove('hidden');
+    }
+    function closeDemoModal() {
+      document.getElementById('demo-modal').classList.add('hidden');
+    }
+    function handleDemoSubmit(e) {
+      e.preventDefault();
+      alert('Thank you! Your institutional inquiry has been submitted. Our Academic Director will reach out within 24 hours.');
+      closeDemoModal();
+    }
+
+    // 5. 10-Stage Operating Model Data & Switcher
+    const stagesData = {
+      1: {
+        badge: "STAGE 01 OF 10",
+        owner: "Ownership: Student + Department Counselor",
+        title: "Career Goal & Competency Profiling",
+        desc: "Students identify target engineering specializations (e.g. Distributed Systems Engineer, LLM Inference Specialist, or AI Research Practitioner). The operating system maps exact skill graphs and industry requirements without vague generalizations.",
+        metric: "100%",
+        metricLabel: "Students with deterministic milestone roadmaps",
+        deliv: ["Role Competency Matrix", "Baseline Diagnostic", "Weeks 1–2"]
+      },
+      2: {
+        badge: "STAGE 02 OF 10",
+        owner: "Ownership: Curriculum Office + AI Engine",
+        title: "Deterministic Skill Mapping",
+        desc: "Translates standard university syllabus into targeted engineering requirements. Identifies gaps between semester courses and high-bar industry benchmarks.",
+        metric: "42",
+        metricLabel: "Core competencies mapped per track",
+        deliv: ["Competency Blueprint", "Course Alignment Matrix", "Weeks 3–4"]
+      },
+      3: {
+        badge: "STAGE 03 OF 10",
+        owner: "Ownership: Faculty & Interactive Platform",
+        title: "Core Mathematical & Systems Foundations",
+        desc: "Deep mastery of underlying principles: LSM trees, append-only logs, matrix calculus, probability densities, and backpropagation mechanics.",
+        metric: "94%",
+        metricLabel: "Concept retention rate through active recall",
+        deliv: ["Math Decoder Drills", "Interactive Foundations", "Weeks 5–8"]
+      },
+      4: {
+        badge: "STAGE 04 OF 10",
+        owner: "Ownership: Student + Automated Test Runners",
+        title: "Hands-on Interactive Labs",
+        desc: "Browser-based sandbox environments. Students calculate KV caches, configure Raft leader elections, and simulate network partitions.",
+        metric: "16+",
+        metricLabel: "Interactive labs completed per learner",
+        deliv: ["GPU Memory Workbench", "Raft Consensus Lab", "Weeks 9–12"]
+      },
+      5: {
+        badge: "STAGE 05 OF 10",
+        owner: "Ownership: Student + Code Review Pipeline",
+        title: "Production Code Builds",
+        desc: "Full end-to-end repository builds: custom storage engines, FlashAttention CUDA bindings, and distributed pub/sub brokers verified against automated test suites.",
+        metric: "3+",
+        metricLabel: "Production-grade repositories shipped",
+        deliv: ["Storage Engine Build", "Distributed Cache", "Weeks 13–16"]
+      },
+      6: {
+        badge: "STAGE 06 OF 10",
+        owner: "Ownership: Industry Mentors + Alumni Network",
+        title: "Structured Code Review & Mentoring",
+        desc: "Senior engineering practitioners review pull requests, architecture decisions, and code cleanliness, mirroring top-tier engineering teams.",
+        metric: "100%",
+        metricLabel: "Builds code-reviewed by human engineers",
+        deliv: ["PR Review Logs", "Architecture Debrief", "Weeks 17–18"]
+      },
+      7: {
+        badge: "STAGE 07 OF 10",
+        owner: "Ownership: Verified Telemetry Engine",
+        title: "Quantified Readiness Indexing",
+        desc: "Real-time 0–100 scoring based on code completeness, test coverage, mathematical drills, and code review feedback.",
+        metric: "88/100",
+        metricLabel: "Average verified readiness of completing cohort",
+        deliv: ["Verifiable Index", "Skill Radar Chart", "Week 19"]
+      },
+      8: {
+        badge: "STAGE 08 OF 10",
+        owner: "Ownership: Placement Cell + HODs",
+        title: "Cohort Benchmarking & Gap Interventions",
+        desc: "Institutional dashboard identifies top-quartile students and alerts mentors to students needing targeted support before hiring drives.",
+        metric: "< 5%",
+        metricLabel: "Unidentified at-risk rate across cohort",
+        deliv: ["Cohort Percentiles", "Intervention Triggers", "Week 20"]
+      },
+      9: {
+        badge: "STAGE 09 OF 10",
+        owner: "Ownership: Placement Directorate & Recruiters",
+        title: "Algorithmic Placement Matching",
+        desc: "Verified profiles and code artifacts are matched directly to hiring partners seeking proven systems and AI engineering talent.",
+        metric: "3.4x",
+        metricLabel: "Higher interview shortlist rate",
+        deliv: ["Verified Candidate Dossier", "Recruiter Shortlists", "Weeks 21–24"]
+      },
+      10: {
+        badge: "STAGE 10 OF 10",
+        owner: "Ownership: Dean / College Leadership",
+        title: "Accreditation & Institutional Reporting",
+        desc: "Continuous exportable reports for NAAC, NBA, and ABET accreditation bodies documenting verifiable outcome-based education metrics.",
+        metric: "100%",
+        metricLabel: "Compliant outcome-based data audit trail",
+        deliv: ["NAAC Criterion 2 & 5 Logs", "Placement Audit Report", "End of Semester"]
+      }
+    };
+
+    function selectStage(num) {
+      document.querySelectorAll('.stage-nav-btn').forEach((btn, idx) => {
+        if (idx + 1 === num) {
+          btn.className = "stage-nav-btn flex-1 p-3 rounded-xl border border-pathwisse bg-pathwisse text-white text-left transition-all shadow-sm";
+        } else {
+          btn.className = "stage-nav-btn flex-1 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-left hover:border-slate-300 transition-all";
+        }
+      });
+
+      const d = stagesData[num];
+      document.getElementById('stage-badge').innerText = d.badge;
+      document.getElementById('stage-owner').innerText = d.owner;
+      document.getElementById('stage-title').innerText = d.title;
+      document.getElementById('stage-desc').innerText = d.desc;
+      document.getElementById('stage-metric').innerText = d.metric;
+      document.getElementById('stage-metric-label').innerText = d.metricLabel;
+
+      const delivEl = document.getElementById('stage-deliverables');
+      delivEl.innerHTML = `
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700">
+          <span class="text-[11px] text-slate-500 block">Deliverable</span>
+          <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">${d.deliv[0]}</span>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700">
+          <span class="text-[11px] text-slate-500 block">Verification</span>
+          <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">${d.deliv[1]}</span>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700">
+          <span class="text-[11px] text-slate-500 block">Time Horizon</span>
+          <span class="text-xs font-semibold text-pathwisse">${d.deliv[2]}</span>
+        </div>
+      `;
+    }
+
+    // 6. Readiness Score Recalculator
+    function recalculateReadiness() {
+      const checks = document.querySelectorAll('.milestone-toggle');
+      let score = 0;
+      checks.forEach(c => {
+        if (c.checked) score += parseInt(c.getAttribute('data-pts') || 0);
+      });
+
+      document.getElementById('sim-score').innerText = score;
+      document.getElementById('demo-readiness-score').innerText = score;
+
+      const verdict = document.getElementById('sim-verdict');
+      if (score >= 85) {
+        verdict.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 mb-4";
+        verdict.innerText = "● Tier-1 Placement Ready";
+      } else if (score >= 60) {
+        verdict.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300 mb-4";
+        verdict.innerText = "● Intermediate Progress";
+      } else {
+        verdict.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 mb-4";
+        verdict.innerText = "● Needs Intervention";
+      }
+
+      // Update breakdown bars
+      document.getElementById('bar-artifact').style.width = Math.min(100, Math.round(score * 1.05)) + '%';
+      document.getElementById('bar-artifact-val').innerText = Math.min(100, Math.round(score * 1.05)) + '%';
+      
+      document.getElementById('bar-systems').style.width = Math.min(100, Math.round(score * 0.98)) + '%';
+      document.getElementById('bar-systems-val').innerText = Math.min(100, Math.round(score * 0.98)) + '%';
+
+      document.getElementById('bar-math').style.width = Math.min(100, Math.round(score * 0.95)) + '%';
+      document.getElementById('bar-math-val').innerText = Math.min(100, Math.round(score * 0.95)) + '%';
+    }
+
+    function resetReadinessDemo() {
+      const checks = document.querySelectorAll('.milestone-toggle');
+      checks.forEach((c, idx) => c.checked = idx < 4);
+      recalculateReadiness();
+    }
+
+    // 7. GPU Memory Workbench Calculator
+    let currentPrecision = 2.0; // FP16: 2 bytes per param
+
+    function setPrecision(prec) {
+      document.getElementById('prec-fp16').className = "p-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium font-mono";
+      document.getElementById('prec-int8').className = "p-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium font-mono";
+      document.getElementById('prec-int4').className = "p-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium font-mono";
+
+      if (prec === 'fp16') {
+        currentPrecision = 2.0;
+        document.getElementById('prec-fp16').className = "p-2 text-xs rounded-lg border border-pathwisse bg-blue-50 dark:bg-blue-950/80 text-pathwisse-dark dark:text-white font-bold font-mono";
+      } else if (prec === 'int8') {
+        currentPrecision = 1.0;
+        document.getElementById('prec-int8').className = "p-2 text-xs rounded-lg border border-pathwisse bg-blue-50 dark:bg-blue-950/80 text-pathwisse-dark dark:text-white font-bold font-mono";
+      } else if (prec === 'int4') {
+        currentPrecision = 0.5;
+        document.getElementById('prec-int4').className = "p-2 text-xs rounded-lg border border-pathwisse bg-blue-50 dark:bg-blue-950/80 text-pathwisse-dark dark:text-white font-bold font-mono";
+      }
+      updateGpuCalc();
+    }
+
+    function updateGpuCalc() {
+      const paramsB = parseInt(document.getElementById('gpu-param-slider').value);
+      const ctxK = parseInt(document.getElementById('gpu-ctx-slider').value);
+      const batch = parseInt(document.getElementById('gpu-batch-slider').value);
+
+      document.getElementById('gpu-param-val').innerText = `${paramsB} Billion (${paramsB}B)`;
+      document.getElementById('gpu-ctx-val').innerText = `${ctxK}k tokens`;
+      document.getElementById('gpu-batch-val').innerText = `${batch} requests`;
+
+      // Weight memory: params * bytes
+      const weightGB = paramsB * currentPrecision;
+      
+      // KV cache approx: 2 * 32 layers * 4096 hidden * ctx * batch * 2 bytes
+      const kvGB = (0.075 * ctxK * batch * (paramsB / 7)).toFixed(1);
+      
+      const cudaOverhead = 1.2;
+      const total = (weightGB + parseFloat(kvGB) + cudaOverhead).toFixed(1);
+
+      document.getElementById('gpu-total-vram').innerText = total;
+      document.getElementById('gpu-weights-mem').innerText = `${weightGB.toFixed(1)} GB`;
+      document.getElementById('gpu-kv-mem').innerText = `${kvGB} GB`;
+
+      const fitBox = document.getElementById('gpu-fit-box');
+      if (total <= 24) {
+        fitBox.className = "p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-xs";
+        fitBox.innerHTML = `
+          <span class="font-semibold text-emerald-800 dark:text-emerald-300 block">✓ Fits in 1x NVIDIA RTX 4090 / A10G (24GB)</span>
+          <span class="text-emerald-600 dark:text-emerald-400 text-[11px] block mt-0.5">Headroom: ~${(24 - total).toFixed(1)} GB free for dynamic batching</span>
+        `;
+      } else if (total <= 48) {
+        fitBox.className = "p-3.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-xs";
+        fitBox.innerHTML = `
+          <span class="font-semibold text-blue-800 dark:text-blue-300 block">✓ Requires 1x NVIDIA A40 / A6000 (48GB)</span>
+          <span class="text-blue-600 dark:text-blue-400 text-[11px] block mt-0.5">Headroom: ~${(48 - total).toFixed(1)} GB free</span>
+        `;
+      } else if (total <= 80) {
+        fitBox.className = "p-3.5 rounded-xl bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 text-xs";
+        fitBox.innerHTML = `
+          <span class="font-semibold text-purple-800 dark:text-purple-300 block">✓ Requires 1x NVIDIA A100 / H100 (80GB)</span>
+          <span class="text-purple-600 dark:text-purple-400 text-[11px] block mt-0.5">Headroom: ~${(80 - total).toFixed(1)} GB free</span>
+        `;
+      } else {
+        fitBox.className = "p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-xs";
+        fitBox.innerHTML = `
+          <span class="font-semibold text-amber-800 dark:text-amber-300 block">⚠️ Multi-GPU Tensor Parallelism Required</span>
+          <span class="text-amber-600 dark:text-amber-400 text-[11px] block mt-0.5">Requires 2x or 4x 80GB GPUs with NVLink interconnect</span>
+        `;
+      }
+    }
+
+    // 8. Instrument Tabs Switcher
+    function switchInstrument(tab) {
+      if (tab === 'gpu') {
+        document.getElementById('inst-gpu-panel').classList.remove('hidden');
+        document.getElementById('inst-decoder-panel').classList.add('hidden');
+        document.getElementById('inst-tab-gpu').className = "px-5 py-2.5 rounded-xl bg-white dark:bg-slate-900 text-pathwisse-dark dark:text-white text-sm font-semibold shadow-sm transition-all";
+        document.getElementById('inst-tab-decoder').className = "px-5 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-pathwisse-dark dark:hover:text-white text-sm font-semibold transition-all";
+      } else {
+        document.getElementById('inst-gpu-panel').classList.add('hidden');
+        document.getElementById('inst-decoder-panel').classList.remove('hidden');
+        document.getElementById('inst-tab-gpu').className = "px-5 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-pathwisse-dark dark:hover:text-white text-sm font-semibold transition-all";
+        document.getElementById('inst-tab-decoder').className = "px-5 py-2.5 rounded-xl bg-white dark:bg-slate-900 text-pathwisse-dark dark:text-white text-sm font-semibold shadow-sm transition-all";
+      }
+    }
+
+    function filterMathSymbols() {
+      const q = document.getElementById('math-search-input').value.toLowerCase();
+      document.querySelectorAll('.math-card').forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(q) ? 'block' : 'none';
+      });
+    }
+
+    function copyLatex(latex) {
+      navigator.clipboard.writeText(latex);
+      alert(`Copied to clipboard: ${latex}`);
+    }
+
+    // 9. Audience Tab Switcher
+    const audienceData = {
+      students: [
+        { label: "01. CERTAINTY", title: "Deterministic Roadmap", desc: "Know exactly what to study each week without wasting months on superficial beginner tutorials." },
+        { label: "02. CREDIBILITY", title: "Verifiable Portfolio", desc: "Proof-of-work code builds and stress tests that instantly distinguish you from generic applicants." },
+        { label: "03. PLACEMENT READY", title: "Verified Score Badge", desc: "Your 0-100 Readiness Index gives recruiting partners instant confidence in your engineering abilities." }
+      ],
+      placement: [
+        { label: "01. SCREENING SPEED", title: "Instant Talent Filtering", desc: "Filter thousands of students by verified competency scores rather than unverified resumes." },
+        { label: "02. RECRUITER TRUST", title: "Evidence-Backed Dossiers", desc: "Deliver recruiters candidate profiles with verified commit histories and stress test outputs." },
+        { label: "03. HIGHER OFFERS", title: "Premium CTC Placement", desc: "Guide students directly into high-tier systems and AI engineering roles with 2x to 3x higher packages." }
+      ],
+      faculty: [
+        { label: "01. SYLLABUS ALIGNMENT", title: "Automated Curriculum Sync", desc: "Map existing university courses to current industry frameworks without rebuilding syllabi." },
+        { label: "02. EARLY RISK DETECTION", title: "At-Risk Alerts", desc: "Identify students struggling with mathematical prerequisites weeks before semester exams." },
+        { label: "03. AUTOMATED LABS", title: "Zero Grading Burden", desc: "Automated test suites and benchmarks evaluate code builds, saving hundreds of faculty grading hours." }
+      ],
+      leadership: [
+        { label: "01. AUDIT COMPLIANCE", title: "NAAC & NBA Evidence", desc: "Continuous exportable reports documenting outcome-based education metrics for accreditation boards." },
+        { label: "02. INSTITUTIONAL BRAND", title: "Top-Tier Placement Prestige", desc: "Build a reputation as a premier tech institution producing engineers who ship from day one." },
+        { label: "03. SCALABLE GOVERNANCE", title: "Departmental Telemetry", desc: "Track readiness distributions, faculty intervention velocity, and recruiter hiring conversion in one place." }
+      ]
+    };
+
+    function switchAudience(aud) {
+      const tabs = ['students', 'placement', 'faculty', 'leadership'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`aud-tab-${t}`);
+        if (t === aud) {
+          btn.className = "px-4 py-2 rounded-xl bg-white dark:bg-slate-900 text-pathwisse-dark dark:text-white text-xs font-bold shadow-sm transition-all";
+        } else {
+          btn.className = "px-4 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-pathwisse-dark text-xs font-semibold transition-all";
+        }
+      });
+
+      const cards = audienceData[aud];
+      const container = document.getElementById('audience-content');
+      container.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-750">
+            <span class="text-xs font-mono text-pathwisse-accent font-bold block mb-1">${cards[0].label}</span>
+            <h4 class="text-base font-bold text-slate-800 dark:text-white">${cards[0].title}</h4>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">${cards[0].desc}</p>
+          </div>
+          <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-750">
+            <span class="text-xs font-mono text-emerald-600 font-bold block mb-1">${cards[1].label}</span>
+            <h4 class="text-base font-bold text-slate-800 dark:text-white">${cards[1].title}</h4>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">${cards[1].desc}</p>
+          </div>
+          <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-750">
+            <span class="text-xs font-mono text-purple-600 font-bold block mb-1">${cards[2].label}</span>
+            <h4 class="text-base font-bold text-slate-800 dark:text-white">${cards[2].title}</h4>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">${cards[2].desc}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Initialize
+    updateGpuCalc();
+    recalculateReadiness();
+  </script>
+</body>
+</html>

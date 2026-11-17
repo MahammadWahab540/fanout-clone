@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";function t(e){return n.some(t=>t===e)}var n,r=e((()=>{n=[`communities`,`tools`]}));export{t as n,r as t};

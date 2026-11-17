@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";import{t}from"./jsx-runtime-CIkHs51R.js";function n({className:e}){return(0,r.jsx)(`img`,{src:`/assets/brand/gift-bloom.png`,alt:``,"aria-hidden":`true`,width:256,height:320,className:`h-16 w-auto max-w-none select-none ${e??``}`.trim(),draggable:!1})}var r,i=e((()=>{r=t()}));export{i as n,n as t};

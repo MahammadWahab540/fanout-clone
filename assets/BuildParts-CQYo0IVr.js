@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";import{t}from"./jsx-runtime-CIkHs51R.js";import{n,t as r}from"./BuildActivity-Ds_PaEp_.js";import{n as i,t as a}from"./ActivityLesson-D5e24ta6.js";function o(){return(0,s.jsx)(a,{lesson:`parts-without-a-printer`,children:(0,s.jsx)(r,{})})}var s;e((()=>{i(),n(),s=t()}))();export{o as default};

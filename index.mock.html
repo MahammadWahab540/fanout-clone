@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Fanout — AI Research, System Design & ML Math</title>
+  <meta name="description" content="Mapped technical learning across AI research, system design, and ML math with practical labs, daily papers, and roadmaps." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%233b82f6' d='M1 4.5L8 .75l7 3.75L8 8.25Z'/%3E%3Cpath fill='%231d4ed8' d='M1 4.5l7 3.75V14l-7-3.75Z'/%3E%3Cpath fill='%2360a5fa' d='M8 8.25l7-3.75v5.75L8 14Z'/%3E%3C/svg%3E" />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            fanout: {
+              bg: '#111315',
+              surface: '#181b1e',
+              surfaceLight: '#212529',
+              card: '#16191c',
+              border: '#282d33',
+              borderLight: '#343b44',
+              fg: '#e6e8eb',
+              muted: '#8b949e',
+              blue: '#3b82f6',
+              green: '#10b981',
+              orange: '#f59e0b',
+              purple: '#8b5cf6',
+              red: '#ef4444'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg: #fbfbfb;
+      --surface: #ffffff;
+      --surface-elevated: #f4f6f8;
+      --surface-hover: #eceef2;
+      --border: #e2e5e9;
+      --border-strong: #cbd2d9;
+      --fg: #111315;
+      --fg-muted: #5e6873;
+      --accent-blue: #2563eb;
+      --accent-green: #059669;
+      --accent-orange: #d97706;
+      --accent-purple: #7c3aed;
+      --accent-red: #dc2626;
+      --badge-bg: #eef2f6;
+      --code-bg: #edf1f5;
+    }
+
+    .dark {
+      --bg: #111315;
+      --surface: #171a1d;
+      --surface-elevated: #1e2226;
+      --surface-hover: #262c32;
+      --border: #282e35;
+      --border-strong: #373f49;
+      --fg: #e6e8eb;
+      --fg-muted: #8b949e;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-orange: #f59e0b;
+      --accent-purple: #8b5cf6;
+      --accent-red: #ef4444;
+      --badge-bg: #1f252b;
+      --code-bg: #131618;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .font-mono-code {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* Tactile Cube Animation */
+    .isometric-cube {
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-origin: center;
+    }
+    .isometric-cube:hover {
+      transform: translateY(-2px) scale(1.05);
+    }
+    .isometric-cube:active {
+      transform: translateY(2px) scale(0.95);
+    }
+
+    /* Dashed wire flow pulse */
+    @keyframes wireFlow {
+      from { stroke-dashoffset: 20; }
+      to { stroke-dashoffset: 0; }
+    }
+    .flow-wire {
+      stroke-dasharray: 3, 3;
+      animation: wireFlow 1.2s linear infinite;
+    }
+
+    /* Grid background pattern */
+    .bg-grid-pattern {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(120, 130, 140, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(120, 130, 140, 0.07) 1px, transparent 1px);
+    }
+
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-strong);
+      border-radius: 9999px;
+    }
+
+    .card-hover {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      border-color: var(--border-strong);
+    }
+    .dark .card-hover:hover {
+      box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.5), 0 4px 12px -2px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Modal Backdrop Blur */
+    .modal-backdrop {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-blue-500/20 selection:text-blue-400">
+
+  <!-- Top Announcement Bar -->
+  <aside aria-label="Announcement" class="bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-emerald-600/10 border-b border-[var(--border)] py-1.5 px-4 text-xs font-mono-code text-center flex items-center justify-center gap-2">
+    <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">NEW</span>
+    <span class="text-[var(--fg-muted)]">Inference Engineering Track: Continuous Batching, PagedAttention &amp; Speculative Decoding now live.</span>
+    <a href="#courses" class="text-[var(--accent-blue)] hover:underline ml-1 font-medium inline-flex items-center gap-1">
+      View syllabus &rarr;
+    </a>
+  </aside>
+
+  <!-- Main Navbar -->
+  <header class="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--bg)]/90 backdrop-blur-md transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Isometric Tactile Mark -->
+      <a href="#" class="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg p-1">
+        <!-- Interactive Tactile SVG Fanout Mark -->
+        <div class="w-9 h-7 relative flex items-center justify-center cursor-pointer select-none">
+          <svg viewBox="0 0 68 52" class="w-full h-full overflow-visible" fill="none">
+            <!-- Connector Wires -->
+            <path d="M17 26H28" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2 2" class="text-zinc-400 dark:text-zinc-600" />
+            <path d="M28 26L45 12" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2 2" class="text-zinc-400 dark:text-zinc-600" />
+            <path d="M28 26H48" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2 2" class="text-zinc-400 dark:text-zinc-600" />
+            <path d="M28 26L45 40" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2 2" class="text-zinc-400 dark:text-zinc-600" />
+            
+            <!-- Dynamic flow pulses -->
+            <path d="M17 26H28" stroke="var(--accent-blue)" stroke-width="1.4" class="flow-wire opacity-80" />
+            <path d="M28 26L45 12" stroke="var(--accent-blue)" stroke-width="1.4" class="flow-wire opacity-80" />
+            <path d="M28 26H48" stroke="var(--accent-green)" stroke-width="1.4" class="flow-wire opacity-80" />
+            <path d="M28 26L45 40" stroke="var(--accent-orange)" stroke-width="1.4" class="flow-wire opacity-80" />
+
+            <!-- Origin Cube Node (Root) -->
+            <g class="isometric-cube" style="transform-origin: 10px 26px;">
+              <g transform="translate(2, 19)">
+                <path d="M1 4.5L8 .75l7 3.75L8 8.25Z" fill="var(--surface-elevated)" stroke="currentColor" stroke-width="0.8" class="text-zinc-500 dark:text-zinc-400" />
+                <path d="M1 4.5l7 3.75V14l-7-3.75Z" fill="var(--bg)" stroke="currentColor" stroke-width="0.8" class="text-zinc-500 dark:text-zinc-400" />
+                <path d="M8 8.25l7-3.75v5.75L8 14Z" fill="var(--border-strong)" stroke="currentColor" stroke-width="0.8" class="text-zinc-500 dark:text-zinc-400" />
+              </g>
+            </g>
+
+            <!-- Leaf Node 1 (AI Research - Blue) -->
+            <g class="isometric-cube" style="transform-origin: 52px 12px;">
+              <g transform="translate(44, 5)">
+                <path d="M1 4.5L8 .75l7 3.75L8 8.25Z" fill="#3b82f6" fill-opacity="0.3" stroke="#3b82f6" stroke-width="1" />
+                <path d="M1 4.5l7 3.75V14l-7-3.75Z" fill="#1d4ed8" fill-opacity="0.4" stroke="#3b82f6" stroke-width="1" />
+                <path d="M8 8.25l7-3.75v5.75L8 14Z" fill="#60a5fa" fill-opacity="0.5" stroke="#3b82f6" stroke-width="1" />
+              </g>
+            </g>
+
+            <!-- Leaf Node 2 (System Design - Green) -->
+            <g class="isometric-cube" style="transform-origin: 55px 26px;">
+              <g transform="translate(47, 19)">
+                <path d="M1 4.5L8 .75l7 3.75L8 8.25Z" fill="#10b981" fill-opacity="0.3" stroke="#10b981" stroke-width="1" />
+                <path d="M1 4.5l7 3.75V14l-7-3.75Z" fill="#047857" fill-opacity="0.4" stroke="#10b981" stroke-width="1" />
+                <path d="M8 8.25l7-3.75v5.75L8 14Z" fill="#34d399" fill-opacity="0.5" stroke="#10b981" stroke-width="1" />
+              </g>
+            </g>
+
+            <!-- Leaf Node 3 (ML Math - Orange) -->
+            <g class="isometric-cube" style="transform-origin: 52px 40px;">
+              <g transform="translate(44, 33)">
+                <path d="M1 4.5L8 .75l7 3.75L8 8.25Z" fill="#f59e0b" fill-opacity="0.3" stroke="#f59e0b" stroke-width="1" />
+                <path d="M1 4.5l7 3.75V14l-7-3.75Z" fill="#b45309" fill-opacity="0.4" stroke="#f59e0b" stroke-width="1" />
+                <path d="M8 8.25l7-3.75v5.75L8 14Z" fill="#fbbf24" fill-opacity="0.5" stroke="#f59e0b" stroke-width="1" />
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <span class="font-bold text-lg tracking-wider font-mono-code text-[var(--fg)]">FANOUT</span>
+          <span class="text-[10px] font-mono-code font-semibold px-1.5 py-0.2 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20">BETA</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Items -->
+      <nav class="hidden md:flex items-center gap-1 text-sm font-medium text-[var(--fg-muted)]">
+        <a href="#courses" class="px-3 py-1.5 rounded-md hover:text-[var(--fg)] hover:bg-[var(--surface-hover)] transition-colors">Courses</a>
+        <a href="#roadmaps" class="px-3 py-1.5 rounded-md hover:text-[var(--fg)] hover:bg-[var(--surface-hover)] transition-colors">Roadmaps</a>
+        <a href="#labs" class="px-3 py-1.5 rounded-md hover:text-[var(--fg)] hover:bg-[var(--surface-hover)] transition-colors flex items-center gap-1.5">
+          <span>Labs</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        </a>
+        <a href="#daily-papers" class="px-3 py-1.5 rounded-md hover:text-[var(--fg)] hover:bg-[var(--surface-hover)] transition-colors">Daily Papers</a>
+        <a href="#study-wall" class="px-3 py-1.5 rounded-md hover:text-[var(--fg)] hover:bg-[var(--surface-hover)] transition-colors">Study Wall</a>
+        <a href="#pricing" class="px-3 py-1.5 rounded-md hover:text-[var(--fg)] hover:bg-[var(--surface-hover)] transition-colors">Pricing</a>
+      </nav>
+
+      <!-- Right Actions: Search, Theme Toggle, Login/Join -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Search Trigger -->
+        <button id="search-trigger-btn" onclick="openSearchModal()" class="flex items-center gap-2 text-xs font-mono-code px-2.5 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--fg-muted)] hover:border-[var(--border-strong)] hover:text-[var(--fg)] transition-all">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <span class="hidden sm:inline">Search archive...</span>
+          <kbd class="hidden sm:inline-block px-1.5 py-0.5 text-[10px] bg-[var(--badge-bg)] text-[var(--fg-muted)] rounded border border-[var(--border)]">⌘K</kbd>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button onclick="toggleTheme()" aria-label="Toggle theme" class="p-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--fg-muted)] hover:text-[var(--fg)] hover:border-[var(--border-strong)] transition-all">
+          <svg id="theme-icon-dark" class="w-4 h-4 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg id="theme-icon-light" class="w-4 h-4 block dark:hidden text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+
+        <!-- Sign In -->
+        <button onclick="openAuthModal('signin')" class="text-xs font-medium px-3 py-1.5 text-[var(--fg-muted)] hover:text-[var(--fg)] hidden sm:block transition-colors">
+          Sign in
+        </button>
+
+        <!-- Join Pro CTA -->
+        <button onclick="openAuthModal('pro')" class="text-xs font-semibold px-3.5 py-1.5 rounded-lg bg-[var(--fg)] text-[var(--bg)] hover:opacity-90 transition-opacity flex items-center gap-1.5 shadow-sm">
+          <span>Join Pro</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="flex-1">
+    <section class="relative overflow-hidden pt-12 pb-16 md:pt-20 md:pb-24 border-b border-[var(--border)] bg-grid-pattern">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        
+        <!-- Live Status Pill -->
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--fg-muted)] text-xs font-mono-code mb-6 shadow-sm">
+          <span class="flex h-2 w-2 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span class="text-[var(--fg)] font-semibold">L7 Brain Archive</span>
+          <span class="text-zinc-400 dark:text-zinc-600">·</span>
+          <span>Updated weekly</span>
+        </div>
+
+        <!-- Main Headline -->
+        <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[var(--fg)] leading-[1.12] mb-6">
+          Mapped technical learning across <br class="hidden sm:inline" />
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-emerald-500 to-amber-500">AI research</span>, 
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-400">system design</span>, &amp; 
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">ML math</span>.
+        </h1>
+
+        <!-- Subheading -->
+        <p class="max-w-3xl mx-auto text-base sm:text-lg text-[var(--fg-muted)] leading-relaxed mb-8">
+          Fanout brings together material that usually takes years to discover, filter, and connect. 
+          Bridge abstract mathematical notations with production LLM inference, KV caching, distributed serving, and foundational research papers.
+        </p>
+
+        <!-- CTA Action Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-12">
+          <a href="#courses" class="px-5 py-2.5 rounded-lg bg-[var(--fg)] text-[var(--bg)] font-semibold text-sm hover:opacity-90 transition-all flex items-center gap-2 shadow-md">
+            <span>Explore Courses</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </a>
+          <a href="#labs" class="px-5 py-2.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--fg)] font-semibold text-sm hover:border-[var(--border-strong)] hover:bg-[var(--surface-hover)] transition-all flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span>Launch Interactive Labs</span>
+          </a>
+          <a href="#roadmaps" class="px-5 py-2.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--fg)] font-semibold text-sm hover:border-[var(--border-strong)] hover:bg-[var(--surface-hover)] transition-all">
+            Browse Roadmaps
+          </a>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto pt-6 border-t border-[var(--border)] text-left">
+          <div class="p-3 rounded-lg border border-[var(--border)] bg-[var(--surface)]/80">
+            <div class="text-xl font-bold font-mono-code text-[var(--fg)]">5 Core</div>
+            <div class="text-xs text-[var(--fg-muted)]">Comprehensive Tracks</div>
+          </div>
+          <div class="p-3 rounded-lg border border-[var(--border)] bg-[var(--surface)]/80">
+            <div class="text-xl font-bold font-mono-code text-[var(--fg)]">20,000+</div>
+            <div class="text-xs text-[var(--fg-muted)]">Engineers Enrolled</div>
+          </div>
+          <div class="p-3 rounded-lg border border-[var(--border)] bg-[var(--surface)]/80">
+            <div class="text-xl font-bold font-mono-code text-[var(--fg)]">16 Labs</div>
+            <div class="text-xs text-[var(--fg-muted)]">Browser-Local Instruments</div>
+          </div>
+          <div class="p-3 rounded-lg border border-[var(--border)] bg-[var(--surface)]/80">
+            <div class="text-xl font-bold font-mono-code text-[var(--fg)]">Daily</div>
+            <div class="text-xs text-[var(--fg-muted)]">Research Breakdowns</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Inside the Fanout Learning Box (5 Pillars) -->
+    <section class="py-12 border-b border-[var(--border)] bg-[var(--surface)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-10">
+          <span class="text-xs font-mono-code uppercase tracking-wider text-blue-500 font-semibold">The Philosophy</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-[var(--fg)] mt-1">Inside the Fanout Learning Box</h2>
+          <p class="text-sm text-[var(--fg-muted)] mt-2">
+            Fanout is not a shallow tutorial or simple flashcard app. It builds the taste, context, and judgment behind Staff and L7-level engineering.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+          
+          <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] card-hover flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-mono-code font-bold text-blue-500 bg-blue-500/10 px-2 py-0.5 rounded">01</span>
+                <svg class="w-4 h-4 text-[var(--fg-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              </div>
+              <h3 class="font-semibold text-sm text-[var(--fg)]">Annotated Notes</h3>
+              <p class="text-xs text-[var(--fg-muted)] mt-1.5 leading-relaxed">Line-by-line deconstructions of classic systems, distributed databases, and seminal ML papers.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-[var(--border)] text-[11px] font-mono-code text-[var(--fg-muted)]">
+              Curated weekly
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] card-hover flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-mono-code font-bold text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded">02</span>
+                <svg class="w-4 h-4 text-[var(--fg-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              </div>
+              <h3 class="font-semibold text-sm text-[var(--fg)]">Daily Brief</h3>
+              <p class="text-xs text-[var(--fg-muted)] mt-1.5 leading-relaxed">One paper at a time with a digestible learning note, key takeaway, and architectural impact.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-[var(--border)] text-[11px] font-mono-code text-[var(--fg-muted)]">
+              Daily habit
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] card-hover flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-mono-code font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">03</span>
+                <svg class="w-4 h-4 text-[var(--fg-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+              </div>
+              <h3 class="font-semibold text-sm text-[var(--fg)]">Books &amp; Shelf</h3>
+              <p class="text-xs text-[var(--fg-muted)] mt-1.5 leading-relaxed">Verified reading orders: Linear Algebra Done Right, DDIA, Attention Papers, and Deep Learning.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-[var(--border)] text-[11px] font-mono-code text-[var(--fg-muted)]">
+              Essential canon
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] card-hover flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-mono-code font-bold text-purple-500 bg-purple-500/10 px-2 py-0.5 rounded">04</span>
+                <svg class="w-4 h-4 text-[var(--fg-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+              </div>
+              <h3 class="font-semibold text-sm text-[var(--fg)]">Builds &amp; Code</h3>
+              <p class="text-xs text-[var(--fg-muted)] mt-1.5 leading-relaxed">From-scratch implementations: write your own Mini-vLLM, KV Cache manager, and Raft node.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-[var(--border)] text-[11px] font-mono-code text-[var(--fg-muted)]">
+              Hands-on execution
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] card-hover flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-mono-code font-bold text-rose-500 bg-rose-500/10 px-2 py-0.5 rounded">05</span>
+                <svg class="w-4 h-4 text-[var(--fg-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+              </div>
+              <h3 class="font-semibold text-sm text-[var(--fg)]">Math Drills</h3>
+              <p class="text-xs text-[var(--fg-muted)] mt-1.5 leading-relaxed">Decode cryptic research paper formulas into intuitive vector spaces, projections, and derivatives.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-[var(--border)] text-[11px] font-mono-code text-[var(--fg-muted)]">
+              Math Decoder included
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Roadmaps: Three Fields / One Map -->
+    <section id="roadmaps" class="py-14 border-b border-[var(--border)] bg-[var(--bg)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div>
+            <span class="text-xs font-mono-code uppercase tracking-wider text-emerald-500 font-semibold">Guided Topography</span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-[var(--fg)] mt-1">Three Fields / One Map</h2>
+            <p class="text-sm text-[var(--fg-muted)] mt-1">Interactive roadmaps showing what to learn, in what exact sequence, with prerequisite dependencies.</p>
+          </div>
+
+          <!-- Roadmap Selector Pills -->
+          <div class="flex flex-wrap gap-1.5 p-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] text-xs font-mono-code">
+            <button onclick="switchRoadmap('inference')" id="tab-btn-inference" class="px-3 py-1.5 rounded-md font-medium bg-[var(--fg)] text-[var(--bg)] transition-all">Inference Eng</button>
+            <button onclick="switchRoadmap('ai')" id="tab-btn-ai" class="px-3 py-1.5 rounded-md font-medium text-[var(--fg-muted)] hover:text-[var(--fg)] transition-all">AI Research</button>
+            <button onclick="switchRoadmap('system')" id="tab-btn-system" class="px-3 py-1.5 rounded-md font-medium text-[var(--fg-muted)] hover:text-[var(--fg)] transition-all">System Design</button>
+            <button onclick="switchRoadmap('ml-math')" id="tab-btn-ml-math" class="px-3 py-1.5 rounded-md font-medium text-[var(--fg-muted)] hover:text-[var(--fg)] transition-all">ML Math</button>
+          </div>
+        </div>
+
+        <!-- Interactive Visual Roadmap Container -->
+        <div class="p-6 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-sm">
+          <div id="roadmap-content" class="transition-opacity duration-200">
+            <!-- Content will be injected dynamically by switchRoadmap() -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Main Course Catalog: "Pick Your Path" -->
+    <section id="courses" class="py-14 border-b border-[var(--border)] bg-[var(--surface)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div>
+            <span class="text-xs font-mono-code uppercase tracking-wider text-blue-500 font-semibold">Structured Curriculum</span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-[var(--fg)] mt-1">Pick Your Path</h2>
+            <p class="text-sm text-[var(--fg-muted)] mt-1">Each course is depth-first, fully mapped, and includes free introductory units and code repos.</p>
+          </div>
+
+          <!-- Course Filter Buttons -->
+          <div class="flex flex-wrap gap-1.5 text-xs font-mono-code">
+            <button onclick="filterCourses('all')" class="course-filter-btn px-3 py-1.5 rounded-md border border-[var(--border)] bg-[var(--fg)] text-[var(--bg)] font-medium" data-filter="all">All Tracks</button>
+            <button onclick="filterCourses('ai')" class="course-filter-btn px-3 py-1.5 rounded-md border border-[var(--border)] bg-[var(--surface)] text-[var(--fg-muted)] hover:text-[var(--fg)]" data-filter="ai">AI &amp; Inference</button>
+            <button onclick="filterCourses('systems')" class="course-filter-btn px-3 py-1.5 rounded-md border border-[var(--border)] bg-[var(--surface)] text-[var(--fg-muted)] hover:text-[var(--fg)]" data-filter="systems">Systems &amp; Infra</button>
+            <button onclick="filterCourses('math')" class="course-filter-btn px-3 py-1.5 rounded-md border border-[var(--border)] bg-[var(--surface)] text-[var(--fg-muted)] hover:text-[var(--fg)]" data-filter="math">Math Foundations</button>
+          </div>
+        </div>
+
+        <!-- Course Cards Grid -->
+        <div id="course-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Interactive Lab 1: GPU Memory Workbench -->
+    <section id="labs" class="py-14 border-b border-[var(--border)] bg-[var(--bg)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="max-w-3xl mb-8">
+          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-xs font-mono-code bg-purple-500/10 text-purple-500 border border-purple-500/20 mb-3">
+            <span>FANOUT LAB #01</span>
+            <span>·</span>
+            <span>Interactive Simulator</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-[var(--fg)]">GPU Memory Workbench for LLM Inference</h2>
+          <p class="text-sm text-[var(--fg-muted)] mt-1">
+            Calculate exact VRAM budgets for serving models. Adjust parameters, precision quantization, context lengths, and concurrent batch slots in real time to spot memory bottlenecks.
+          </p>
+        </div>
+
+        <!-- Interactive Workbench Card -->
+        <div class="p-6 md:p-8 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-md grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Controls Panel (Left 7 cols) -->
+          <div class="lg:col-span-7 space-y-6">
+            
+            <!-- Model Parameter Size -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-mono-code mb-2">
+                <label class="text-[var(--fg)] font-semibold">Model Parameter Count</label>
+                <span id="param-display" class="px-2 py-0.5 rounded bg-[var(--surface-elevated)] border border-[var(--border)] text-blue-500 font-bold">7 Billion (e.g. LLaMA 3 8B)</span>
+              </div>
+              <input type="range" id="param-slider" min="1" max="4" value="1" step="1" oninput="updateGpuWorkbench()" class="w-full h-2 bg-[var(--border)] rounded-lg appearance-none cursor-pointer accent-blue-500">
+              <div class="flex justify-between text-[10px] font-mono-code text-[var(--fg-muted)] mt-1">
+                <span>7B / 8B</span>
+                <span>13B / 14B</span>
+                <span>32B / 34B</span>
+                <span>70B (MoE)</span>
+              </div>
+            </div>
+
+            <!-- Precision Quantization -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-mono-code mb-2">
+                <label class="text-[var(--fg)] font-semibold">Weight Precision / Quantization</label>
+                <span id="dtype-display" class="px-2 py-0.5 rounded bg-[var(--surface-elevated)] border border-[var(--border)] text-purple-500 font-bold">FP16 (16-bit)</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2">
+                <button type="button" onclick="selectQuant('fp16')" id="quant-btn-fp16" class="p-2 rounded-lg border border-blue-500 bg-blue-500/10 text-xs font-mono-code text-[var(--fg)] font-medium text-center">FP16 / BF16</button>
+                <button type="button" onclick="selectQuant('int8')" id="quant-btn-int8" class="p-2 rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] text-xs font-mono-code text-[var(--fg-muted)] hover:text-[var(--fg)] text-center">INT8 Quant</button>
+                <button type="button" onclick="selectQuant('int4')" id="quant-btn-int4" class="p-2 rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] text-xs font-mono-code text-[var(--fg-muted)] hover:text-[var(--fg)] text-center">INT4 (AWQ/GPTQ)</button>
+              </div>
+            </div>
+
+            <!-- Context Length -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-mono-code mb-2">
+                <label class="text-[var(--fg)] font-semibold">Context Window per Request</label>
+                <span id="context-display" class="px-2 py-0.5 rounded bg-[var(--surface-elevated)] border border-[var(--border)] text-emerald-500 font-bold">4,096 tokens</span>
+              </div>
+              <input type="range" id="context-slider" min="1" max="4" value="2" step="1" oninput="updateGpuWorkbench()" class="w-full h-2 bg-[var(--border)] rounded-lg appearance-none cursor-pointer accent-emerald-500">
+              <div class="flex justify-between text-[10px] font-mono-code text-[var(--fg-muted)] mt-1">
+                <span>2,048</span>
+                <span>4,096</span>
+                <span>16,384</span>
+                <span>65,536</span>
+              </div>
+            </div>
+
+            <!-- Concurrency Slots -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-mono-code mb-2">
+                <label class="text-[var(--fg)] font-semibold">Batch Concurrency (Parallel Requests)</label>
+                <span id="batch-display" class="px-2 py-0.5 rounded bg-[var(--surface-elevated)] border border-[var(--border)] text-amber-500 font-bold">8 concurrent users</span>
+              </div>
+              <input type="range" id="batch-slider" min="1" max="32" value="8" step="1" oninput="updateGpuWorkbench()" class="w-full h-2 bg-[var(--border)] rounded-lg appearance-none cursor-pointer accent-amber-500">
+            </div>
+
+            <!-- GPU Target Hardware -->
+            <div>
+              <label class="block text-xs font-mono-code text-[var(--fg)] font-semibold mb-2">GPU Hardware Pool</label>
+              <select id="gpu-select" onchange="updateGpuWorkbench()" class="w-full text-xs font-mono-code p-2.5 rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--fg)] focus:outline-none focus:border-blue-500">
+                <option value="24">1x RTX 4090 / 3090 (24 GB VRAM)</option>
+                <option value="48">1x RTX 6000 Ada / 2x 4090 (48 GB VRAM)</option>
+                <option value="80" selected>1x NVIDIA A100 / H100 SXM (80 GB VRAM)</option>
+                <option value="160">2x NVIDIA H100 (160 GB VRAM via Tensor Parallel)</option>
+              </select>
+            </div>
+
+          </div>
+
+          <!-- Realtime Memory Visualization (Right 5 cols) -->
+          <div class="lg:col-span-5 p-5 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] flex flex-col justify-between h-full">
+            <div>
+              <div class="flex items-center justify-between pb-3 border-b border-[var(--border)] mb-4">
+                <span class="text-xs font-mono-code uppercase font-semibold text-[var(--fg)]">VRAM Breakdown</span>
+                <span id="oom-badge" class="px-2 py-0.5 rounded text-[10px] font-mono-code font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">FITS IN MEMORY</span>
+              </div>
+
+              <!-- Meter Bar -->
+              <div class="space-y-1 mb-6">
+                <div class="flex justify-between text-xs font-mono-code">
+                  <span>Used: <strong id="vram-total-used" class="text-[var(--fg)]">19.2 GB</strong></span>
+                  <span>Total: <span id="vram-capacity" class="text-[var(--fg-muted)]">80 GB</span></span>
+                </div>
+                <div class="w-full h-4 rounded-full bg-zinc-800 overflow-hidden flex">
+                  <div id="bar-weights" class="h-full bg-blue-500 transition-all duration-300" style="width: 17%;"></div>
+                  <div id="bar-kv" class="h-full bg-amber-500 transition-all duration-300" style="width: 6%;"></div>
+                  <div id="bar-cuda" class="h-full bg-zinc-500 transition-all duration-300" style="width: 2%;"></div>
+                </div>
+              </div>
+
+              <!-- Legend Details -->
+              <div class="space-y-3 text-xs font-mono-code">
+                <div class="flex items-center justify-between p-2 rounded bg-[var(--surface)] border border-[var(--border)]">
+                  <span class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                    <span>Model Weights</span>
+                  </span>
+                  <span id="detail-weights" class="font-bold text-[var(--fg)]">14.0 GB</span>
+                </div>
+
+                <div class="flex items-center justify-between p-2 rounded bg-[var(--surface)] border border-[var(--border)]">
+                  <span class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    <span>KV Cache Allocation</span>
+                  </span>
+                  <span id="detail-kv" class="font-bold text-[var(--fg)]">4.2 GB</span>
+                </div>
+
+                <div class="flex items-center justify-between p-2 rounded bg-[var(--surface)] border border-[var(--border)]">
+                  <span class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-zinc-500"></span>
+                    <span>CUDA Runtime &amp; Overhead</span>
+                  </span>
+                  <span id="detail-cuda" class="font-bold text-[var(--fg)]">1.2 GB</span>
+                </div>
+
+                <div class="flex items-center justify-between p-2 rounded bg-[var(--surface)] border border-[var(--border)]">
+                  <span class="flex items-center gap-2 text-[var(--fg-muted)]">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    <span>Remaining Headroom</span>
+                  </span>
+                  <span id="detail-headroom" class="font-bold text-emerald-500">60.6 GB</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Architectural Insight -->
+            <div class="mt-6 pt-4 border-t border-[var(--border)] text-[11px] text-[var(--fg-muted)] leading-relaxed">
+              <strong class="text-[var(--fg)] font-semibold">Inference Rule:</strong> KV cache memory scales linearly with context length and batch concurrency: <code class="text-amber-500">2 × n_layers × n_heads × d_head × tokens × b</code>.
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Interactive Lab 2: Math Decoder for Research Papers -->
+    <section id="math-decoder" class="py-14 border-b border-[var(--border)] bg-[var(--surface)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-xs font-mono-code bg-amber-500/10 text-amber-500 border border-amber-500/20 mb-3">
+              <span>FANOUT LAB #02</span>
+              <span>·</span>
+              <span>Notation Library</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-[var(--fg)]">Math Decoder for AI Research Papers</h2>
+            <p class="text-sm text-[var(--fg-muted)] mt-1">
+              Search mathematical symbols by LaTeX, pronunciation, meaning, and domain. Never get stuck reading equations in arXiv papers again.
+            </p>
+          </div>
+
+          <!-- Symbol Search Input -->
+          <div class="relative w-full md:w-72">
+            <input type="text" id="math-search-input" oninput="filterMathSymbols()" placeholder="Search symbols (e.g. nabla, expectation, dot)..." class="w-full text-xs font-mono-code pl-8 pr-3 py-2 rounded-lg border border-[var(--border)] bg-[var(--bg)] text-[var(--fg)] focus:outline-none focus:border-amber-500">
+            <svg class="w-4 h-4 text-[var(--fg-muted)] absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+        </div>
+
+        <!-- Domain Pills -->
+        <div class="flex flex-wrap gap-2 mb-6">
+          <button onclick="filterMathDomain('all')" class="math-domain-btn px-3 py-1 rounded-md text-xs font-mono-code border border-[var(--border)] bg-[var(--fg)] text-[var(--bg)]" data-domain="all">All Domains</button>
+          <button onclick="filterMathDomain('attention')" class="math-domain-btn px-3 py-1 rounded-md text-xs font-mono-code border border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--fg-muted)] hover:text-[var(--fg)]" data-domain="attention">Transformers &amp; Attention</button>
+          <button onclick="filterMathDomain('linear-algebra')" class="math-domain-btn px-3 py-1 rounded-md text-xs font-mono-code border border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--fg-muted)] hover:text-[var(--fg)]" data-domain="linear-algebra">Linear Algebra</button>
+          <button onclick="filterMathDomain('calculus')" class="math-domain-btn px-3 py-1 rounded-md text-xs font-mono-code border border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--fg-muted)] hover:text-[var(--fg)]" data-domain="calculus">Calculus &amp; Optimization</button>
+          <button onclick="filterMathDomain('prob')" class="math-domain-btn px-3 py-1 rounded-md text-xs font-mono-code border border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--fg-muted)] hover:text-[var(--fg)]" data-domain="prob">Probability &amp; Information</button>
+        </div>
+
+        <!-- Symbol Grid -->
+        <div id="math-symbols-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- "Beyond the Courses" - Ecosystem Bento Grid -->
+    <section class="py-14 border-b border-[var(--border)] bg-[var(--bg)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-10">
+          <span class="text-xs font-mono-code uppercase tracking-wider text-purple-500 font-semibold">The Ecosystem</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-[var(--fg)] mt-1">Beyond the Courses</h2>
+          <p class="text-sm text-[var(--fg-muted)] mt-2">
+            Fanout includes public instruments, daily digests, curated company topographies, and reference libraries.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <div class="p-5 rounded-xl border border-[var(--border)] bg-[var(--surface)] card-hover flex flex-col justify-between">
+            <div>
+              <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center font-mono-code font-bold mb-3">01</div>
+              <h3 class="font-bold text-sm text-[var(--fg)]">Fanout Labs</h3>
+              <p class="text-xs text-[var(--fg-muted)] mt-1 leading-relaxed">Browser-local tools for technical judgment: latency budgets, KV cache visualizer, and model scale simulator.</p>
+            </div>
+            <a href="#labs" class="mt-4 text-xs font-mono-code font-semibold text-blue-500 hover:underline flex items-center gap-1">
+              <span>Open Labs</span> &rarr;
+            </a>
+          </div>
+
+          <div class="p-5 rounded-xl border border-[var(--border)] bg-[var(--surface)] card-hover flex flex-col justify-between">
+            <div>
+              <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center font-mono-code font-bold mb-3">02</div>
+              <h3 class="font-bold text-sm text-[var(--fg)]">Daily Papers</h3>
+              <p class="text-xs text-[var(--fg-muted)] mt-1 leading-relaxed">One paper at a time with a short learning note. Build a reliable, lifelong research reading habit.</p>
+            </div>
+            <a href="#daily-papers" class="mt-4 text-xs font-mono-code font-semibold text-amber-500 hover:underline flex items-center gap-1">
+              <span>View Feed</span> &rarr;
+            </a>
+          </div>
+
+          <div class="p-5 rounded-xl border border-[var(--border)] bg-[var(--surface)] card-hover flex flex-col justify-between">
+            <div>
+              <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-mono-code font-bold mb-3">03</div>
+              <h3 class="font-bold text-sm text-[var(--fg)]">Paper Hierarchy</h3>
+              <p class="text-xs text-[var(--fg-muted)] mt-1 leading-relaxed">Foundational papers organized by tracks with prerequisite links: know which paper to read first.</p>
+            </div>
+            <a href="#roadmaps" class="mt-4 text-xs font-mono-code font-semibold text-emerald-500 hover:underline flex items-center gap-1">
+              <span>Inspect Tree</span> &rarr;
+            </a>
+          </div>
+
+          <div class="p-5 rounded-xl border border-[var(--border)] bg-[var(--surface)] card-hover flex flex-col justify-between">
+            <div>
+              <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-500 flex items-center justify-center font-mono-code font-bold mb-3">04</div>
+              <h3 class="font-bold text-sm text-[var(--fg)]">Study With Me</h3>
+              <p class="text-xs text-[var(--fg-muted)] mt-1 leading-relaxed">Public learning loops and receipts from real builders across labs, startups, and universities.</p>
+            </div>
+            <a href="#study-wall" class="mt-4 text-xs font-mono-code font-semibold text-purple-500 hover:underline flex items-center gap-1">
+              <span>Open Wall</span> &rarr;
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Daily Papers Feed -->
+    <section id="daily-papers" class="py-14 border-b border-[var(--border)] bg-[var(--surface)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div>
+            <span class="text-xs font-mono-code uppercase tracking-wider text-amber-500 font-semibold">Research Archive</span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-[var(--fg)] mt-1">Daily Research Papers Explained</h2>
+            <p class="text-sm text-[var(--fg-muted)] mt-1">Concise, source-verified breakdowns of seminal breakthroughs and modern preprints.</p>
+          </div>
+          <div class="text-xs font-mono-code text-[var(--fg-muted)]">
+            Archive size: <strong>320+ papers analyzed</strong>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="papers-feed-container">
+          <!-- Populated by JS -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Learner Wall / Social Proof -->
+    <section id="study-wall" class="py-14 border-b border-[var(--border)] bg-[var(--bg)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-10">
+          <span class="text-xs font-mono-code uppercase tracking-wider text-blue-500 font-semibold">Social Proof</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-[var(--fg)] mt-1">Keep Company With People Doing The Work</h2>
+          <p class="text-sm text-[var(--fg-muted)] mt-2">
+            Real public learning logs from software engineers, researchers, and builders studying on Fanout.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="testimonials-container">
+          <!-- Populated by JS -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-16 border-b border-[var(--border)] bg-[var(--surface)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-10">
+          <span class="text-xs font-mono-code uppercase tracking-wider text-emerald-500 font-semibold">Membership Plans</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-[var(--fg)] mt-1">Full Access to Every Course</h2>
+          <p class="text-sm text-[var(--fg-muted)] mt-2">
+            Join over 20,000 engineers. Includes all current tracks, code repositories, weekly updates, and interactive labs.
+          </p>
+
+          <!-- Cadence Switcher -->
+          <div class="inline-flex p-1 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] mt-6 text-xs font-mono-code">
+            <button onclick="setPricingCadence('monthly')" id="cadence-monthly" class="px-3.5 py-1.5 rounded-lg text-[var(--fg-muted)] hover:text-[var(--fg)] transition-all">Monthly</button>
+            <button onclick="setPricingCadence('annual')" id="cadence-annual" class="px-3.5 py-1.5 rounded-lg bg-[var(--fg)] text-[var(--bg)] font-bold transition-all flex items-center gap-1.5">
+              <span>Annual</span>
+              <span class="px-1.5 py-0.2 rounded text-[10px] bg-emerald-500 text-white font-bold">SAVE 51%</span>
+            </button>
+            <button onclick="setPricingCadence('lifetime')" id="cadence-lifetime" class="px-3.5 py-1.5 rounded-lg text-[var(--fg-muted)] hover:text-[var(--fg)] transition-all">Lifetime</button>
+          </div>
+        </div>
+
+        <!-- Pricing Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          
+          <!-- Monthly -->
+          <div class="p-6 rounded-2xl border border-[var(--border)] bg-[var(--bg)] card-hover flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-mono-code font-bold uppercase text-[var(--fg-muted)]">Monthly Plan</span>
+              </div>
+              <div class="flex items-baseline gap-1 mb-4">
+                <span class="text-3xl sm:text-4xl font-extrabold font-mono-code text-[var(--fg)]">$39</span>
+                <span class="text-xs font-mono-code text-[var(--fg-muted)]">/ month</span>
+              </div>
+              <p class="text-xs text-[var(--fg-muted)] mb-6">Shortest commitment. Full access to every current course and interactive lab.</p>
+              
+              <ul class="space-y-2.5 text-xs text-[var(--fg)] mb-8">
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  <span>All 5 Core Tracks &amp; Code</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  <span>16 Interactive Labs &amp; Workbenches</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  <span>Daily Paper Reading Feed</span>
+                </li>
+                <li class="flex items-center gap-2 text-[var(--fg-muted)]">
+                  <svg class="w-4 h-4 text-zinc-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                  <span>Future Course Inclusions</span>
+                </li>
+              </ul>
+            </div>
+
+            <button onclick="openAuthModal('monthly')" class="w-full py-2.5 rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] hover:bg-[var(--surface-hover)] text-xs font-semibold text-[var(--fg)] transition-all">
+              Choose Monthly
+            </button>
+          </div>
+
+          <!-- Annual (Featured) -->
+          <div class="p-6 rounded-2xl border-2 border-emerald-500 bg-[var(--surface-elevated)] card-hover relative flex flex-col justify-between shadow-lg">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-mono-code font-bold tracking-wider uppercase">
+              Most Popular
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-4 mt-2">
+                <span class="text-xs font-mono-code font-bold uppercase text-emerald-600 dark:text-emerald-400">Annual Membership</span>
+              </div>
+              <div class="flex items-baseline gap-1 mb-4">
+                <span class="text-3xl sm:text-4xl font-extrabold font-mono-code text-[var(--fg)]">$227</span>
+                <span class="text-xs font-mono-code text-[var(--fg-muted)]">/ year ($18.90/mo)</span>
+              </div>
+              <p class="text-xs text-[var(--fg-muted)] mb-6">The lowest recurring rate. Complete access to every current course and all updates for 1 full year.</p>
+              
+              <ul class="space-y-2.5 text-xs text-[var(--fg)] mb-8">
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  <span>All 5 Core Tracks &amp; Code</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  <span>16 Interactive Labs &amp; Workbenches</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  <span>Daily Paper Reading Feed &amp; Notes</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  <span>Continuous Weekly Material Updates</span>
+                </li>
+              </ul>
+            </div>
+
+            <button onclick="openAuthModal('annual')" class="w-full py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md">
+              Choose Annual Access
+            </button>
+          </div>
+
+          <!-- Lifetime -->
+          <div class="p-6 rounded-2xl border border-[var(--border)] bg-[var(--bg)] card-hover flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-mono-code font-bold uppercase text-[var(--fg-muted)]">Lifetime Pass</span>
+              </div>
+              <div class="flex items-baseline gap-1 mb-4">
+                <span class="text-3xl sm:text-4xl font-extrabold font-mono-code text-[var(--fg)]">$256</span>
+                <span class="text-xs font-mono-code text-[var(--fg-muted)]">paid once</span>
+              </div>
+              <p class="text-xs text-[var(--fg-muted)] mb-6">Pay once, own forever. Every current track, every future Fanout course, and lifetime updates.</p>
+              
+              <ul class="space-y-2.5 text-xs text-[var(--fg)] mb-8">
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  <span>All Current &amp; <strong>All Future Courses</strong></span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  <span>Lifetime Access (No recurring fee)</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  <span>Robotics &amp; Advanced Hardware Tracks</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  <span>Private Discord Paper Club</span>
+                </li>
+              </ul>
+            </div>
+
+            <button onclick="openAuthModal('lifetime')" class="w-full py-2.5 rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] hover:bg-[var(--surface-hover)] text-xs font-semibold text-[var(--fg)] transition-all">
+              Choose Lifetime
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FAQ Accordion Section -->
+    <section class="py-14 border-b border-[var(--border)] bg-[var(--bg)]">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center mb-10">
+          <span class="text-xs font-mono-code uppercase tracking-wider text-blue-500 font-semibold">Got Questions?</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-[var(--fg)] mt-1">Frequently Asked Questions</h2>
+          <p class="text-sm text-[var(--fg-muted)] mt-1">Questions people frequently ask before joining Fanout.</p>
+        </div>
+
+        <div class="space-y-3" id="faq-container">
+          <!-- Injected via JS -->
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="border-t border-[var(--border)] bg-[var(--surface)] text-[var(--fg-muted)] py-12 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
+      
+      <!-- Col 1: Brand & Bio -->
+      <div class="col-span-2">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="font-bold text-base font-mono-code text-[var(--fg)]">FANOUT</span>
+          <span class="text-[10px] font-mono-code px-1.5 py-0.2 rounded bg-blue-500/10 text-blue-500 border border-blue-500/20">EST. 2026</span>
+        </div>
+        <p class="text-xs text-[var(--fg-muted)] leading-relaxed max-w-sm mb-4">
+          Independent educational product created by Suraj Gaud. Serious technical learning across AI research, systems, ML math, and inference engineering.
+        </p>
+        <div class="flex items-center gap-3 text-[var(--fg-muted)]">
+          <a href="https://x.com/notsurajgaud" target="_blank" rel="noreferrer" class="hover:text-[var(--fg)] transition-colors">@notsurajgaud</a>
+          <span>·</span>
+          <a href="https://github.com/suraj-xd" target="_blank" rel="noreferrer" class="hover:text-[var(--fg)] transition-colors">GitHub</a>
+          <span>·</span>
+          <a href="/feed.xml" class="hover:text-[var(--fg)] transition-colors">RSS Feed</a>
+        </div>
+      </div>
+
+      <!-- Col 2: Courses -->
+      <div>
+        <h4 class="font-semibold text-xs font-mono-code text-[var(--fg)] uppercase tracking-wider mb-3">Courses</h4>
+        <ul class="space-y-2">
+          <li><a href="#courses" class="hover:text-[var(--fg)] transition-colors">AI Research</a></li>
+          <li><a href="#courses" class="hover:text-[var(--fg)] transition-colors">System Design</a></li>
+          <li><a href="#courses" class="hover:text-[var(--fg)] transition-colors">Inference Engineering</a></li>
+          <li><a href="#courses" class="hover:text-[var(--fg)] transition-colors">ML Mathematics</a></li>
+          <li><a href="#courses" class="hover:text-[var(--fg)] transition-colors">AI Engineering</a></li>
+          <li><a href="#courses" class="hover:text-[var(--fg)] transition-colors">Open Robotics</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Labs & Tools -->
+      <div>
+        <h4 class="font-semibold text-xs font-mono-code text-[var(--fg)] uppercase tracking-wider mb-3">Instruments</h4>
+        <ul class="space-y-2">
+          <li><a href="#labs" class="hover:text-[var(--fg)] transition-colors">GPU Memory Workbench</a></li>
+          <li><a href="#math-decoder" class="hover:text-[var(--fg)] transition-colors">Math Notation Decoder</a></li>
+          <li><a href="#roadmaps" class="hover:text-[var(--fg)] transition-colors">Knowledge Topography</a></li>
+          <li><a href="#daily-papers" class="hover:text-[var(--fg)] transition-colors">Paper Reading Order</a></li>
+          <li><a href="#study-wall" class="hover:text-[var(--fg)] transition-colors">Study With Me Wall</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Platform -->
+      <div>
+        <h4 class="font-semibold text-xs font-mono-code text-[var(--fg)] uppercase tracking-wider mb-3">Platform</h4>
+        <ul class="space-y-2">
+          <li><a href="#pricing" class="hover:text-[var(--fg)] transition-colors">Pricing &amp; Plans</a></li>
+          <li><a href="#" onclick="openSearchModal()" class="hover:text-[var(--fg)] transition-colors">Search Index (⌘K)</a></li>
+          <li><a href="/llms.txt" class="hover:text-[var(--fg)] transition-colors">llms.txt</a></li>
+          <li><a href="#" class="hover:text-[var(--fg)] transition-colors">Terms of Service</a></li>
+          <li><a href="#" class="hover:text-[var(--fg)] transition-colors">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 border-t border-[var(--border)] flex flex-col sm:flex-row items-center justify-between text-[11px] text-[var(--fg-muted)]">
+      <div>&copy; 2026 Fanout.sh — All rights reserved.</div>
+      <div class="mt-2 sm:mt-0 font-mono-code">Designed with precision for technical builders.</div>
+    </div>
+  </footer>
+
+  <!-- Search Modal (Cmd+K / Ctrl+K) -->
+  <div id="search-modal" class="fixed inset-0 z-50 modal-backdrop bg-black/60 hidden flex items-start justify-center pt-20 px-4">
+    <div class="w-full max-w-xl rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)] shadow-2xl overflow-hidden flex flex-col">
+      
+      <!-- Input bar -->
+      <div class="p-3 border-b border-[var(--border)] flex items-center gap-3">
+        <svg class="w-4 h-4 text-[var(--fg-muted)] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" id="global-search-input" oninput="handleGlobalSearch()" placeholder="Search courses, lessons, labs, math symbols, papers..." class="w-full bg-transparent text-sm text-[var(--fg)] focus:outline-none font-mono-code">
+        <button onclick="closeSearchModal()" class="text-xs font-mono-code px-2 py-1 rounded bg-[var(--surface-elevated)] border border-[var(--border)] text-[var(--fg-muted)]">ESC</button>
+      </div>
+
+      <!-- Quick Categories -->
+      <div class="px-3 py-2 border-b border-[var(--border)] bg-[var(--surface-elevated)] flex gap-2 overflow-x-auto text-[11px] font-mono-code">
+        <button onclick="setSearchFilter('all')" class="search-cat-pill px-2 py-0.5 rounded bg-[var(--fg)] text-[var(--bg)] font-medium" data-cat="all">All</button>
+        <button onclick="setSearchFilter('course')" class="search-cat-pill px-2 py-0.5 rounded bg-[var(--surface)] text-[var(--fg-muted)] border border-[var(--border)]" data-cat="course">Courses</button>
+        <button onclick="setSearchFilter('lab')" class="search-cat-pill px-2 py-0.5 rounded bg-[var(--surface)] text-[var(--fg-muted)] border border-[var(--border)]" data-cat="lab">Labs</button>
+        <button onclick="setSearchFilter('symbol')" class="search-cat-pill px-2 py-0.5 rounded bg-[var(--surface)] text-[var(--fg-muted)] border border-[var(--border)]" data-cat="symbol">Math</button>
+        <button onclick="setSearchFilter('paper')" class="search-cat-pill px-2 py-0.5 rounded bg-[var(--surface)] text-[var(--fg-muted)] border border-[var(--border)]" data-cat="paper">Papers</button>
+      </div>
+
+      <!-- Results list -->
+      <div id="search-results-list" class="max-h-80 overflow-y-auto p-2 space-y-1">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="px-4 py-2 border-t border-[var(--border)] bg-[var(--surface-elevated)] text-[10px] font-mono-code text-[var(--fg-muted)] flex justify-between">
+        <span>Use <kbd>↑</kbd> <kbd>↓</kbd> to navigate</span>
+        <span>Press <kbd>ESC</kbd> to dismiss</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Course Curriculum Breakdown Modal -->
+  <div id="curriculum-modal" class="fixed inset-0 z-50 modal-backdrop bg-black/60 hidden flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl max-h-[85vh] rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)] shadow-2xl overflow-hidden flex flex-col">
+      <div class="p-5 border-b border-[var(--border)] flex items-center justify-between">
+        <div>
+          <span id="modal-course-badge" class="text-[10px] font-mono-code font-bold px-2 py-0.5 rounded bg-blue-500/10 text-blue-500 border border-blue-500/20">COURSE SYLLABUS</span>
+          <h3 id="modal-course-title" class="text-lg font-bold text-[var(--fg)] mt-1">Course Title</h3>
+        </div>
+        <button onclick="closeCurriculumModal()" class="p-1.5 rounded-lg border border-[var(--border)] text-[var(--fg-muted)] hover:text-[var(--fg)] hover:bg-[var(--surface-hover)]">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div id="modal-curriculum-body" class="p-6 overflow-y-auto space-y-4">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="p-4 border-t border-[var(--border)] bg-[var(--surface-elevated)] flex justify-between items-center text-xs">
+        <span class="text-[var(--fg-muted)] font-mono-code">Included in Pro &amp; Lifetime</span>
+        <button onclick="openAuthModal('pro'); closeCurriculumModal();" class="px-4 py-2 rounded-lg bg-[var(--fg)] text-[var(--bg)] font-semibold hover:opacity-90">
+          Enroll in Course &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth Simulation Modal -->
+  <div id="auth-modal" class="fixed inset-0 z-50 modal-backdrop bg-black/60 hidden flex items-center justify-center p-4">
+    <div class="w-full max-w-sm rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)] p-6 shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <span class="font-bold text-sm font-mono-code text-[var(--fg)]">FANOUT AUTH</span>
+        <button onclick="closeAuthModal()" class="text-[var(--fg-muted)] hover:text-[var(--fg)]">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <h3 id="auth-modal-title" class="text-base font-bold text-[var(--fg)] mb-1">Access Fanout Pro</h3>
+      <p class="text-xs text-[var(--fg-muted)] mb-5">Sign in via Magic Link or GitHub to sync your learning progress and roadmaps.</p>
+      
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-mono-code text-[var(--fg)] mb-1">Work or Personal Email</label>
+          <input type="email" id="auth-email-input" placeholder="engineer@domain.com" class="w-full text-xs font-mono-code p-2.5 rounded-lg border border-[var(--border)] bg-[var(--bg)] text-[var(--fg)] focus:outline-none focus:border-blue-500">
+        </div>
+        <button onclick="simulateAuthSuccess()" class="w-full py-2.5 rounded-lg bg-[var(--fg)] text-[var(--bg)] font-semibold text-xs hover:opacity-90 transition-opacity">
+          Send Magic Link &rarr;
+        </button>
+        <div class="relative my-3 text-center">
+          <span class="px-2 text-[10px] font-mono-code text-[var(--fg-muted)] bg-[var(--surface)] relative z-10">OR</span>
+          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 border-t border-[var(--border)]"></div>
+        </div>
+        <button onclick="simulateAuthSuccess()" class="w-full py-2.5 rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] hover:bg-[var(--surface-hover)] text-xs font-mono-code text-[var(--fg)] flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          <span>Continue with GitHub</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive JavaScript Logic -->
+  <script>
+    // Data Store
+    const COURSES_DATA = [
+      {
+        id: 'inference-eng',
+        category: 'ai',
+        title: 'Inference Engineering',
+        accent: 'purple',
+        badge: 'NEW MASTER TRACK',
+        modulesCount: 14,
+        lessonsCount: 68,
+        description: 'Self-paced production LLM inference course: KV cache mechanics, continuous batching, FlashAttention, and multi-GPU tensor parallelism.',
+        pointers: [
+          'Continuous batching & KV cache layout',
+          'FlashAttention-2 & quantization kernels',
+          'Multi-GPU tensor & pipeline parallelism'
+        ],
+        modules: [
+          { title: 'Module 01: The Inference Bottleneck', lessons: ['Memory bandwidth vs Compute bound', 'Why autoregressive generation stalls', 'Benchmarking TTFT and TPOT'] },
+          { title: 'Module 02: KV Cache Architecture', lessons: ['Attention projections refresher', 'KV cache shape through decoder layers', 'Memory arithmetic and token budgets'] },
+          { title: 'Module 03: PagedAttention & vLLM Internals', lessons: ['Virtual memory mapping for KV blocks', 'Block tables and allocation schemes', 'Prefix caching for shared system prompts'] },
+          { title: 'Module 04: Continuous Batching', lessons: ['Static vs Dynamic batching', 'Iteration-level scheduling', 'Handling heterogeneous request lengths'] },
+          { title: 'Module 05: Quantization & Kernels', lessons: ['Post-training quantization (AWQ vs GPTQ)', 'FP8 and INT4 matrix multiplication', 'Custom Triton kernels for decoding'] }
+        ]
+      },
+      {
+        id: 'ai-research',
+        category: 'ai',
+        title: 'Fanout AI Research',
+        accent: 'blue',
+        badge: 'FOUNDATIONAL',
+        modulesCount: 16,
+        lessonsCount: 82,
+        description: 'A sequenced path from foundational math to modern LLM pretraining, transformers from scratch, RLHF, and frontier research papers.',
+        pointers: [
+          'Deconstruct papers without getting stuck',
+          'Build neural nets & transformers from scratch',
+          'Modern RLHF, DPO, and reasoning paradigms'
+        ],
+        modules: [
+          { title: 'Module 01: Mathematical Foundations', lessons: ['Matrix calculus and Jacobian shapes', 'Probability distributions & cross entropy', 'Gradient descent dynamics'] },
+          { title: 'Module 02: Attention Mechanisms', lessons: ['Scaled dot-product attention step-by-step', 'Multi-head query/key/value projections', 'Causal masking and RoPE positional encoding'] },
+          { title: 'Module 03: Transformer Decoder Block', lessons: ['LayerNorm vs RMSNorm', 'Residual streams and MLP activations (SwiGLU)', 'Weight initialization and scaling laws'] },
+          { title: 'Module 04: Alignment & Post-Training', lessons: ['Supervised Fine-Tuning (SFT)', 'Reward modeling and PPO / RLHF', 'Direct Preference Optimization (DPO)'] }
+        ]
+      },
+      {
+        id: 'system-design',
+        category: 'systems',
+        title: 'System Design In Depth',
+        accent: 'green',
+        badge: 'STAFF / L7 PREP',
+        modulesCount: 18,
+        lessonsCount: 94,
+        description: 'Beyond box-and-arrow whiteboard diagrams: deep-dive storage engines, LSM-trees, Raft consensus, consistency models, and Discord/Stripe architectures.',
+        pointers: [
+          'LSM trees, B-trees & WAL disk layouts',
+          'Distributed consensus (Raft & Paxos)',
+          'Real production builds: Discord, Stripe, Dynamo'
+        ],
+        modules: [
+          { title: 'Module 01: Storage Engines Under The Hood', lessons: ['Append-only logs vs In-place mutations', 'LSM trees: MemTable, SSTables & Compaction', 'B+ trees: Page layout and buffer pools'] },
+          { title: 'Module 02: Distributed Consensus & Replication', lessons: ['Leader election and log replication with Raft', 'Quorums, split-brain, and fencing tokens', 'CAP theorem trade-offs in real cloud databases'] },
+          { title: 'Module 03: Distributed Caching & Coordination', lessons: ['Cache-aside, write-through, and cache stampedes', 'Consistent hashing with virtual nodes', 'Distributed locks with Redis Redlock & etcd'] },
+          { title: 'Module 04: Production Architecture Case Studies', lessons: ['Discord: Storing trillions of messages with ScyllaDB', 'Stripe: Zero-downtime database migrations', 'Instagram: Real-time fanout feed architecture'] }
+        ]
+      },
+      {
+        id: 'ml-math',
+        category: 'math',
+        title: 'Advanced ML Mathematics',
+        accent: 'orange',
+        badge: 'MATHEMATICS',
+        modulesCount: 12,
+        lessonsCount: 56,
+        description: 'Rigorous math for machine learning: sets, linear algebra, multivariable calculus, probability, SVD, and interactive verification drills.',
+        pointers: [
+          'Deconstruct dense research notations',
+          'Geometric intuition behind eigenvalues & SVD',
+          'Vector derivatives & high-dimensional spaces'
+        ],
+        modules: [
+          { title: 'Module 01: Linear Algebra & Vector Spaces', lessons: ['Basis vectors and linear transformations', 'Null spaces, rank, and projections', 'Eigendecomposition & Principal Component Analysis (PCA)'] },
+          { title: 'Module 02: Multivariable Calculus & Optimization', lessons: ['Gradients, directional derivatives & Hessians', 'Backpropagation as generalized chain rule', 'Convex optimization and Karush-Kuhn-Tucker (KKT) conditions'] },
+          { title: 'Module 03: Probability & Information Theory', lessons: ['Joint, marginal, and conditional probabilities', 'Bayes Theorem and Maximum Likelihood Estimation (MLE)', 'Shannon Entropy, KL Divergence, and Cross-Entropy'] }
+        ]
+      },
+      {
+        id: 'ai-engineering',
+        category: 'ai',
+        title: 'AI Engineering & Agents',
+        accent: 'blue',
+        badge: 'APPLIED AI',
+        modulesCount: 15,
+        lessonsCount: 74,
+        description: 'Build robust production AI applications: embedding spaces, hybrid search with pgvector/Milvus, reasoning loops, and Model Context Protocol (MCP).',
+        pointers: [
+          'Vector indexing (HNSW vs IVF)',
+          'Agent loops: ReAct, Tree-of-Thought, Tool calls',
+          'MCP (Model Context Protocol) client & server architecture'
+        ],
+        modules: [
+          { title: 'Module 01: Embeddings & Vector Databases', lessons: ['Semantic distance metrics: Cosine vs Dot Product', 'HNSW graph indexing and IVF clustering', 'Postgres pgvector vs dedicated vector engines'] },
+          { title: 'Module 02: Advanced RAG Systems', lessons: ['Semantic chunking strategies', 'Hybrid BM25 keyword + dense retrieval', 'Cross-encoder reranking models'] },
+          { title: 'Module 03: Autonomous Agents & MCP', lessons: ['The ReAct loop: Reason, Act, Observe', 'Function calling and schema enforcement', 'MCP (Model Context Protocol) specification and tooling'] }
+        ]
+      },
+      {
+        id: 'open-robotics',
+        category: 'systems',
+        title: 'Open Robotics & Simulation',
+        accent: 'purple',
+        badge: 'UPCOMING',
+        modulesCount: 10,
+        lessonsCount: 42,
+        description: 'Open-stack physical AI: ROS 2, Gazebo physics simulation, forward/inverse kinematics, imitation learning, and edge hardware interfaces.',
+        pointers: [
+          'ROS 2 nodes, publishers, and subscribers',
+          'Gazebo physics simulation & URDF models',
+          'Teleoperation and imitation learning for arms'
+        ],
+        modules: [
+          { title: 'Module 01: ROS 2 Foundations', lessons: ['ROS 2 architecture & DDS communication', 'Creating custom messages and service nodes', 'Coordinate frames and TF2 transforms'] },
+          { title: 'Module 02: Simulation in Gazebo', lessons: ['URDF and SDF robot modeling', 'Joint controllers and torque limits', 'Simulating camera sensors and LiDAR'] }
+        ]
+      }
+    ];
+
+    const MATH_SYMBOLS = [
+      { glyph: '∇', latex: '\\nabla', name: 'Nabla / Del', domain: 'calculus', meaning: 'Vector differential operator. Represents the gradient vector of partial derivatives when applied to a scalar field.' },
+      { glyph: '𝔼[X]', latex: '\\mathbb{E}[X]', name: 'Expectation', domain: 'prob', meaning: 'Expected value (mean) of a random variable X weighted by its probability density function.' },
+      { glyph: '⊙', latex: '\\odot', name: 'Hadamard Product', domain: 'linear-algebra', meaning: 'Element-wise multiplication of two matrices or vectors of identical dimension.' },
+      { glyph: 'σ(z)', latex: '\\sigma(z)', name: 'Sigmoid / Logistic', domain: 'calculus', meaning: 'S-shaped activation function mapping real numbers to the interval (0, 1): 1 / (1 + e^{-z}).' },
+      { glyph: 'Softmax', latex: '\\text{softmax}(z_i)', name: 'Softmax Function', domain: 'attention', meaning: 'Normalizes an unconstrained vector of logits into a categorical probability distribution summing to 1.' },
+      { glyph: 'Q, K, V', latex: 'Q, K, V', name: 'Query, Key, Value', domain: 'attention', meaning: 'Projections in Attention: Attention(Q, K, V) = softmax(QK^T / sqrt(d_k)) * V.' },
+      { glyph: 'D_{KL}', latex: 'D_{KL}(P \\parallel Q)', name: 'Kullback-Leibler Divergence', domain: 'prob', meaning: 'Relative entropy measuring how much one probability distribution Q diverges from reference P.' },
+      { glyph: '‖x‖_2', latex: '\\|x\\|_2', name: 'L2 Euclidean Norm', domain: 'linear-algebra', meaning: 'Length/magnitude of a vector calculated as the square root of the sum of squared components.' }
+    ];
+
+    const DAILY_PAPERS = [
+      { date: 'Nov 17, 2026', title: 'DeepSeek-V3 Technical Report', category: 'LLM Architecture', summary: 'Multi-head Latent Attention (MLA) and DeepSeekMoE architecture achieving frontier performance with 1/10th the training compute.', arxiv: '2412.19437' },
+      { date: 'Nov 16, 2026', title: 'FlashAttention-2: Faster Attention with Better Parallelism', category: 'Inference & Kernels', summary: 'Restructuring the attention loop to execute with 73% of theoretical peak FLOPs on A100 GPUs by minimizing non-matmul FLOPs.', arxiv: '2307.08691' },
+      { date: 'Nov 15, 2026', title: 'Attention Is All You Need', category: 'Foundational', summary: 'The watershed paper introducing the Transformer architecture, replacing recurrent and convolutional layers with self-attention.', arxiv: '1706.03762' },
+      { date: 'Nov 14, 2026', title: 'Direct Preference Optimization: Your Language Model is Secretly a Reward Model', category: 'Alignment', summary: 'Mathematical derivation showing how to optimize policies directly on human preferences without training a separate reward model.', arxiv: '2305.18290' },
+      { date: 'Nov 13, 2026', title: 'LoRA: Low-Rank Adaptation of Large Language Models', category: 'Fine-tuning', summary: 'Freezing pre-trained model weights and injecting trainable rank decomposition matrices into each Transformer layer.', arxiv: '2106.09685' },
+      { date: 'Nov 12, 2026', title: 'BitNet: Scaling 1-bit Transformers for Large Language Models', category: 'Quantization', summary: 'Replacing 16-bit float linear layers with 1-bit ternary {-1, 0, 1} weights to drastically reduce memory and energy during inference.', arxiv: '2310.11453' }
+    ];
+
+    const TESTIMONIALS = [
+      { author: 'Ahmed B.', handle: '@TheBaamAhmed', role: 'Staff ML Engineer', text: 'Fanout is the only platform that treated me like an adult engineer. The Inference Engineering breakdowns of KV cache paging saved us months of trial and error in our vLLM deployment.' },
+      { author: 'Sophie Chen', handle: '@builder_sophie', role: 'AI Systems Researcher', text: 'The Math Decoder and System Design modules bridge the gap between abstract academic papers and real C++/CUDA implementations. Pure gold.' },
+      { author: 'Mrinal K.', handle: '@Hi_Mrinal', role: 'Forward Deployed Engineer', text: 'I used Fanout to prepare for my L7 interview loops. The Discord and Stripe architecture case studies with from-scratch code are unmatched anywhere on the internet.' }
+    ];
+
+    const ROADMAPS_DATA = {
+      inference: {
+        title: 'Inference Engineering Track Topography',
+        subtitle: 'From naive forward passes to distributed, continuous batching on multi-GPU nodes.',
+        steps: [
+          { phase: '01. FOUNDATIONS', title: 'Autoregressive Decoding & Memory Wall', desc: 'Understanding compute vs memory bandwidth saturation. Why token generation is IO-bound.' },
+          { phase: '02. KV CACHING', title: 'Key-Value Cache Math & Management', desc: 'Calculating bytes per token. Avoiding recomputing attention keys across prior positions.' },
+          { phase: '03. OPTIMIZED SERVING', title: 'PagedAttention & Continuous Batching', desc: 'Virtual block memory mapping, avoiding internal fragmentation, dynamic request iteration.' },
+          { phase: '04. ACCELERATION', title: 'Speculative Decoding & FlashAttention', desc: 'Draft model verification, tiling SRAM attention kernels, FlashInfer integration.' },
+          { phase: '05. DISTRIBUTED', title: 'Tensor Parallelism & Pipeline Parallelism', desc: 'Megatron-style column/row parallel linear projections, NCCL all-reduce communication.' }
+        ]
+      },
+      ai: {
+        title: 'AI Research Track Topography',
+        subtitle: 'From linear algebra and backprop to training modern LLMs and alignment.',
+        steps: [
+          { phase: '01. MATH BEDROCK', title: 'Jacobians, Gradients & Loss Landscapes', desc: 'Matrix calculus, cross-entropy derivatives, stochastic gradient descent dynamics.' },
+          { phase: '02. TRANSFORMERS', title: 'Self-Attention & Decoder From Scratch', desc: 'Building QKV attention, causal masking, RoPE embeddings, RMSNorm, and residual connections.' },
+          { phase: '03. PRE-TRAINING', title: 'Data Pipelines, Tokenization & Scaling Laws', desc: 'Byte-Pair Encoding, Chinchilla scaling laws, learning rate warmups and cosine decay.' },
+          { phase: '04. POST-TRAINING', title: 'SFT, RLHF, DPO & Reasoning Traces', desc: 'Turning next-token predictors into helpful assistants. Chain-of-thought and verification.' }
+        ]
+      },
+      system: {
+        title: 'System Design In Depth Topography',
+        subtitle: 'From storage engines and data structures to distributed consensus and billion-user scale.',
+        steps: [
+          { phase: '01. STORAGE ENGINES', title: 'LSM-Trees, B+ Trees & Disk Physics', desc: 'Sequential vs random I/O, write amplification, compaction strategies, bloom filters.' },
+          { phase: '02. CONSENSUS', title: 'Raft, Paxos & Distributed Commit', desc: 'Leader election, log replication, two-phase commit, Byzantine fault tolerance.' },
+          { phase: '03. SCALING PATTERNS', title: 'Sharding, Replication & Consistent Hashing', desc: 'Virtual node rings, read repair, vector clocks, multi-region database topologies.' },
+          { phase: '04. REAL SYSTEMS', title: 'Discord, Stripe, Instagram & Dynamo', desc: 'Real production blueprints: schema migrations with zero downtime, global rate limiters.' }
+        ]
+      },
+      'ml-math': {
+        title: 'ML Mathematics Track Topography',
+        subtitle: 'Building the visual and computational intuition behind AI papers.',
+        steps: [
+          { phase: '01. LINEAR ALGEBRA', title: 'Vector Spaces, Projections & Eigendecomposition', desc: 'Change of basis, singular value decomposition (SVD), low-rank matrix approximations.' },
+          { phase: '02. CALCULUS', title: 'Multivariable Derivatives & Gradient Fields', desc: 'Hessian matrices, curvature, Taylor expansions, optimization algorithms.' },
+          { phase: '03. PROBABILITY', title: 'Densities, Bayes Rule & Information Geometry', desc: 'Maximum likelihood, KL divergence, mutual information, sampling methods.' }
+        ]
+      }
+    };
+
+    const FAQS = [
+      { q: 'Where should I start if I am a beginner?', a: 'Start with the free introductory lessons in whichever track matches your current blocker: if math symbols in papers confuse you, start with ML Math; if you want to understand how LLMs serve tokens in production, start with Inference Engineering; if you want architecture and interviews, start with System Design.' },
+      { q: 'What is actually inside the Fanout courses?', a: 'Every course combines deep-dive annotated technical notes, architecture diagrams, from-scratch implementations, and interactive browser tools. We deconstruct real production code (vLLM, Milvus, ScyllaDB, Discord) rather than high-level slides.' },
+      { q: 'Is Fanout only for senior or Staff engineer interview prep?', a: 'No. While our material frequently helps engineers pass L6/L7 Staff interviews, the primary mission is building genuine architectural judgment: understanding the real memory, latency, and operational cost of engineering decisions.' },
+      { q: 'Can I explore lessons before purchasing a subscription?', a: 'Yes! Every course has multiple free introductory modules and interactive labs that you can explore immediately without creating an account or paying.' },
+      { q: 'How often is the material updated?', a: 'Fanout is maintained as a living archive. Every single week, we add new paper breakdowns, case studies, code updates, and curriculum revisions as the AI field advances.' }
+    ];
+
+    // Theme Management
+    function initTheme() {
+      const stored = localStorage.getItem('fanout-theme') || 'dark';
+      if (stored === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('fanout-theme', isDark ? 'dark' : 'light');
+    }
+
+    // Render Courses
+    function renderCourses(filter = 'all') {
+      const container = document.getElementById('course-cards-container');
+      const filtered = filter === 'all' 
+        ? COURSES_DATA 
+        : COURSES_DATA.filter(c => c.category === filter);
+
+      container.innerHTML = filtered.map(course => {
+        const accentColors = {
+          blue: { border: 'border-blue-500/30', badge: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
+          green: { border: 'border-emerald-500/30', badge: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' },
+          orange: { border: 'border-amber-500/30', badge: 'bg-amber-500/10 text-amber-500 border-amber-500/20' },
+          purple: { border: 'border-purple-500/30', badge: 'bg-purple-500/10 text-purple-500 border-purple-500/20' }
+        }[course.accent];
+
+        return `
+          <div class="p-6 rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] card-hover flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-[10px] font-mono-code font-bold px-2 py-0.5 rounded border ${accentColors.badge}">${course.badge}</span>
+                <span class="text-xs font-mono-code text-[var(--fg-muted)]">${course.modulesCount} modules · ${course.lessonsCount} lessons</span>
+              </div>
+              <h3 class="text-lg font-bold text-[var(--fg)]">${course.title}</h3>
+              <p class="text-xs text-[var(--fg-muted)] mt-2 leading-relaxed">${course.description}</p>
+
+              <div class="mt-4 pt-3 border-t border-[var(--border)] space-y-1.5">
+                <div class="text-[10px] font-mono-code font-semibold text-[var(--fg-muted)] uppercase tracking-wider">Key Takeaways:</div>
+                ${course.pointers.map(p => `
+                  <div class="flex items-start gap-2 text-xs text-[var(--fg)]">
+                    <span class="text-emerald-500 font-bold">✓</span>
+                    <span>${p}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-[var(--border)] flex items-center justify-between">
+              <button onclick="openCurriculumModal('${course.id}')" class="text-xs font-semibold text-blue-500 hover:underline flex items-center gap-1">
+                <span>View Curriculum</span> &rarr;
+              </button>
+              <button onclick="openAuthModal('course-${course.id}')" class="px-3 py-1.5 rounded-lg bg-[var(--surface)] border border-[var(--border)] text-xs font-mono-code font-semibold hover:border-[var(--border-strong)]">
+                Free Preview
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterCourses(cat) {
+      document.querySelectorAll('.course-filter-btn').forEach(btn => {
+        if (btn.dataset.filter === cat) {
+          btn.className = 'course-filter-btn px-3 py-1.5 rounded-md border border-[var(--border)] bg-[var(--fg)] text-[var(--bg)] font-medium';
+        } else {
+          btn.className = 'course-filter-btn px-3 py-1.5 rounded-md border border-[var(--border)] bg-[var(--surface)] text-[var(--fg-muted)] hover:text-[var(--fg)]';
+        }
+      });
+      renderCourses(cat);
+    }
+
+    // Render Roadmaps
+    function switchRoadmap(key) {
+      const data = ROADMAPS_DATA[key];
+      const container = document.getElementById('roadmap-content');
+      
+      // Update Tab Styles
+      ['inference', 'ai', 'system', 'ml-math'].forEach(tab => {
+        const btn = document.getElementById(`tab-btn-${tab}`);
+        if (tab === key) {
+          btn.className = 'px-3 py-1.5 rounded-md font-medium bg-[var(--fg)] text-[var(--bg)] transition-all';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-md font-medium text-[var(--fg-muted)] hover:text-[var(--fg)] transition-all';
+        }
+      });
+
+      container.innerHTML = `
+        <div class="mb-6">
+          <h3 class="text-lg font-bold text-[var(--fg)]">${data.title}</h3>
+          <p class="text-xs text-[var(--fg-muted)] mt-1">${data.subtitle}</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${Math.min(data.steps.length, 5)} gap-3">
+          ${data.steps.map((step, idx) => `
+            <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] relative flex flex-col justify-between">
+              <div>
+                <span class="text-[10px] font-mono-code font-bold text-blue-500">${step.phase}</span>
+                <h4 class="font-bold text-sm text-[var(--fg)] mt-1">${step.title}</h4>
+                <p class="text-xs text-[var(--fg-muted)] mt-2 leading-relaxed">${step.desc}</p>
+              </div>
+              <div class="mt-4 pt-2 border-t border-[var(--border)] text-[10px] font-mono-code text-emerald-500 font-medium flex items-center gap-1">
+                <span>Step ${idx + 1} of ${data.steps.length}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // GPU Memory Workbench Logic
+    let currentQuant = 'fp16';
+    function selectQuant(type) {
+      currentQuant = type;
+      ['fp16', 'int8', 'int4'].forEach(q => {
+        const btn = document.getElementById(`quant-btn-${q}`);
+        if (q === type) {
+          btn.className = 'p-2 rounded-lg border border-blue-500 bg-blue-500/10 text-xs font-mono-code text-[var(--fg)] font-medium text-center';
+        } else {
+          btn.className = 'p-2 rounded-lg border border-[var(--border)] bg-[var(--surface-elevated)] text-xs font-mono-code text-[var(--fg-muted)] hover:text-[var(--fg)] text-center';
+        }
+      });
+
+      const display = document.getElementById('dtype-display');
+      display.textContent = type === 'fp16' ? 'FP16 (16-bit)' : (type === 'int8' ? 'INT8 Quant' : 'INT4 (AWQ/GPTQ)');
+      updateGpuWorkbench();
+    }
+
+    function updateGpuWorkbench() {
+      const paramVal = parseInt(document.getElementById('param-slider').value);
+      const contextVal = parseInt(document.getElementById('context-slider').value);
+      const batchSlots = parseInt(document.getElementById('batch-slider').value);
+      const totalVram = parseFloat(document.getElementById('gpu-select').value);
+
+      const paramsMap = { 1: { b: 7, label: '7 Billion (LLaMA 3 8B)' }, 2: { b: 14, label: '14 Billion (Qwen 14B)' }, 3: { b: 32, label: '32 Billion (Qwen 32B)' }, 4: { b: 70, label: '70 Billion (LLaMA 3 70B)' } };
+      const contextMap = { 1: { tokens: 2048, label: '2,048 tokens' }, 2: { tokens: 4096, label: '4,096 tokens' }, 3: { tokens: 16384, label: '16,384 tokens' }, 4: { tokens: 65536, label: '65,536 tokens' } };
+      const bytesPerParam = currentQuant === 'fp16' ? 2 : (currentQuant === 'int8' ? 1 : 0.5);
+
+      const selectedParams = paramsMap[paramVal];
+      const selectedContext = contextMap[contextVal];
+
+      document.getElementById('param-display').textContent = selectedParams.label;
+      document.getElementById('context-display').textContent = selectedContext.label;
+      document.getElementById('batch-display').textContent = `${batchSlots} concurrent users`;
+
+      // Model weight memory in GB
+      const weightMemory = (selectedParams.b * bytesPerParam);
+      
+      // KV cache calculation in GB
+      // KV cache per token approx: 2 * num_layers * hidden_dim * 2 bytes
+      // For a 7B model, approx 0.00013 GB per token. For 70B, approx 0.00064 GB per token.
+      const kvPerToken = (selectedParams.b / 7) * 0.000032;
+      const kvMemory = selectedContext.tokens * batchSlots * kvPerToken;
+
+      // CUDA overhead
+      const cudaMemory = 1.2;
+
+      const totalUsed = weightMemory + kvMemory + cudaMemory;
+      const headroom = Math.max(0, totalVram - totalUsed);
+      const isOom = totalUsed > totalVram;
+
+      // Update UI displays
+      document.getElementById('vram-total-used').textContent = `${totalUsed.toFixed(1)} GB`;
+      document.getElementById('vram-capacity').textContent = `${totalVram} GB`;
+      document.getElementById('detail-weights').textContent = `${weightMemory.toFixed(1)} GB`;
+      document.getElementById('detail-kv').textContent = `${kvMemory.toFixed(1)} GB`;
+      document.getElementById('detail-cuda').textContent = `${cudaMemory.toFixed(1)} GB`;
+      document.getElementById('detail-headroom').textContent = isOom ? '0.0 GB (OOM!)' : `${headroom.toFixed(1)} GB`;
+
+      const badge = document.getElementById('oom-badge');
+      if (isOom) {
+        badge.className = 'px-2 py-0.5 rounded text-[10px] font-mono-code font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30';
+        badge.textContent = 'OUT OF MEMORY (OOM)';
+      } else {
+        badge.className = 'px-2 py-0.5 rounded text-[10px] font-mono-code font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+        badge.textContent = 'FITS IN MEMORY';
+      }
+
+      // Bar percentages
+      const pctWeight = Math.min(100, (weightMemory / totalVram) * 100);
+      const pctKv = Math.min(100 - pctWeight, (kvMemory / totalVram) * 100);
+      const pctCuda = Math.min(100 - pctWeight - pctKv, (cudaMemory / totalVram) * 100);
+
+      document.getElementById('bar-weights').style.width = `${pctWeight}%`;
+      document.getElementById('bar-kv').style.width = `${pctKv}%`;
+      document.getElementById('bar-cuda').style.width = `${pctCuda}%`;
+    }
+
+    // Math Decoder Logic
+    let currentMathDomain = 'all';
+    function renderMathSymbols() {
+      const container = document.getElementById('math-symbols-grid');
+      const search = (document.getElementById('math-search-input')?.value || '').toLowerCase();
+
+      const filtered = MATH_SYMBOLS.filter(s => {
+        const matchesDomain = currentMathDomain === 'all' || s.domain === currentMathDomain;
+        const matchesSearch = s.glyph.toLowerCase().includes(search) || 
+                              s.name.toLowerCase().includes(search) || 
+                              s.latex.toLowerCase().includes(search) ||
+                              s.meaning.toLowerCase().includes(search);
+        return matchesDomain && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="col-span-full py-8 text-center text-xs font-mono-code text-[var(--fg-muted)]">No matching mathematical notation found.</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(sym => `
+        <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] card-hover flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl font-bold font-mono-code text-blue-500">${sym.glyph}</span>
+              <span class="text-[10px] font-mono-code px-1.5 py-0.5 rounded bg-[var(--badge-bg)] text-[var(--fg-muted)]">${sym.latex}</span>
+            </div>
+            <h4 class="font-bold text-xs text-[var(--fg)] mt-1">${sym.name}</h4>
+            <p class="text-xs text-[var(--fg-muted)] mt-1.5 leading-relaxed">${sym.meaning}</p>
+          </div>
+          <div class="mt-4 pt-2 border-t border-[var(--border)] text-[10px] font-mono-code text-amber-500 flex items-center justify-between">
+            <span>Domain: ${sym.domain}</span>
+            <button onclick="copyToClipboard('${sym.latex}')" class="hover:underline">Copy LaTeX</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterMathDomain(domain) {
+      currentMathDomain = domain;
+      document.querySelectorAll('.math-domain-btn').forEach(btn => {
+        if (btn.dataset.domain === domain) {
+          btn.className = 'math-domain-btn px-3 py-1 rounded-md text-xs font-mono-code border border-[var(--border)] bg-[var(--fg)] text-[var(--bg)]';
+        } else {
+          btn.className = 'math-domain-btn px-3 py-1 rounded-md text-xs font-mono-code border border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--fg-muted)] hover:text-[var(--fg)]';
+        }
+      });
+      renderMathSymbols();
+    }
+
+    function filterMathSymbols() {
+      renderMathSymbols();
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard?.writeText(text);
+      alert(`Copied "${text}" to clipboard!`);
+    }
+
+    // Render Daily Papers
+    function renderDailyPapers() {
+      const container = document.getElementById('papers-feed-container');
+      container.innerHTML = DAILY_PAPERS.map(paper => `
+        <div class="p-5 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] card-hover flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-mono-code text-[var(--fg-muted)] mb-2">
+              <span>${paper.date}</span>
+              <span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-500 font-semibold">${paper.category}</span>
+            </div>
+            <h3 class="font-bold text-sm text-[var(--fg)] leading-snug">${paper.title}</h3>
+            <p class="text-xs text-[var(--fg-muted)] mt-2 leading-relaxed">${paper.summary}</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-[var(--border)] flex items-center justify-between text-xs font-mono-code">
+            <span class="text-[var(--fg-muted)]">arXiv:${paper.arxiv}</span>
+            <a href="https://arxiv.org/abs/${paper.arxiv}" target="_blank" rel="noreferrer" class="text-blue-500 hover:underline flex items-center gap-1 font-semibold">
+              <span>Read Paper</span> &rarr;
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Render Testimonials
+    function renderTestimonials() {
+      const container = document.getElementById('testimonials-container');
+      container.innerHTML = TESTIMONIALS.map(t => `
+        <div class="p-5 rounded-xl border border-[var(--border)] bg-[var(--surface)] card-hover flex flex-col justify-between">
+          <p class="text-xs text-[var(--fg)] leading-relaxed italic">"${t.text}"</p>
+          <div class="mt-4 pt-3 border-t border-[var(--border)] flex items-center justify-between text-xs">
+            <div>
+              <div class="font-bold text-[var(--fg)]">${t.author}</div>
+              <div class="text-[11px] text-[var(--fg-muted)]">${t.role}</div>
+            </div>
+            <span class="font-mono-code text-[11px] text-blue-500">${t.handle}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Render FAQs
+    function renderFaqs() {
+      const container = document.getElementById('faq-container');
+      container.innerHTML = FAQS.map((faq, idx) => `
+        <details class="group rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 transition-all">
+          <summary class="flex justify-between items-center font-semibold text-sm text-[var(--fg)] cursor-pointer select-none">
+            <span>${faq.q}</span>
+            <span class="transition-transform group-open:rotate-180 text-[var(--fg-muted)]">▼</span>
+          </summary>
+          <p class="text-xs text-[var(--fg-muted)] leading-relaxed mt-3 pt-3 border-t border-[var(--border)]">
+            ${faq.a}
+          </p>
+        </details>
+      `).join('');
+    }
+
+    // Pricing Cadence
+    function setPricingCadence(cadence) {
+      ['monthly', 'annual', 'lifetime'].forEach(c => {
+        const btn = document.getElementById(`cadence-${c}`);
+        if (c === cadence) {
+          btn.className = 'px-3.5 py-1.5 rounded-lg bg-[var(--fg)] text-[var(--bg)] font-bold transition-all';
+        } else {
+          btn.className = 'px-3.5 py-1.5 rounded-lg text-[var(--fg-muted)] hover:text-[var(--fg)] transition-all';
+        }
+      });
+    }
+
+    // Curriculum Modal
+    function openCurriculumModal(courseId) {
+      const course = COURSES_DATA.find(c => c.id === courseId);
+      if (!course) return;
+
+      document.getElementById('modal-course-title').textContent = course.title;
+      document.getElementById('modal-course-badge').textContent = `${course.modulesCount} MODULES · ${course.lessonsCount} LESSONS`;
+
+      const body = document.getElementById('modal-curriculum-body');
+      body.innerHTML = course.modules.map((mod, idx) => `
+        <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)]">
+          <h4 class="font-bold text-xs font-mono-code text-[var(--fg)] uppercase text-blue-500">${mod.title}</h4>
+          <ul class="mt-2 space-y-1.5">
+            ${mod.lessons.map(lesson => `
+              <li class="flex items-center justify-between text-xs text-[var(--fg)] py-1 border-b border-[var(--border)]/50 last:border-0">
+                <span class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  <span>${lesson}</span>
+                </span>
+                <span class="text-[10px] font-mono-code text-emerald-500 font-semibold">Available</span>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      `).join('');
+
+      document.getElementById('curriculum-modal').classList.remove('hidden');
+    }
+
+    function closeCurriculumModal() {
+      document.getElementById('curriculum-modal').classList.add('hidden');
+    }
+
+    // Search Palette Modal
+    let searchCategory = 'all';
+    function openSearchModal() {
+      document.getElementById('search-modal').classList.remove('hidden');
+      const input = document.getElementById('global-search-input');
+      input.value = '';
+      input.focus();
+      handleGlobalSearch();
+    }
+
+    function closeSearchModal() {
+      document.getElementById('search-modal').classList.add('hidden');
+    }
+
+    function setSearchFilter(cat) {
+      searchCategory = cat;
+      document.querySelectorAll('.search-cat-pill').forEach(pill => {
+        if (pill.dataset.cat === cat) {
+          pill.className = 'search-cat-pill px-2 py-0.5 rounded bg-[var(--fg)] text-[var(--bg)] font-medium';
+        } else {
+          pill.className = 'search-cat-pill px-2 py-0.5 rounded bg-[var(--surface)] text-[var(--fg-muted)] border border-[var(--border)]';
+        }
+      });
+      handleGlobalSearch();
+    }
+
+    function handleGlobalSearch() {
+      const query = (document.getElementById('global-search-input')?.value || '').toLowerCase().trim();
+      const list = document.getElementById('search-results-list');
+
+      let results = [];
+
+      // Add Courses
+      if (searchCategory === 'all' || searchCategory === 'course') {
+        COURSES_DATA.forEach(c => {
+          if (!query || c.title.toLowerCase().includes(query) || c.description.toLowerCase().includes(query)) {
+            results.push({ type: 'Course', title: c.title, subtitle: `${c.modulesCount} modules · ${c.badge}`, action: () => { closeSearchModal(); openCurriculumModal(c.id); } });
+          }
+        });
+      }
+
+      // Add Labs
+      if (searchCategory === 'all' || searchCategory === 'lab') {
+        const labs = [
+          { title: 'GPU Memory Workbench for LLM Inference', subtitle: 'Interactive VRAM and context allocation budget calculator' },
+          { title: 'Math Decoder for Research Papers', subtitle: 'Notation translator for cryptic AI/ML paper formulas' },
+          { title: 'KV Cache Layout Visualizer', subtitle: 'Step through key-value matrix allocations across sequence lengths' }
+        ];
+        labs.forEach(l => {
+          if (!query || l.title.toLowerCase().includes(query) || l.subtitle.toLowerCase().includes(query)) {
+            results.push({ type: 'Lab', title: l.title, subtitle: l.subtitle, action: () => { closeSearchModal(); window.location.hash = 'labs'; } });
+          }
+        });
+      }
+
+      // Add Math Symbols
+      if (searchCategory === 'all' || searchCategory === 'symbol') {
+        MATH_SYMBOLS.forEach(m => {
+          if (!query || m.name.toLowerCase().includes(query) || m.glyph.includes(query) || m.latex.includes(query)) {
+            results.push({ type: 'Math', title: `${m.glyph} — ${m.name}`, subtitle: `${m.latex} · ${m.meaning}`, action: () => { closeSearchModal(); window.location.hash = 'math-decoder'; } });
+          }
+        });
+      }
+
+      // Add Papers
+      if (searchCategory === 'all' || searchCategory === 'paper') {
+        DAILY_PAPERS.forEach(p => {
+          if (!query || p.title.toLowerCase().includes(query) || p.summary.toLowerCase().includes(query)) {
+            results.push({ type: 'Paper', title: p.title, subtitle: `arXiv:${p.arxiv} · ${p.category}`, action: () => { closeSearchModal(); window.location.hash = 'daily-papers'; } });
+          }
+        });
+      }
+
+      if (results.length === 0) {
+        list.innerHTML = `<div class="p-6 text-center text-xs font-mono-code text-[var(--fg-muted)]">No results found for "${query}".</div>`;
+        return;
+      }
+
+      list.innerHTML = results.slice(0, 10).map((r, i) => `
+        <div onclick="searchResultsActions[${i}]()" class="p-2.5 rounded-lg hover:bg-[var(--surface-hover)] cursor-pointer flex items-center justify-between text-xs group transition-colors">
+          <div>
+            <div class="font-bold text-[var(--fg)] flex items-center gap-2">
+              <span class="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-[var(--badge-bg)] text-[var(--fg-muted)] border border-[var(--border)] uppercase">${r.type}</span>
+              <span>${r.title}</span>
+            </div>
+            <div class="text-[11px] text-[var(--fg-muted)] mt-0.5 pl-1">${r.subtitle}</div>
+          </div>
+          <span class="text-xs text-[var(--fg-muted)] group-hover:text-[var(--fg)]">&rarr;</span>
+        </div>
+      `).join('');
+
+      window.searchResultsActions = results.slice(0, 10).map(r => r.action);
+    }
+
+    // Keyboard Shortcuts (⌘K / Ctrl+K and ESC)
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        openSearchModal();
+      }
+      if (e.key === 'Escape') {
+        closeSearchModal();
+        closeCurriculumModal();
+        closeAuthModal();
+      }
+    });
+
+    // Auth Simulation
+    function openAuthModal(context) {
+      document.getElementById('auth-modal-title').textContent = context === 'signin' ? 'Sign In to Fanout' : 'Join Fanout Pro';
+      document.getElementById('auth-modal').classList.remove('hidden');
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal').classList.add('hidden');
+    }
+
+    function simulateAuthSuccess() {
+      const email = document.getElementById('auth-email-input').value || 'engineer@domain.com';
+      alert(`Success! Magic link simulated for ${email}. You now have full unlocked access to all Fanout tracks!`);
+      closeAuthModal();
+    }
+
+    // Initialize Everything
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      renderCourses();
+      switchRoadmap('inference');
+      updateGpuWorkbench();
+      renderMathSymbols();
+      renderDailyPapers();
+      renderTestimonials();
+      renderFaqs();
+    });
+  </script>
+</body>
+</html>

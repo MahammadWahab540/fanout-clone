@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";import{t}from"./jsx-runtime-CIkHs51R.js";import{n,t as r}from"./ActivityLesson-D5e24ta6.js";import{n as i,t as a}from"./PolicyActivity-CeKQIBlD.js";function o(){return(0,s.jsx)(r,{lesson:`when-the-policy-fails`,children:(0,s.jsx)(a,{})})}var s;e((()=>{n(),i(),s=t()}))();export{o as default};

@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";var t,n,r=e((()=>{t=`Explore how context and concurrency use GPU memory.`,n=`Calculations stay in your browser. Download your notes before switching cases or refreshing.`}));export{n,r,t};

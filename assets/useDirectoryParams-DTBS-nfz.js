@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";import{g as t,t as n}from"./dist-BXxUuVPX.js";function r(){let[e,n]=t();return{params:e,updateParams:e=>{n(t=>{let n=new URLSearchParams(t);for(let[t,r]of Object.entries(e))r?n.set(t,r):n.delete(t);return n},{replace:!0})}}}var i=e((()=>{n()}));export{r as n,i as t};

@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";function t(e,t){return{name:n[e],properties:{track:t.track,lesson_id:t.lessonId,from_path:t.path.split(/[?#]/,1)[0]||`/`}}}var n,r=e((()=>{n={viewed:`free_preview_viewed`,completed:`free_preview_completed`,upgrade_clicked:`free_preview_upgrade_clicked`}}));export{r as n,t};

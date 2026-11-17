@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";var t,n,r=e((()=>{t=`/robotics`,n={overview:`${t}/overview`,lesson:e=>`${t}/lessons/${e}`,books:`${t}/books`,people:`${t}/people`,papers:`${t}/papers`,library:e=>`${t}/library/${e}`}}));export{n,r as t};

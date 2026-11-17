@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";function t(){return typeof navigator>`u`||typeof navigator.vibrate!=`function`?null:navigator.vibrate.bind(navigator)}function n(e,n=t()){if(n)try{if(n(16))return`vibrate`}catch{}return e?(e.click(),`switch`):`unavailable`}var r=e((()=>{}));export{n,r as t};

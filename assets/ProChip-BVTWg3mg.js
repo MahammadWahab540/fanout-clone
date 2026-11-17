@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";import{t}from"./jsx-runtime-CIkHs51R.js";import{t as n,v as r}from"./brand-C2gbhl7g.js";function i(){return(0,a.jsx)(r,{label:`Pro`})}var a,o=e((()=>{n(),a=t()}));export{o as n,i as t};

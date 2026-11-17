@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";import{t}from"./jsx-runtime-CIkHs51R.js";function n({disclosure:e}){return(0,r.jsx)(`div`,{className:`border-b border-border bg-[var(--ga-sidebar)] px-5 py-2 text-center text-[11px] leading-5 text-muted-foreground sm:px-6`,children:e})}var r,i=e((()=>{r=t()}));export{i as n,n as t};

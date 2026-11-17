@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";function t(e){return`${r}${e}`}function n(e){return e.startsWith(`inference/`)&&e.length>10?e.slice(10):null}var r,i=e((()=>{r=`inference/`}));export{i,n,t as r,r as t};

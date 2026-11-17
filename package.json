@@ -1,0 +1,19 @@
+{
+  "name": "fanout-clone",
+  "version": "1.0.0",
+  "description": "Full reverse-engineered clone of fanout.sh",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "serve": "node server.js"
+  },
+  "keywords": [
+    "fanout",
+    "ai-research",
+    "system-design",
+    "ml-math",
+    "inference-engineering"
+  ],
+  "author": "Suraj Gaud (Reconstructed)",
+  "license": "ISC"
+}

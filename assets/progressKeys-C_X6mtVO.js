@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";function t(e){return`${n}${e}`}var n,r=e((()=>{n=`ai-engineering/`}));export{t as n,r,n as t};

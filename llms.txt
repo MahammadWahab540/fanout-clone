@@ -1,0 +1,48 @@
+# Fanout
+
+> Fanout maps serious technical learning across AI research, system design, machine learning mathematics, inference engineering, open robotics, practical labs, and daily papers.
+
+Fanout is an independent educational product by Suraj Gaud. Public pages, previews, tools, and Daily paper notes may be summarized and cited. Pro lessons and account-specific pages are access-controlled and are intentionally absent from these files.
+
+## Start here
+
+- [Fanout](https://fanout.sh/): Product map, current learning note, course directory, and the main public discovery surface.
+- [Learning roadmaps](https://fanout.sh/roadmaps): Visual roadmaps for Inference Engineering, AI Research, System Design, and ML Math.
+- [Pricing](https://fanout.sh/pricing): Full access to every course: Monthly ($39 a month), Quarterly ($85 every 3 months), Annual ($227 a year), or Lifetime ($256, paid once). US prices; other countries see local prices at checkout.
+
+## Courses
+
+- [AI Research](https://fanout.sh/ai): A sequenced path from mathematical foundations through modern language models, alignment, and research practice.
+- [System Design In Depth](https://fanout.sh/system): System design notes, case studies, curriculum, and from-scratch implementation previews.
+- [Machine Learning Mathematics](https://fanout.sh/ml-math): A 12-module mathematics path spanning sets, linear algebra, calculus, probability, and inference.
+- [AI Engineering](https://fanout.sh/ai-engineering/overview): Models, embeddings, retrieval, reasoning, and agents. Free starting modules and selected lessons, with Pro access to the full course and library.
+- [AI engineering course comparison](https://fanout.sh/ai-engineering/courses): AI engineering courses and books for software engineers side by side: format, length, price and who each suits.
+- [Inference Engineering](https://fanout.sh/inference-eng): A self-paced production LLM inference course with free introductory lessons and Pro lessons.
+- [Forward deployed engineer course comparison](https://fanout.sh/forward-deployed-engineer/courses): FDE programmes compared on fee, length and refund terms against what FDE job posts ask for. Fanout sells no FDE course.
+- [Inference course comparison](https://fanout.sh/inference-eng/courses): Current LLM inference courses and open resources side by side: format, who each suits, and what to know before you enrol.
+- [System design course comparison](https://fanout.sh/system/courses): System design courses side by side: depth, practice, format, price and who each suits.
+- [Open Robotics](https://fanout.sh/open-robotics): The public curriculum preview for the upcoming open-stack robotics course.
+
+## Free tools and ongoing learning
+
+- [Fanout Labs](https://fanout.sh/labs): Explore 16 curated interactive Labs for AI, inference, system design, evaluation, research, and everyday technical work.
+- [Daily papers](https://fanout.sh/daily): A dated calendar of foundational and current technical papers with concise reading notes.
+- [Paper hierarchy](https://fanout.sh/papers): Foundational papers per track, in reading order, with the prerequisites drawn in.
+- [Fanout blog](https://fanout.sh/blog): Practical field notes across AI research, systems, inference, and ML mathematics.
+- [Knowledge Topography](https://fanout.sh/knowledge-graph): A navigable map connecting concepts across AI Research, System Design, and ML Math.
+- [Technical tools](https://fanout.sh/tools): A curated directory of useful AI, ML, and system design tools.
+- [Study With Me](https://fanout.sh/study-with-me): Public guided study sessions and previews of people learning in public.
+
+## Reference collections
+
+- [AI glossary](https://fanout.sh/ai/glossary): Plain-English definitions for AI and machine learning terms.
+- [Foundational AI papers](https://fanout.sh/ai/papers): A curated reading sequence of papers that shaped modern AI.
+- [AI researcher resources](https://fanout.sh/ai/resources): Courses, books, lectures, and repositories organized by topic and level.
+- [System design books and resources](https://fanout.sh/system/resources): What to read for system design and when: books, free guides, engineering blogs, tools, and channels.
+
+## Optional
+
+- [Full Fanout context](https://fanout.sh/llms-full.txt): Expanded descriptions of canonical public routes and Daily papers.
+- [XML sitemap](https://fanout.sh/sitemap.xml): Canonical indexable URLs and honest content modification dates where known.
+- [Daily paper RSS feed](https://fanout.sh/feed.xml): Machine-readable updates for the Daily paper archive.
+- [Blog RSS feed](https://fanout.sh/blog/feed.xml): Machine-readable updates for Fanout field notes.

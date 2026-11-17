@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";import{t}from"./jsx-runtime-CIkHs51R.js";import{ArchiveCategoryView as n,t as r}from"./CategoryPage-B4ADo4Ks.js";function i(){return(0,a.jsx)(n,{slug:`communities`,covers:!0})}var a;e((()=>{r(),a=t()}))();export{i as default};

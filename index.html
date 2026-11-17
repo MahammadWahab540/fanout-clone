@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Session-fragment scrub. If an auth redirect ever lands with tokens in
+         the URL fragment (legacy implicit-flow magic links), remove them
+         before any tracker below can read location.href. Position matters:
+         this must stay the first script in <head>, above GTM and every pixel.
+         Pinned by tests/security-headers.test.ts. -->
+    <script>
+      if (location.hash.indexOf("access_token") !== -1) {
+        history.replaceState(null, "", location.pathname + location.search);
+      }
+    </script>
+
+    <!-- Local dev CORS interceptor for remote telemetry -->
+    <script>
+      (function() {
+        const _fetch = window.fetch;
+        window.fetch = function(input, init) {
+          const url = typeof input === 'string' ? input : (input && input.url ? input.url : '');
+          if (url && (url.includes('fanout-analytics') || url.includes('/v1/sessions'))) {
+            return Promise.resolve(new Response(JSON.stringify({ ok: true, status: 'mocked' }), {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' }
+            }));
+          }
+          return _fetch.apply(this, arguments);
+        };
+      })();
+    </script>
+
+    <!-- Google Tag Manager -->
+    <!-- Container id is pinned by tests/static-metadata.test.ts and mirrored in
+         src/lib/analytics/gtm.ts. The container's built-in Page View trigger only
+         fires on this document load; SPA route changes and catalog events are
+         pushed to the dataLayer from src/lib/analytics/gtm.ts. -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-W7BVZPQV');</script>
+    <!-- End Google Tag Manager -->
+
+    <script>!function(w,d,s,u,n,a,b){if(w[n])return;a=w[n]={q:[],t:+new Date,s:[],o:u,track:function(){a.q.push([+new Date].concat([].slice.call(arguments)))},setScope:function(){a.s=[].slice.call(arguments).filter(function(x){return typeof x==="string"});a.q.push([+new Date,"setScope"].concat(a.s))},scope:function(){var c=[].slice.call(arguments);return{track:function(){a.q.push([+new Date].concat([].slice.call(arguments)).concat([{__scope:c}]))}}}};b=d.createElement(s);b.async=1;b.src=u+"/s.js";d.getElementsByTagName(s)[0].parentNode.insertBefore(b,d.getElementsByTagName(s)[0])}(window,document,"script","https://t.whop.tw","whop");whop.setScope("biz_UvSk2l0dpckrBO");whop.track("page");</script>
+
+    <!-- fanout:route-meta:start -->
+    <title data-fanout-static-route>Fanout: AI Research, System Design &amp; ML Math</title>
+    <meta name="description" content="Mapped learning across AI research, systems, ML math, inference, and open robotics, with practical labs, daily papers, and roadmaps." data-fanout-static-route />
+    <link rel="canonical" href="https://fanout.sh/" data-fanout-static-route />
+    <link rel="alternate" type="text/markdown" href="/index.md" data-fanout-static-route />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" data-fanout-static-route />
+    <meta property="og:type" content="website" data-fanout-static-route />
+    <meta property="og:url" content="https://fanout.sh/" data-fanout-static-route />
+    <meta property="og:title" content="Fanout: AI Research, System Design &amp; ML Math" data-fanout-static-route />
+    <meta property="og:description" content="Mapped learning across AI research, systems, ML math, inference, and open robotics, with practical labs, daily papers, and roadmaps." data-fanout-static-route />
+    <meta property="og:image" content="https://fanout.sh/og-everything-google-l7-mapped.png" data-fanout-static-route />
+    <meta property="og:image:secure_url" content="https://fanout.sh/og-everything-google-l7-mapped.png" data-fanout-static-route />
+    <meta property="og:image:type" content="image/png" data-fanout-static-route />
+    <meta property="og:image:width" content="1200" data-fanout-static-route />
+    <meta property="og:image:height" content="630" data-fanout-static-route />
+    <meta property="og:image:alt" content="Fanout: AI Research, System Design &amp; ML Math on Fanout" data-fanout-static-route />
+    <meta name="twitter:url" content="https://fanout.sh/" data-fanout-static-route />
+    <meta name="twitter:title" content="Fanout: AI Research, System Design &amp; ML Math" data-fanout-static-route />
+    <meta name="twitter:description" content="Mapped learning across AI research, systems, ML math, inference, and open robotics, with practical labs, daily papers, and roadmaps." data-fanout-static-route />
+    <meta name="twitter:image" content="https://fanout.sh/og-everything-google-l7-mapped.png" data-fanout-static-route />
+    <meta name="twitter:image:alt" content="Fanout: AI Research, System Design &amp; ML Math on Fanout" data-fanout-static-route />
+    <script type="application/ld+json" data-fanout-static-route>[{"@context":"https://schema.org","@type":"WebPage","@id":"https://fanout.sh/#webpage","url":"https://fanout.sh/","name":"Fanout: AI Research, System Design & ML Math","description":"Mapped learning across AI research, systems, ML math, inference, and open robotics, with practical labs, daily papers, and roadmaps.","inLanguage":"en-US","isPartOf":{"@id":"https://fanout.sh/#website"},"about":{"@id":"https://fanout.sh/#org"}},{"@context":"https://schema.org","@type":"ItemList","@id":"https://fanout.sh/#courses","itemListElement":[{"@type":"ListItem","position":1,"url":"https://fanout.sh/ai-engineering/overview","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/ai-engineering/overview#course","url":"https://fanout.sh/ai-engineering/overview","name":"Fanout AI Engineering","description":"Build with models, embeddings, retrieval, reasoning, and agents. Free introductory modules and selected lessons, with Pro access to the full course.","provider":{"@id":"https://fanout.sh/#org"}}},{"@type":"ListItem","position":2,"url":"https://fanout.sh/ai","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/ai#course","url":"https://fanout.sh/ai","name":"Fanout AI Research","description":"AI research from math foundations to RLHF and MLOps.","provider":{"@id":"https://fanout.sh/#org"}}},{"@type":"ListItem","position":3,"url":"https://fanout.sh/system","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/system#course","url":"https://fanout.sh/system","name":"System Design In Depth","description":"System design notes, case studies, and implementations.","provider":{"@id":"https://fanout.sh/#org"}}},{"@type":"ListItem","position":4,"url":"https://fanout.sh/ml-math","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/ml-math#course","url":"https://fanout.sh/ml-math","name":"Machine Learning Mathematics","description":"Mathematics for machine learning across 12 modules.","provider":{"@id":"https://fanout.sh/#org"}}},{"@type":"ListItem","position":5,"url":"https://fanout.sh/inference-eng","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/inference-eng#course","url":"https://fanout.sh/inference-eng","name":"Fanout Inference Engineering","description":"A self-paced production LLM inference course with free introductory lessons and Pro lessons.","provider":{"@id":"https://fanout.sh/#org"}}}]}]</script>
+    <!-- fanout:route-meta:end -->
+
+    <!-- React owns the same route metadata after hydration and on SPA navigation. -->
+    <meta name="author" content="Suraj Gaud" />
+    <meta name="creator" content="Suraj Gaud" />
+    <meta name="publisher" content="Fanout" />
+    <meta name="application-name" content="Fanout" />
+    <meta name="generator" content="Vite + React" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="format-detection" content="telephone=no, address=no, email=no" />
+    <meta name="theme-color" content="#FBFBFB" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      (() => {
+        try {
+          const stored = localStorage.getItem("fanout-theme");
+          const dark = stored
+            ? stored === "dark"
+            : matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.classList.toggle("dark", dark);
+          document.documentElement.style.colorScheme = dark ? "dark" : "light";
+          document
+            .querySelector('meta[name="theme-color"]')
+            ?.setAttribute("content", dark ? "#111315" : "#FBFBFB");
+        } catch {
+          // Keep the default light theme when storage or media queries fail.
+        }
+      })();
+    </script>
+
+    <!-- Icons & PWA -->
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/svg+xml" sizes="any" href="/assets/brand/fanout-mark.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Fanout" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="msapplication-TileColor" content="#FBFBFB" />
+    <meta name="msapplication-TileImage" content="/icon-192.png" />
+
+    <!-- Open Graph site identity; route-specific fields live in the generated block above. -->
+    <meta property="og:site_name" content="Fanout" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:author" content="https://x.com/notsurajgaud" />
+    <meta property="article:publisher" content="https://x.com/notsurajgaud" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@notsurajgaud" />
+    <meta name="twitter:creator" content="@notsurajgaud" />
+    <meta name="twitter:domain" content="fanout.sh" />
+
+    <!-- Shared Google tag for Ads and GA4. GA4 enhanced measurement handles
+         page views on initial load and SPA history changes. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18393127573"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-18393127573');
+      gtag('config', 'G-EPZE2FZ1XT');
+    </script>
+
+    <!-- X Ads conversion tracking base code -->
+    <script>
+      !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments)},s.version="1.1",s.queue=[],u=t.createElement(n),u.async=!0,u.src="https://static.ads-twitter.com/uwt.js",a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,"script");
+      // Three pixels, three ads accounts — see shared/x-capi.ts X_PIXEL_IDS.
+      // The sync test in tests/x-pixel.test.ts keeps these literals honest.
+      twq("config", "reepc");
+      twq("config", "reczr");
+      twq("config", "rf84d");
+    </script>
+
+    <!-- Meta Pixel base code. fbevents.js hooks pushState itself, so SPA route
+         changes fire PageView without react-router wiring. -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      // Automatic event detection labelled every button "SubscribedButtonClick";
+      // real funnel events are forwarded from src/lib/analytics/metaPixel.ts.
+      fbq('set', 'autoConfig', false, '2545109755937527');
+      fbq('init', '2545109755937527');
+      fbq('track', 'PageView');
+    </script>
+
+    <!-- TikTok Pixel base code. events.js hooks pushState itself (like
+         fbevents.js), so SPA route changes fire Pageview without react-router
+         wiring; funnel events are forwarded from
+         src/lib/analytics/tiktokPixel.ts. One ttq.load per pixel in
+         shared/tiktok-capi.ts TIKTOK_PIXEL_IDS; every global ttq call (page,
+         track, identify) fans out to each loaded pixel with the same
+         event_id (verified live 2026-09-10). The literals are pinned to
+         TIKTOK_PIXEL_IDS by tests/tiktok-pixel.test.ts. -->
+    <script>
+      !function (w, d, t) {
+        w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+      var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+      ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+
+        ttq.load('DAH7P8RC77UDHLL3QKVG');
+        ttq.page();
+      }(window, document, 'ttq');
+    </script>
+
+    <!-- rel=me for identity verification (Mastodon, IndieWeb) -->
+    <link rel="me" href="https://x.com/notsurajgaud" />
+    <link rel="me" href="https://github.com/suraj-xd" />
+    <link rel="author" href="https://x.com/notsurajgaud" />
+
+    <!-- Sitemap -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Fanout Daily papers" href="/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Fanout blog" href="/blog/feed.xml" />
+    <link rel="alternate" type="text/plain" title="Fanout for language models" href="/llms.txt" />
+
+    <!-- Structured data — WebSite + Organization + Person. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://fanout.sh/#website",
+            "url": "https://fanout.sh/",
+            "name": "Fanout",
+            "description": "Mapped technical learning across AI research, system design, ML math, and inference engineering, with practical labs, daily papers, and roadmaps.",
+            "inLanguage": "en-US",
+            "publisher": { "@id": "https://fanout.sh/#org" }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://fanout.sh/#org",
+            "name": "Fanout",
+            "url": "https://fanout.sh/",
+            "logo": "https://fanout.sh/icon-512.png",
+            "description": "Technical learning for AI systems engineers, with structured courses, practical roadmaps, interactive labs, and source-led field notes.",
+            "knowsAbout": [
+              "AI research engineering",
+              "LLM inference engineering",
+              "Machine learning mathematics",
+              "System design"
+            ],
+            "founder": { "@id": "https://fanout.sh/#person" },
+            "brand": "Fanout",
+            "sameAs": [
+              "https://x.com/Fanoutdotsh",
+              "https://www.instagram.com/fanout.sh/"
+            ]
+          },
+          {
+            "@type": "Person",
+            "@id": "https://fanout.sh/#person",
+            "name": "Suraj Gaud",
+            "alternateName": "notsurajgaud",
+            "url": "https://surajgaud.com",
+            "sameAs": [
+              "https://x.com/notsurajgaud",
+              "https://github.com/suraj-xd"
+            ]
+          }
+        ]
+      }
+    </script>
+
+    <!-- Icon fonts are decorative; load them without delaying first paint. -->
+    <!-- Core subsets of the faces nearly every page renders (scripts/generate-webfonts.py).
+         Extended files load on demand through unicode-range. -->
+    <link rel="preload" href="/assets/OverusedGrotesk-Roman-core-Bdvro-z4.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/OverusedGrotesk-Medium-core-BPZFOhJr.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/OverusedGrotesk-SemiBold-core-z15TJaaJ.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/IBMPlexMono-Regular-core-BhwDdshb.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/IBMPlexMono-Medium-core-Cm2hjasA.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/DepartureMono-Regular-core-BG0_QVaz.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/phosphor-regular-d6b5dcdf2f.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="/assets/phosphor-fill-fc2384beef.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="/assets/phosphor-bold-0fc7c5b1b7.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript>
+      <link rel="stylesheet" href="/assets/phosphor-regular-d6b5dcdf2f.css" />
+      <link rel="stylesheet" href="/assets/phosphor-fill-fc2384beef.css" />
+      <link rel="stylesheet" href="/assets/phosphor-bold-0fc7c5b1b7.css" />
+    </noscript>
+    <script type="module" crossorigin src="/assets/index-CXfpSli5.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-BgaNhQyE.js">
+    <link rel="modulepreload" crossorigin href="/assets/courses-BfdxzLqa.js">
+    <link rel="modulepreload" crossorigin href="/assets/gift-links-ZewkrAX8.js">
+    <link rel="modulepreload" crossorigin href="/assets/dodoCurrency-DJAmdqii.js">
+    <link rel="modulepreload" crossorigin href="/assets/module-g1eYuniJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-C65L1HE3.js">
+    <link rel="modulepreload" crossorigin href="/assets/jsx-runtime-CIkHs51R.js">
+    <link rel="modulepreload" crossorigin href="/assets/dist-B84PheR_.js">
+    <link rel="modulepreload" crossorigin href="/assets/preload-helper-BfGapeCf.js">
+    <link rel="modulepreload" crossorigin href="/assets/datafast-B4-DpDB2.js">
+    <link rel="modulepreload" crossorigin href="/assets/api-CZnonzPU.js">
+    <link rel="modulepreload" crossorigin href="/assets/auth-CKFvb8-Z.js">
+    <link rel="modulepreload" crossorigin href="/assets/useActiveOffer-Cr7YoOeM.js">
+    <link rel="modulepreload" crossorigin href="/assets/dist-BXxUuVPX.js">
+    <link rel="modulepreload" crossorigin href="/assets/haptics-CImxe2gB.js">
+    <link rel="modulepreload" crossorigin href="/assets/PhIcon-C8YzW2Wq.js">
+    <link rel="modulepreload" crossorigin href="/assets/utils-40vLMUdz.js">
+    <link rel="modulepreload" crossorigin href="/assets/lucide-react-BhmvaPUY.js">
+    <link rel="modulepreload" crossorigin href="/assets/button-Db2QPobg.js">
+    <link rel="modulepreload" crossorigin href="/assets/brand-C2gbhl7g.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-DS65NBSq.js">
+    <link rel="modulepreload" crossorigin href="/assets/profile-bootstrap-BrHLLe3z.js">
+    <link rel="modulepreload" crossorigin href="/assets/subscription-CGNDjmrL.js">
+    <link rel="modulepreload" crossorigin href="/assets/dialog-BjiUTJbW.js">
+    <link rel="stylesheet" crossorigin href="/assets/brand-q-gmNaul.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-DCAXL5XB.css">
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W7BVZPQV"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <!-- Meta Pixel no-JS fallback; img is not valid inside a head noscript. -->
+    <noscript><img height="1" width="1" style="display:none" alt=""
+      src="https://www.facebook.com/tr?id=2545109755937527&ev=PageView&noscript=1"
+    /></noscript>
+    <div id="root">
+      <!-- fanout:route-heading:start -->
+      <h1 class="sr-only" data-fanout-static-route>Mapped technical learning across AI research, system design, and ML math</h1>
+      <nav class="sr-only" aria-label="Fanout site directory" data-fanout-static-route><h2>Explore Fanout</h2><ul><li><a href="/">Fanout home</a></li><li><a href="/ai">Fanout AI Research Course &amp; Roadmap</a></li><li><a href="/system">System Design Course: Concepts, Cases and Builds</a></li><li><a href="/ml-math">Machine Learning Mathematics Course</a></li><li><a href="/math-decoder">Math Decoder for AI Research Papers</a></li><li><a href="/inference-eng">Inference Engineering Course</a></li><li><a href="/open-robotics">Open Robotics</a></li><li><a href="/labs">Interactive AI and System Design Labs</a></li><li><a href="/labs/math-decoder">Mathematical Notation Library</a></li><li><a href="/daily">AI Research Papers Explained Daily</a></li><li><a href="/blog">Fanout blog: AI, systems and ML engineering</a></li><li><a href="/roadmaps">AI, system design &amp; ML math roadmaps</a></li><li><a href="/tools">Tools for technical work</a></li><li><a href="/knowledge-graph">Knowledge Topography</a></li><li><a href="/study-with-me">Study With Me</a></li><li><a href="/pricing">Fanout Course Pricing: AI, Systems and ML Math</a></li></ul></nav>
+      <!-- fanout:route-heading:end -->
+    </div>
+    <script>
+      // Ask for regional prices now, while the app bundle is still downloading,
+      // so they are ready when the pricing UI mounts. Consumed once by
+      // src/features/pricing/pricingQuoteClient.ts; harmless if never used.
+      (function () {
+        try {
+          var path = location.pathname;
+          if (path !== "/" && path !== "/pricing") return;
+          var currency =
+            new URLSearchParams(location.search).get("currency") === "usd"
+              ? "usd"
+              : "local";
+          window.__fanoutEarlyQuote = {
+            currency: currency,
+            startedAt: Date.now(),
+            response: fetch(
+              "/api/checkout?surface=pricing-quote&currency=" + currency,
+              { credentials: "same-origin" }
+            ).catch(function () {
+              return null;
+            }),
+          };
+        } catch (error) {}
+      })();
+    </script>
+  </body>
+</html>

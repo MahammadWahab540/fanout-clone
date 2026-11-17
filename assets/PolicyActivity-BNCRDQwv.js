@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";import{n as t,t as n}from"./PolicyActivity-CeKQIBlD.js";e((()=>{t()}))();export{n as default};

@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BgaNhQyE.js";var t,n=e((()=>{t={privacy:{iso:`2026-11-15`,label:`November 15, 2026`},terms:{iso:`2026-08-28`,label:`August 28, 2026`},refunds:{iso:`2026-08-28`,label:`August 28, 2026`}}}));export{n,t};
