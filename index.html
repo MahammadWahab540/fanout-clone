@@ -1,2375 +1,539 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Pathwisse — ProofOS v1.0 · Capability, made visible</title>
-  <meta name="description" content="ProofOS is the interface system for Pathwisse. Built around one ladder: Learn → Practice → Build → Review → Prove." />
-  
-  <!-- Favicon: 5 rising bars ending in green -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23102F60'/%3E%3Crect x='6' y='22' width='3' height='4' rx='1' fill='%232458E8'/%3E%3Crect x='10.5' y='18' width='3' height='8' rx='1' fill='%23C07824'/%3E%3Crect x='15' y='14' width='3' height='12' rx='1' fill='%237156B5'/%3E%3Crect x='19.5' y='10' width='3' height='16' rx='1' fill='%23102F60'/%3E%3Crect x='24' y='6' width='3' height='20' rx='1' fill='%23167D66'/%3E%3C/svg%3E" />
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-  <!-- Fonts: Geist Sans & Geist Mono (via Google Fonts / CDN fallbacks) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Session-fragment scrub. If an auth redirect ever lands with tokens in
+         the URL fragment (legacy implicit-flow magic links), remove them
+         before any tracker below can read location.href. Position matters:
+         this must stay the first script in <head>, above GTM and every pixel.
+         Pinned by tests/security-headers.test.ts. -->
+    <script>
+      if (location.hash.indexOf("access_token") !== -1) {
+        history.replaceState(null, "", location.pathname + location.search);
+      }
+    </script>
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: ['selector', '[data-theme="dark"]'],
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Geist"', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
-            mono: ['"Geist Mono"', '"IBM Plex Mono"', 'ui-monospace', 'monospace'],
-          },
-          colors: {
-            // ProofOS Exact Semantic Tokens
-            paper: {
-              50: 'var(--ref-paper-50)',
-              100: 'var(--ref-paper-100)',
-              200: 'var(--ref-paper-200)',
-              300: 'var(--ref-paper-300)',
-              400: 'var(--ref-paper-400)',
-              600: 'var(--ref-paper-600)',
-            },
-            ink: {
-              900: 'var(--text-primary)',
-              700: 'var(--text-secondary)',
-              500: 'var(--text-tertiary)',
-              300: 'var(--text-disabled)',
-            },
-            brand: {
-              DEFAULT: 'var(--brand)',
-              subtle: 'var(--brand-subtle)',
-            },
-            stage: {
-              learn: 'var(--stage-learn-solid)',
-              'learn-tint': 'var(--stage-learn-tint)',
-              'learn-line': 'var(--stage-learn-line)',
-              practice: 'var(--stage-practice-solid)',
-              'practice-text': 'var(--stage-practice-text)',
-              'practice-tint': 'var(--stage-practice-tint)',
-              'practice-line': 'var(--stage-practice-line)',
-              build: 'var(--stage-build-solid)',
-              'build-tint': 'var(--stage-build-tint)',
-              'build-line': 'var(--stage-build-line)',
-              review: 'var(--stage-review-solid)',
-              'review-tint': 'var(--stage-review-tint)',
-              'review-line': 'var(--stage-review-line)',
-              prove: 'var(--stage-prove-solid)',
-              'prove-text': 'var(--stage-prove-text)',
-              'prove-tint': 'var(--stage-prove-tint)',
-              'prove-line': 'var(--stage-prove-line)',
-            }
-          },
-          borderRadius: {
-            'mark': '2px',       // Specified --radius-mark: 2px
-            'control': '6px',    // Specified --radius-control: 6px
-            'surface': '8px',    // Specified --radius-surface: 8px
+    <!-- Local dev CORS interceptor for remote telemetry -->
+    <script>
+      (function() {
+        const _fetch = window.fetch;
+        window.fetch = function(input, init) {
+          const url = typeof input === 'string' ? input : (input && input.url ? input.url : '');
+          if (url && (url.includes('fanout-analytics') || url.includes('/v1/sessions'))) {
+            return Promise.resolve(new Response(JSON.stringify({ ok: true, status: 'mocked' }), {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' }
+            }));
           }
+          return _fetch.apply(this, arguments);
+        };
+      })();
+    </script>
+
+    <!-- Google Tag Manager -->
+    <!-- Container id is pinned by tests/static-metadata.test.ts and mirrored in
+         src/lib/analytics/gtm.ts. The container's built-in Page View trigger only
+         fires on this document load; SPA route changes and catalog events are
+         pushed to the dataLayer from src/lib/analytics/gtm.ts. -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-W7BVZPQV');</script>
+    <!-- End Google Tag Manager -->
+
+    <script>!function(w,d,s,u,n,a,b){if(w[n])return;a=w[n]={q:[],t:+new Date,s:[],o:u,track:function(){a.q.push([+new Date].concat([].slice.call(arguments)))},setScope:function(){a.s=[].slice.call(arguments).filter(function(x){return typeof x==="string"});a.q.push([+new Date,"setScope"].concat(a.s))},scope:function(){var c=[].slice.call(arguments);return{track:function(){a.q.push([+new Date].concat([].slice.call(arguments)).concat([{__scope:c}]))}}}};b=d.createElement(s);b.async=1;b.src=u+"/s.js";d.getElementsByTagName(s)[0].parentNode.insertBefore(b,d.getElementsByTagName(s)[0])}(window,document,"script","https://t.whop.tw","whop");whop.setScope("biz_UvSk2l0dpckrBO");whop.track("page");</script>
+
+    <!-- fanout:route-meta:start -->
+    <title data-fanout-static-route>Fanout: AI Research, System Design &amp; ML Math</title>
+    <meta name="description" content="Mapped learning across AI research, systems, ML math, inference, and open robotics, with practical labs, daily papers, and roadmaps." data-fanout-static-route />
+    <link rel="canonical" href="https://fanout.sh/" data-fanout-static-route />
+    <link rel="alternate" type="text/markdown" href="/index.md" data-fanout-static-route />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" data-fanout-static-route />
+    <meta property="og:type" content="website" data-fanout-static-route />
+    <meta property="og:url" content="https://fanout.sh/" data-fanout-static-route />
+    <meta property="og:title" content="Fanout: AI Research, System Design &amp; ML Math" data-fanout-static-route />
+    <meta property="og:description" content="Mapped learning across AI research, systems, ML math, inference, and open robotics, with practical labs, daily papers, and roadmaps." data-fanout-static-route />
+    <meta property="og:image" content="https://fanout.sh/og-everything-google-l7-mapped.png" data-fanout-static-route />
+    <meta property="og:image:secure_url" content="https://fanout.sh/og-everything-google-l7-mapped.png" data-fanout-static-route />
+    <meta property="og:image:type" content="image/png" data-fanout-static-route />
+    <meta property="og:image:width" content="1200" data-fanout-static-route />
+    <meta property="og:image:height" content="630" data-fanout-static-route />
+    <meta property="og:image:alt" content="Fanout: AI Research, System Design &amp; ML Math on Fanout" data-fanout-static-route />
+    <meta name="twitter:url" content="https://fanout.sh/" data-fanout-static-route />
+    <meta name="twitter:title" content="Fanout: AI Research, System Design &amp; ML Math" data-fanout-static-route />
+    <meta name="twitter:description" content="Mapped learning across AI research, systems, ML math, inference, and open robotics, with practical labs, daily papers, and roadmaps." data-fanout-static-route />
+    <meta name="twitter:image" content="https://fanout.sh/og-everything-google-l7-mapped.png" data-fanout-static-route />
+    <meta name="twitter:image:alt" content="Fanout: AI Research, System Design &amp; ML Math on Fanout" data-fanout-static-route />
+    <script type="application/ld+json" data-fanout-static-route>[{"@context":"https://schema.org","@type":"WebPage","@id":"https://fanout.sh/#webpage","url":"https://fanout.sh/","name":"Fanout: AI Research, System Design & ML Math","description":"Mapped learning across AI research, systems, ML math, inference, and open robotics, with practical labs, daily papers, and roadmaps.","inLanguage":"en-US","isPartOf":{"@id":"https://fanout.sh/#website"},"about":{"@id":"https://fanout.sh/#org"}},{"@context":"https://schema.org","@type":"ItemList","@id":"https://fanout.sh/#courses","itemListElement":[{"@type":"ListItem","position":1,"url":"https://fanout.sh/ai-engineering/overview","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/ai-engineering/overview#course","url":"https://fanout.sh/ai-engineering/overview","name":"Fanout AI Engineering","description":"Build with models, embeddings, retrieval, reasoning, and agents. Free introductory modules and selected lessons, with Pro access to the full course.","provider":{"@id":"https://fanout.sh/#org"}}},{"@type":"ListItem","position":2,"url":"https://fanout.sh/ai","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/ai#course","url":"https://fanout.sh/ai","name":"Fanout AI Research","description":"AI research from math foundations to RLHF and MLOps.","provider":{"@id":"https://fanout.sh/#org"}}},{"@type":"ListItem","position":3,"url":"https://fanout.sh/system","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/system#course","url":"https://fanout.sh/system","name":"System Design In Depth","description":"System design notes, case studies, and implementations.","provider":{"@id":"https://fanout.sh/#org"}}},{"@type":"ListItem","position":4,"url":"https://fanout.sh/ml-math","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/ml-math#course","url":"https://fanout.sh/ml-math","name":"Machine Learning Mathematics","description":"Mathematics for machine learning across 12 modules.","provider":{"@id":"https://fanout.sh/#org"}}},{"@type":"ListItem","position":5,"url":"https://fanout.sh/inference-eng","item":{"@context":"https://schema.org","@type":"Course","@id":"https://fanout.sh/inference-eng#course","url":"https://fanout.sh/inference-eng","name":"Fanout Inference Engineering","description":"A self-paced production LLM inference course with free introductory lessons and Pro lessons.","provider":{"@id":"https://fanout.sh/#org"}}}]}]</script>
+    <!-- fanout:route-meta:end -->
+
+    <!-- React owns the same route metadata after hydration and on SPA navigation. -->
+    <meta name="author" content="Suraj Gaud" />
+    <meta name="creator" content="Suraj Gaud" />
+    <meta name="publisher" content="Fanout" />
+    <meta name="application-name" content="Fanout" />
+    <meta name="generator" content="Vite + React" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="format-detection" content="telephone=no, address=no, email=no" />
+    <meta name="theme-color" content="#FBFBFB" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      (() => {
+        try {
+          const stored = localStorage.getItem("fanout-theme");
+          const dark = stored
+            ? stored === "dark"
+            : matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.classList.toggle("dark", dark);
+          document.documentElement.style.colorScheme = dark ? "dark" : "light";
+          document
+            .querySelector('meta[name="theme-color"]')
+            ?.setAttribute("content", dark ? "#111315" : "#FBFBFB");
+        } catch {
+          // Keep the default light theme when storage or media queries fail.
         }
-      }
-    }
-  </script>
-
-  <style>
-    /* ==========================================================================
-       Pathwisse ProofOS v1.0 — Tokens from design.md
-       ========================================================================== */
-    :root {
-      /* Reference palette */
-      --ref-paper-50: #fafaf8;
-      --ref-paper-100: #f4f4f0;
-      --ref-paper-200: #eeeee8;
-      --ref-paper-300: #e6e6df;
-      --ref-paper-400: #d9d9d0;
-      --ref-paper-600: #8c8c82;
-      --ref-white: #ffffff;
-      --ref-ink-900: #20252b;
-      --ref-ink-700: #444c56;
-      --ref-ink-500: #636b75;
-      --ref-ink-300: #a4aab2;
-      --ref-navy-900: #102f60;
-      --ref-navy-950: #0a2147;
-      --ref-navy-50: #e9eef7;
-      --ref-blue-600: #2458e8;
-      --ref-blue-50: #edf2fe;
-      --ref-blue-200: #c4d3fa;
-      --ref-green-600: #167d66;
-      --ref-green-700: #126a55;
-      --ref-green-50: #e7f4f0;
-      --ref-green-200: #b3dccf;
-      --ref-purple-600: #7156b5;
-      --ref-purple-50: #f1eef9;
-      --ref-purple-200: #d3c8ec;
-      --ref-amber-600: #c07824;
-      --ref-amber-800: #8f5510;
-      --ref-amber-50: #fbf1e3;
-      --ref-amber-200: #efd3a8;
-      --ref-red-700: #b3261e;
-      --ref-red-50: #fcecea;
-      --ref-red-200: #f0bdb8;
-
-      /* Surfaces */
-      --bg-canvas: var(--ref-paper-50);
-      --bg-surface: var(--ref-white);
-      --bg-subtle: var(--ref-paper-100);
-      --bg-inset: var(--ref-paper-200);
-      --bg-selected: var(--ref-blue-50);
-
-      /* Borders */
-      --border-hairline: var(--ref-paper-300);
-      --border-default: var(--ref-paper-400);
-      --border-strong: var(--ref-ink-300);
-      --border-control: var(--ref-paper-600);
-
-      /* Text */
-      --text-primary: var(--ref-ink-900);
-      --text-secondary: var(--ref-ink-700);
-      --text-tertiary: var(--ref-ink-500);
-      --text-disabled: var(--ref-ink-300);
-      --text-inverse: var(--ref-white);
-      --text-link: var(--ref-blue-600);
-
-      /* Brand & Actions */
-      --brand: var(--ref-navy-900);
-      --brand-subtle: var(--ref-navy-50);
-      --action-primary-bg: var(--ref-navy-900);
-      --action-primary-bg-hover: var(--ref-navy-950);
-      --action-primary-fg: var(--ref-white);
-      --action-primary-edge: var(--ref-navy-950);
-      --action-secondary-bg: var(--ref-white);
-      --action-secondary-bg-hover: var(--ref-paper-100);
-      --focus-ring: var(--ref-blue-600);
-
-      /* 5 Stage Tokens */
-      --stage-learn-solid: var(--ref-blue-600);
-      --stage-learn-text: var(--ref-blue-600);
-      --stage-learn-tint: var(--ref-blue-50);
-      --stage-learn-line: var(--ref-blue-200);
-
-      --stage-practice-solid: var(--ref-amber-600);
-      --stage-practice-text: var(--ref-amber-800);
-      --stage-practice-tint: var(--ref-amber-50);
-      --stage-practice-line: var(--ref-amber-200);
-
-      --stage-build-solid: var(--ref-purple-600);
-      --stage-build-text: var(--ref-purple-600);
-      --stage-build-tint: var(--ref-purple-50);
-      --stage-build-line: var(--ref-purple-200);
-
-      --stage-review-solid: var(--ref-navy-900);
-      --stage-review-text: var(--ref-navy-900);
-      --stage-review-tint: var(--ref-navy-50);
-      --stage-review-line: #bccae3;
-
-      --stage-prove-solid: var(--ref-green-600);
-      --stage-prove-text: var(--ref-green-700);
-      --stage-prove-tint: var(--ref-green-50);
-      --stage-prove-line: var(--ref-green-200);
-
-      /* Geometry & Motion */
-      --radius-mark: 2px;
-      --radius-control: 6px;
-      --radius-surface: 8px;
-      --border-width: 1px;
-      --border-width-strong: 2px;
-      --control-sm: 28px;
-      --control-md: 32px;
-      --control-lg: 40px;
-      --press-depth: 2px;
-      --notch-size: 12px;
-
-      /* Elevation */
-      --shadow-raised: 0 1px 0 rgb(16 47 96 / 0.06);
-      --shadow-overlay: 0 12px 32px -12px rgb(16 24 40 / 0.22), 0 2px 6px -2px rgb(16 24 40 / 0.1);
-
-      color-scheme: light;
-    }
-
-    [data-theme="dark"] {
-      --ref-paper-50: #111315;
-      --ref-paper-100: #1a1d20;
-      --ref-paper-200: #212529;
-      --ref-paper-300: #2a2f34;
-      --ref-paper-400: #343a40;
-      --ref-paper-600: #7b838c;
-      --ref-white: #171a1d;
-      --ref-ink-900: #ecede9;
-      --ref-ink-700: #b9bec5;
-      --ref-ink-500: #8f96a0;
-      --ref-ink-300: #565d66;
-      --ref-navy-900: #a9c1f0;
-      --ref-navy-950: #c4d5f6;
-      --ref-navy-50: #18233b;
-      --ref-blue-600: #7e9cff;
-      --ref-blue-50: #172041;
-      --ref-blue-200: #2c3e78;
-      --ref-green-600: #4fc3a4;
-      --ref-green-700: #4fc3a4;
-      --ref-green-50: #112a25;
-      --ref-green-200: #1f5a4d;
-      --ref-purple-600: #b09bec;
-      --ref-purple-50: #231d3a;
-      --ref-purple-200: #46397a;
-      --ref-amber-600: #d9954a;
-      --ref-amber-800: #e5ab6a;
-      --ref-amber-50: #2d2112;
-      --ref-amber-200: #6a4a1f;
-
-      --action-primary-bg: #e4ebfa;
-      --action-primary-bg-hover: #f2f5fd;
-      --action-primary-fg: #0b1f40;
-      --action-primary-edge: #8ea4cf;
-      --action-secondary-bg: var(--ref-paper-100);
-      --action-secondary-bg-hover: var(--ref-paper-200);
-
-      --shadow-raised: 0 1px 0 rgb(0 0 0 / 0.3);
-      --shadow-overlay: 0 16px 40px -12px rgb(0 0 0 / 0.6), 0 0 0 1px var(--ref-paper-400);
-
-      color-scheme: dark;
-    }
-
-    body {
-      background-color: var(--bg-canvas);
-      color: var(--text-primary);
-      font-family: var(--font-sans, "Geist", -apple-system, sans-serif);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    /* Tactile Commit Button: 2px hard lower edge collapsing on press (§4.1) */
-    .btn-proof-primary {
-      background: var(--action-primary-bg);
-      color: var(--action-primary-fg);
-      border-radius: var(--radius-control);
-      border: 1px solid var(--action-primary-edge);
-      box-shadow: 0 2px 0 var(--action-primary-edge);
-      transition: transform 60ms ease-out, box-shadow 60ms ease-out;
-    }
-    .btn-proof-primary:active {
-      transform: translateY(2px);
-      box-shadow: 0 0 0 var(--action-primary-edge);
-    }
-
-    .btn-proof-secondary {
-      background: var(--bg-surface);
-      color: var(--text-primary);
-      border-radius: var(--radius-control);
-      border: 1px solid var(--border-default);
-      box-shadow: 0 1px 0 var(--border-hairline);
-      transition: transform 60ms ease-out, background-color 100ms ease;
-    }
-    .btn-proof-secondary:active {
-      transform: translateY(1px);
-    }
-
-    /* The Notch: Folded top-right corner reserved strictly for verified work (§1.5, §4.8) */
-    .notched-verified {
-      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
-      position: relative;
-    }
-    .notched-verified::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 12px;
-      height: 12px;
-      background: var(--border-default);
-      clip-path: polygon(0 0, 100% 100%, 0 100%);
-    }
-
-    /* The Ruled Section Header (§1.5) */
-    .ruled-header {
-      border-top: 1px solid var(--border-hairline);
-      padding-top: 12px;
-      margin-bottom: 24px;
-    }
-
-    /* The Proof Cell (§4.2) */
-    .proof-cell {
-      width: 24px;
-      height: 24px;
-      border-radius: var(--radius-mark);
-      border-width: 1px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 600;
-      flex-shrink: 0;
-      transition: transform 80ms ease;
-    }
-    .proof-cell:active {
-      transform: translateY(1px);
-    }
-
-    /* Tabular figures for telemetry (§2.3) */
-    .t-num {
-      font-variant-numeric: tabular-nums;
-    }
-  </style>
-</head>
-<body class="min-h-screen flex flex-col selection:bg-[var(--bg-selected)] selection:text-[var(--text-primary)]">
-
-  <!-- ========================================================================= -->
-  <!-- 1. GLOBAL NAVIGATION SHELL                                                -->
-  <!-- ========================================================================= -->
-  <header class="sticky top-0 z-50 bg-[var(--bg-canvas)]/90 backdrop-blur-md border-b border-[var(--border-hairline)] transition-colors">
-    <div class="max-w-[1280px] mx-auto px-4 sm:px-6 h-12 flex items-center justify-between gap-4">
-      
-      <!-- Brand & The Ladder Mark (5 rising bars ending in green) -->
-      <a href="/" class="flex items-center gap-3 group">
-        <div class="flex items-end gap-[2.5px] h-5 w-6 pb-0.5" title="Learn → Practice → Build → Review → Prove">
-          <div class="w-1 h-2 rounded-[1px] bg-[var(--stage-learn-solid)]"></div>
-          <div class="w-1 h-2.5 rounded-[1px] bg-[var(--stage-practice-solid)]"></div>
-          <div class="w-1 h-3 rounded-[1px] bg-[var(--stage-build-solid)]"></div>
-          <div class="w-1 h-3.5 rounded-[1px] bg-[var(--stage-review-solid)]"></div>
-          <div class="w-1 h-4.5 rounded-[1px] bg-[var(--stage-prove-solid)]"></div>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="text-sm font-semibold tracking-tight text-[var(--text-primary)]">Pathwisse</span>
-          <span class="text-[10px] font-mono uppercase tracking-wider text-[var(--text-tertiary)] px-1.5 py-0.5 rounded bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">ProofOS v1.0</span>
-        </div>
-      </a>
-
-      <!-- Desktop Links: Compact, Swiss, Left-aligned -->
-      <nav class="hidden md:flex items-center gap-1 text-[13px] font-medium text-[var(--text-secondary)]">
-        <a href="#overview" class="px-2.5 py-1 rounded-[var(--radius-control)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors">Overview</a>
-        <a href="#ladder" class="px-2.5 py-1 rounded-[var(--radius-control)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors">Capability Trail</a>
-        <a href="#telemetry" class="px-2.5 py-1 rounded-[var(--radius-control)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors">Readiness Index</a>
-        <a href="#labs" class="px-2.5 py-1 rounded-[var(--radius-control)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors">Practice Labs</a>
-        <a href="#curriculum" class="px-2.5 py-1 rounded-[var(--radius-control)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors">Curricula</a>
-        <a href="#institutions" class="px-2.5 py-1 rounded-[var(--radius-control)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors">Institutions</a>
-        <a href="#design-system" class="px-2.5 py-1 rounded-[var(--radius-control)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[var(--stage-prove-solid)]"></span><span>Design Studio</span></a>
-      </nav>
-
-      <!-- Right CTAs & Tools -->
-      <div class="flex items-center gap-2">
-        
-        <!-- Search Trigger (⌘K) -->
-        <button onclick="toggleCommandPalette()" class="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-xs text-[var(--text-tertiary)] hover:border-[var(--border-strong)] transition-colors">
-          <svg class="w-3 h-3 text-[var(--text-tertiary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          <span class="text-[11px] font-mono">Jump to lab...</span>
-          <kbd class="px-1 py-0.2 rounded bg-[var(--bg-subtle)] text-[10px] font-mono text-[var(--text-tertiary)] border border-[var(--border-hairline)]">⌘K</kbd>
-        </button>
-
-        <!-- Theme Toggle -->
-        <button onclick="jumpToDesignStudio()" class="p-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] transition-colors flex items-center gap-1" title="Design System Studio">
-          <svg class="w-3.5 h-3.5 text-[var(--stage-learn-solid)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4 4 4 0 014-4c.48 0 .93.08 1.35.23L15.65 6.9a2 2 0 112.83 2.83l-6.33 7.3A4 4 0 017 21z"></path></svg>
-          <span class="text-[11px] font-mono hidden lg:inline">Tokens</span>
-        </button>
-        <button onclick="toggleProofOSTheme()" class="p-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] transition-colors" title="Toggle theme">
-          <svg id="theme-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-        </button>
-
-        <!-- Primary CTA: Tactile Commit Button (2px press depth) -->
-        <button onclick="openDemoModal()" class="btn-proof-primary px-3 py-1.5 text-xs font-medium flex items-center gap-1.5">
-          <span>Request Demo</span>
-          <span class="text-[10px] opacity-70">→</span>
-        </button>
-
-      </div>
-
-    </div>
-  </header>
-
-  <!-- ========================================================================= -->
-  <!-- 2. HERO: EDITORIAL SWISS LAYOUT & THE 5-STAGE LADDER                      -->
-  <!-- ========================================================================= -->
-  <section id="overview" class="pt-10 pb-16 border-b border-[var(--border-hairline)]">
-    <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
-      
-      <!-- Section Index Rule (§1.5) -->
-      <div class="ruled-header flex items-center justify-between">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--text-tertiary)]">01 / Proof of Capability</span>
-        <span class="text-[11px] font-mono text-[var(--stage-prove-solid)] font-medium">● System Status: Active Telemetry</span>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        
-        <!-- Left: Editorial Left-Aligned Copy -->
-        <div class="lg:col-span-7 space-y-5 text-left">
-          
-          <div class="inline-flex items-center gap-2 px-2 py-0.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-            <span class="w-1.5 h-1.5 rounded-full bg-[var(--stage-prove-solid)]"></span>
-            <span class="text-[11px] font-mono uppercase tracking-wider font-semibold text-[var(--text-secondary)]">Proof over Progress</span>
-          </div>
-
-          <h1 class="text-3xl sm:text-4xl lg:text-[2.6rem] font-semibold text-[var(--text-primary)] leading-[1.18] tracking-tight text-balance">
-            Guide every student from career choice to placement readiness.
-          </h1>
-
-          <p class="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed max-w-xl">
-            Pathwisse measures <strong>evidence</strong>, not mere activity. A continuous five-stage operating ladder uniting systems curriculum, interactive practice labs, and third-party reviewed engineering artifacts.
-          </p>
-
-          <!-- The Five-Stage Ladder Indicator (§2.1) -->
-          <div class="p-3.5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-            <span class="text-[10px] font-mono uppercase tracking-wider text-[var(--text-tertiary)] block mb-2 font-medium">The ProofOS Progression Ladder</span>
-            <div class="grid grid-cols-5 gap-2 text-center text-xs">
-              <div class="p-2 rounded-[var(--radius-control)] bg-[var(--stage-learn-tint)] border border-[var(--stage-learn-line)] text-[var(--stage-learn-solid)]">
-                <span class="font-mono text-[10px] block opacity-75">01</span>
-                <span class="font-semibold block mt-0.5">Learn</span>
-              </div>
-              <div class="p-2 rounded-[var(--radius-control)] bg-[var(--stage-practice-tint)] border border-[var(--stage-practice-line)] text-[var(--stage-practice-text)]">
-                <span class="font-mono text-[10px] block opacity-75">02</span>
-                <span class="font-semibold block mt-0.5">Practice</span>
-              </div>
-              <div class="p-2 rounded-[var(--radius-control)] bg-[var(--stage-build-tint)] border border-[var(--stage-build-line)] text-[var(--stage-build-solid)]">
-                <span class="font-mono text-[10px] block opacity-75">03</span>
-                <span class="font-semibold block mt-0.5">Build</span>
-              </div>
-              <div class="p-2 rounded-[var(--radius-control)] bg-[var(--stage-review-tint)] border border-[var(--stage-review-line)] text-[var(--stage-review-solid)]">
-                <span class="font-mono text-[10px] block opacity-75">04</span>
-                <span class="font-semibold block mt-0.5">Review</span>
-              </div>
-              <div class="p-2 rounded-[var(--radius-control)] bg-[var(--stage-prove-tint)] border border-[var(--stage-prove-line)] text-[var(--stage-prove-text)] font-bold">
-                <span class="font-mono text-[10px] block opacity-75">05</span>
-                <span class="block mt-0.5">Prove ✓</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Actions -->
-          <div class="flex items-center gap-3 pt-1">
-            <button onclick="openDemoModal()" class="btn-proof-primary px-4 py-2 text-xs font-semibold">
-              Request Institutional Demo
-            </button>
-            <a href="#ladder" class="btn-proof-secondary px-4 py-2 text-xs font-semibold">
-              Inspect Capability Trail
-            </a>
-          </div>
-
-        </div>
-
-        <!-- Right: Verification Ledger Panel (§4.8 & The Notch) -->
-        <div class="lg:col-span-5">
-          <div class="rounded-[var(--radius-surface)] p-5 bg-[var(--bg-surface)] border border-[var(--border-default)] shadow-[var(--shadow-raised)] notched-verified">
-            
-            <div class="flex items-center justify-between pb-3.5 border-b border-[var(--border-hairline)]">
-              <div>
-                <span class="text-[10px] font-mono text-[var(--text-tertiary)] uppercase block">VERIFIED EVIDENCE RECORD</span>
-                <h3 class="text-sm font-semibold text-[var(--text-primary)]">EV-014 · Distributed LSM Storage Engine</h3>
-              </div>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded-[var(--radius-control)] bg-[var(--stage-prove-tint)] text-[var(--stage-prove-text)] border border-[var(--stage-prove-line)] font-medium">
-                Verified by External Reviewer
-              </span>
-            </div>
-
-            <!-- Readiness metric box -->
-            <div class="py-4 my-1 flex items-baseline justify-between border-b border-[var(--border-hairline)]">
-              <div>
-                <span class="text-[11px] font-mono text-[var(--text-tertiary)] block">STUDENT READINESS INDEX</span>
-                <div class="flex items-baseline gap-2 mt-0.5">
-                  <span id="demo-readiness-score" class="text-4xl font-semibold font-mono text-[var(--text-primary)] t-num">88</span>
-                  <span class="text-sm text-[var(--text-tertiary)] font-mono">/ 100</span>
-                </div>
-              </div>
-              <div class="text-right text-xs">
-                <span class="text-[var(--stage-prove-solid)] font-semibold font-mono block">Top 8% Percentile</span>
-                <span class="text-[11px] text-[var(--text-tertiary)]">NAAC Criterion 2.6 Certified</span>
-              </div>
-            </div>
-
-            <!-- 3 Proof Cell Verification Items (§4.2) -->
-            <div class="space-y-2 pt-3 text-xs">
-              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                  <span class="proof-cell bg-[var(--stage-prove-solid)] text-white border-transparent">✓</span>
-                  <div>
-                    <span class="font-medium text-[var(--text-primary)] block">MemTable & WAL Compaction Suite</span>
-                    <span class="text-[10px] text-[var(--text-tertiary)] font-mono">Passed 14/14 automated fuzzing checks</span>
-                  </div>
-                </div>
-                <span class="text-[10px] font-mono text-[var(--stage-prove-text)] font-semibold">Stage 05</span>
-              </div>
-
-              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                  <span class="proof-cell bg-[var(--stage-review-solid)] text-white border-transparent">✎</span>
-                  <div>
-                    <span class="font-medium text-[var(--text-primary)] block">FlashAttention-2 VRAM Lab</span>
-                    <span class="text-[10px] text-[var(--text-tertiary)] font-mono">Review signed off by Staff Infrastructure Mentor</span>
-                  </div>
-                </div>
-                <span class="text-[10px] font-mono text-[var(--stage-review-solid)] font-semibold">Stage 04</span>
-              </div>
-
-              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                  <span class="proof-cell bg-[var(--stage-practice-tint)] text-[var(--stage-practice-text)] border-[var(--stage-practice-solid)]">○</span>
-                  <div>
-                    <span class="font-medium text-[var(--text-primary)] block">Matrix Calculus Gradient Drills</span>
-                    <span class="text-[10px] text-[var(--text-tertiary)] font-mono">Completed 50+ manual backprop derivations</span>
-                  </div>
-                </div>
-                <span class="text-[10px] font-mono text-[var(--stage-practice-text)] font-semibold">Stage 02</span>
-              </div>
-            </div>
-
-            <div class="mt-4 pt-3 border-t border-[var(--border-hairline)] flex items-center justify-between text-[11px] text-[var(--text-tertiary)] font-mono">
-              <span>Timestamp: 2026-11-17T14:40:00Z</span>
-              <a href="#labs" class="text-[var(--text-link)] hover:underline">Open Live Lab →</a>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 3. THE CAPABILITY TRAIL & 10-STAGE OPERATING MODEL (§4.3)                 -->
-  <!-- ========================================================================= -->
-  <section id="ladder" class="py-14 border-b border-[var(--border-hairline)] bg-[var(--bg-subtle)]/50">
-    <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
-      
-      <div class="ruled-header flex items-center justify-between">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--text-tertiary)]">02 / Capability Trail</span>
-        <span class="text-[11px] font-mono text-[var(--text-tertiary)]">Standard Cycle: 2 to 4 Semesters</span>
-      </div>
-
-      <div class="mb-8">
-        <h2 class="text-2xl font-semibold text-[var(--text-primary)] tracking-tight">The 10-Stage Operational Journey</h2>
-        <p class="text-xs sm:text-sm text-[var(--text-secondary)] mt-1 max-w-xl">
-          A continuous sequence where every milestone produces tangible evidence. Select any stage to inspect its deliverables.
-        </p>
-      </div>
-
-      <!-- Segmented Rail for Stages (§4.3) -->
-      <div class="overflow-x-auto pb-3 mb-6 -mx-4 px-4 sm:mx-0 sm:px-0">
-        <div class="flex items-center gap-1.5 min-w-[980px]">
-          <button onclick="selectStage(1)" id="stage-btn-1" class="stage-nav-btn flex-1 p-2.5 rounded-[var(--radius-control)] border border-[var(--brand)] bg-[var(--brand)] text-white text-left transition-all">
-            <span class="text-[9px] font-mono opacity-80 block">01 LEARN</span>
-            <span class="text-xs font-semibold block mt-0.5">Career Goal</span>
-          </button>
-          <button onclick="selectStage(2)" id="stage-btn-2" class="stage-nav-btn flex-1 p-2.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-primary)] text-left hover:border-[var(--border-strong)] transition-all">
-            <span class="text-[9px] font-mono text-[var(--text-tertiary)] block">02 LEARN</span>
-            <span class="text-xs font-semibold block mt-0.5">Skill Mapping</span>
-          </button>
-          <button onclick="selectStage(3)" id="stage-btn-3" class="stage-nav-btn flex-1 p-2.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-primary)] text-left hover:border-[var(--border-strong)] transition-all">
-            <span class="text-[9px] font-mono text-[var(--text-tertiary)] block">03 LEARN</span>
-            <span class="text-xs font-semibold block mt-0.5">Foundations</span>
-          </button>
-          <button onclick="selectStage(4)" id="stage-btn-4" class="stage-nav-btn flex-1 p-2.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-primary)] text-left hover:border-[var(--border-strong)] transition-all">
-            <span class="text-[9px] font-mono text-[var(--text-tertiary)] block">04 PRACTICE</span>
-            <span class="text-xs font-semibold block mt-0.5">Interactive Labs</span>
-          </button>
-          <button onclick="selectStage(5)" id="stage-btn-5" class="stage-nav-btn flex-1 p-2.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-primary)] text-left hover:border-[var(--border-strong)] transition-all">
-            <span class="text-[9px] font-mono text-[var(--text-tertiary)] block">05 BUILD</span>
-            <span class="text-xs font-semibold block mt-0.5">Code Builds</span>
-          </button>
-          <button onclick="selectStage(6)" id="stage-btn-6" class="stage-nav-btn flex-1 p-2.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-primary)] text-left hover:border-[var(--border-strong)] transition-all">
-            <span class="text-[9px] font-mono text-[var(--text-tertiary)] block">06 REVIEW</span>
-            <span class="text-xs font-semibold block mt-0.5">PR Review</span>
-          </button>
-          <button onclick="selectStage(7)" id="stage-btn-7" class="stage-nav-btn flex-1 p-2.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-primary)] text-left hover:border-[var(--border-strong)] transition-all">
-            <span class="text-[9px] font-mono text-[var(--text-tertiary)] block">07 PROVE</span>
-            <span class="text-xs font-semibold block mt-0.5">Readiness Index</span>
-          </button>
-          <button onclick="selectStage(8)" id="stage-btn-8" class="stage-nav-btn flex-1 p-2.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-primary)] text-left hover:border-[var(--border-strong)] transition-all">
-            <span class="text-[9px] font-mono text-[var(--text-tertiary)] block">08 PROVE</span>
-            <span class="text-xs font-semibold block mt-0.5">Benchmarking</span>
-          </button>
-          <button onclick="selectStage(9)" id="stage-btn-9" class="stage-nav-btn flex-1 p-2.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-primary)] text-left hover:border-[var(--border-strong)] transition-all">
-            <span class="text-[9px] font-mono text-[var(--text-tertiary)] block">09 PROVE</span>
-            <span class="text-xs font-semibold block mt-0.5">Matching</span>
-          </button>
-          <button onclick="selectStage(10)" id="stage-btn-10" class="stage-nav-btn flex-1 p-2.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-primary)] text-left hover:border-[var(--border-strong)] transition-all">
-            <span class="text-[9px] font-mono text-[var(--text-tertiary)] block">10 PROVE</span>
-            <span class="text-xs font-semibold block mt-0.5">Audit Report</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Stage Detail Display Card -->
-      <div id="stage-detail-card" class="p-6 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-          <div class="lg:col-span-8 space-y-3">
-            <div class="flex items-center gap-2">
-              <span id="stage-badge" class="px-2 py-0.5 rounded-[var(--radius-control)] bg-[var(--stage-learn-tint)] text-[var(--stage-learn-solid)] text-[10px] font-mono font-bold">STAGE 01 OF 10 · LEARN</span>
-              <span id="stage-owner" class="text-xs text-[var(--text-tertiary)]">Ownership: Student + Department Counselor</span>
-            </div>
-            <h3 id="stage-title" class="text-xl font-semibold text-[var(--text-primary)]">Career Goal & Competency Profiling</h3>
-            <p id="stage-desc" class="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed">
-              Students identify target engineering specializations (e.g. Distributed Systems Engineer, LLM Inference Specialist, or AI Research Practitioner). The operating system maps exact skill graphs and industry requirements without vague generalizations.
-            </p>
-            <div id="stage-deliverables" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2">
-              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-                <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">DELIVERABLE</span>
-                <span class="text-xs font-medium text-[var(--text-primary)]">Role Competency Matrix</span>
-              </div>
-              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-                <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">VERIFICATION</span>
-                <span class="text-xs font-medium text-[var(--stage-prove-solid)]">Baseline Diagnostic</span>
-              </div>
-              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-                <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">TIME HORIZON</span>
-                <span class="text-xs font-medium text-[var(--text-primary)]">Weeks 1–2</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="lg:col-span-4 bg-[var(--bg-subtle)] p-5 rounded-[var(--radius-control)] border border-[var(--border-hairline)] text-center">
-            <span class="text-[10px] font-mono uppercase text-[var(--text-tertiary)] block mb-1 font-semibold">Institutional Metric Impact</span>
-            <div class="text-3xl font-bold font-mono text-[var(--text-primary)] mb-1" id="stage-metric">100%</div>
-            <span class="text-xs text-[var(--text-secondary)] block" id="stage-metric-label">Students with deterministic milestone roadmaps</span>
-            <div class="mt-3 pt-3 border-t border-[var(--border-hairline)]">
-              <span class="text-xs text-[var(--stage-prove-solid)] font-medium">✓ Accreditation Ready</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 4. READINESS INDEX SIMULATOR (§3.2 & §4.2)                                -->
-  <!-- ========================================================================= -->
-  <section id="telemetry" class="py-14 border-b border-[var(--border-hairline)]">
-    <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
-      
-      <div class="ruled-header flex items-center justify-between">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--text-tertiary)]">03 / Quantified Evidence Telemetry</span>
-        <span class="text-[11px] font-mono text-[var(--text-tertiary)]">Algorithm: Weighted Capability Matrix</span>
-      </div>
-
-      <div class="mb-8">
-        <h2 class="text-2xl font-semibold text-[var(--text-primary)] tracking-tight">Readiness is a quantified score — never a guess.</h2>
-        <p class="text-xs sm:text-sm text-[var(--text-secondary)] mt-1 max-w-xl">
-          ProofOS combines code test suites, architectural write-ups, and interactive labs into a tamper-proof index for recruiters and placement cells.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        <!-- Checklist Left -->
-        <div class="lg:col-span-7 p-6 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-          <div class="flex items-center justify-between pb-3 border-b border-[var(--border-hairline)]">
-            <h3 class="text-sm font-semibold text-[var(--text-primary)]">Student Milestone Checkpoints</h3>
-            <button onclick="resetReadinessDemo()" class="text-xs text-[var(--text-link)] hover:underline font-mono">Reset</button>
-          </div>
-
-          <div class="space-y-2.5 mt-4" id="milestones-container">
-            <label class="flex items-start gap-3 p-3 rounded-[var(--radius-control)] border border-[var(--border-hairline)] bg-[var(--bg-subtle)] hover:bg-[var(--bg-surface)] cursor-pointer transition-colors">
-              <input type="checkbox" checked onchange="recalculateReadiness()" class="milestone-toggle mt-0.5 h-4 w-4 rounded-[var(--radius-mark)] text-[var(--brand)]" data-pts="25">
-              <div class="flex-1">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs font-semibold text-[var(--text-primary)]">LSM-Tree Storage Engine Implementation</span>
-                  <span class="text-[11px] font-mono font-bold text-[var(--stage-learn-solid)]">+25 pts</span>
-                </div>
-                <p class="text-[11px] text-[var(--text-tertiary)] mt-0.5">MemTable, WAL, SSTable sparse indexing, compaction benchmarks passed</p>
-              </div>
-            </label>
-
-            <label class="flex items-start gap-3 p-3 rounded-[var(--radius-control)] border border-[var(--border-hairline)] bg-[var(--bg-subtle)] hover:bg-[var(--bg-surface)] cursor-pointer transition-colors">
-              <input type="checkbox" checked onchange="recalculateReadiness()" class="milestone-toggle mt-0.5 h-4 w-4 rounded-[var(--radius-mark)] text-[var(--brand)]" data-pts="25">
-              <div class="flex-1">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs font-semibold text-[var(--text-primary)]">LLM Inference & KV Cache Arithmetic Lab</span>
-                  <span class="text-[11px] font-mono font-bold text-[var(--stage-learn-solid)]">+25 pts</span>
-                </div>
-                <p class="text-[11px] text-[var(--text-tertiary)] mt-0.5">FlashAttention-2 and continuous batching capacity calculations submitted</p>
-              </div>
-            </label>
-
-            <label class="flex items-start gap-3 p-3 rounded-[var(--radius-control)] border border-[var(--border-hairline)] bg-[var(--bg-subtle)] hover:bg-[var(--bg-surface)] cursor-pointer transition-colors">
-              <input type="checkbox" checked onchange="recalculateReadiness()" class="milestone-toggle mt-0.5 h-4 w-4 rounded-[var(--radius-mark)] text-[var(--brand)]" data-pts="20">
-              <div class="flex-1">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs font-semibold text-[var(--text-primary)]">Distributed Consensus (Raft/Paxos) Simulator</span>
-                  <span class="text-[11px] font-mono font-bold text-[var(--stage-learn-solid)]">+20 pts</span>
-                </div>
-                <p class="text-[11px] text-[var(--text-tertiary)] mt-0.5">Leader election and log replication stress test pass rate > 98%</p>
-              </div>
-            </label>
-
-            <label class="flex items-start gap-3 p-3 rounded-[var(--radius-control)] border border-[var(--border-hairline)] bg-[var(--bg-subtle)] hover:bg-[var(--bg-surface)] cursor-pointer transition-colors">
-              <input type="checkbox" checked onchange="recalculateReadiness()" class="milestone-toggle mt-0.5 h-4 w-4 rounded-[var(--radius-mark)] text-[var(--brand)]" data-pts="18">
-              <div class="flex-1">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs font-semibold text-[var(--text-primary)]">ML Math Decoder Drills (Linear Algebra & Hessians)</span>
-                  <span class="text-[11px] font-mono font-bold text-[var(--stage-learn-solid)]">+18 pts</span>
-                </div>
-                <p class="text-[11px] text-[var(--text-tertiary)] mt-0.5">Matrix calculus and attention weight gradient derivations verified</p>
-              </div>
-            </label>
-
-            <label class="flex items-start gap-3 p-3 rounded-[var(--radius-control)] border border-[var(--border-hairline)] bg-[var(--bg-subtle)] hover:bg-[var(--bg-surface)] cursor-pointer transition-colors">
-              <input type="checkbox" onchange="recalculateReadiness()" class="milestone-toggle mt-0.5 h-4 w-4 rounded-[var(--radius-mark)] text-[var(--brand)]" data-pts="12">
-              <div class="flex-1">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs font-semibold text-[var(--text-primary)]">Production Code Review & Mock Interview</span>
-                  <span class="text-[11px] font-mono text-[var(--stage-practice-solid)] font-semibold">+12 pts (Pending)</span>
-                </div>
-                <p class="text-[11px] text-[var(--text-tertiary)] mt-0.5">Live technical walkthrough with alumni engineering mentors</p>
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <!-- Calculated Score Right -->
-        <div class="lg:col-span-5 p-6 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-[var(--text-tertiary)] block">CALCULATED SCORE</span>
-          
-          <div class="flex items-baseline gap-2 my-2">
-            <span id="sim-score" class="text-5xl font-mono font-bold text-[var(--text-primary)] t-num">88</span>
-            <span class="text-lg font-mono text-[var(--text-tertiary)]">/ 100</span>
-          </div>
-
-          <div id="sim-verdict" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--radius-control)] text-xs font-mono font-medium bg-[var(--stage-prove-tint)] text-[var(--stage-prove-text)] border border-[var(--stage-prove-line)] mb-4">
-            ● Proven Placement Ready
-          </div>
-
-          <!-- Progress breakdown bars -->
-          <div class="space-y-3 pt-3 border-t border-[var(--border-hairline)] text-xs">
-            <div>
-              <div class="flex justify-between mb-1 font-mono text-[11px]">
-                <span class="text-[var(--text-secondary)]">Artifact Verification</span>
-                <span id="bar-artifact-val" class="font-bold text-[var(--text-primary)]">92%</span>
-              </div>
-              <div class="w-full bg-[var(--bg-subtle)] h-1.5 rounded-[var(--radius-mark)] overflow-hidden">
-                <div id="bar-artifact" class="bg-[var(--brand)] h-1.5 transition-all duration-200" style="width: 92%"></div>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex justify-between mb-1 font-mono text-[11px]">
-                <span class="text-[var(--text-secondary)]">Systems Rigor</span>
-                <span id="bar-systems-val" class="font-bold text-[var(--text-primary)]">86%</span>
-              </div>
-              <div class="w-full bg-[var(--bg-subtle)] h-1.5 rounded-[var(--radius-mark)] overflow-hidden">
-                <div id="bar-systems" class="bg-[var(--stage-learn-solid)] h-1.5 transition-all duration-200" style="width: 86%"></div>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex justify-between mb-1 font-mono text-[11px]">
-                <span class="text-[var(--text-secondary)]">Mathematical Fluency</span>
-                <span id="bar-math-val" class="font-bold text-[var(--text-primary)]">84%</span>
-              </div>
-              <div class="w-full bg-[var(--bg-subtle)] h-1.5 rounded-[var(--radius-mark)] overflow-hidden">
-                <div id="bar-math" class="bg-[var(--stage-build-solid)] h-1.5 transition-all duration-200" style="width: 84%"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-5 pt-3 border-t border-[var(--border-hairline)] text-[11px] text-[var(--text-tertiary)] font-mono">
-            Integrates directly into LMS gradebooks and accreditation evidence dossiers.
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 5. ENGINEERING LABS & INSTRUMENTS (§4.6)                                  -->
-  <!-- ========================================================================= -->
-  <section id="labs" class="py-14 border-b border-[var(--border-hairline)] bg-[var(--bg-subtle)]/50">
-    <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
-      
-      <div class="ruled-header flex items-center justify-between">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--text-tertiary)]">04 / Hands-On Practice Labs</span>
-        <span class="text-[11px] font-mono text-[var(--stage-practice-solid)] font-medium">Stage 02 · Deliberate Practice</span>
-      </div>
-
-      <div class="mb-8">
-        <h2 class="text-2xl font-semibold text-[var(--text-primary)] tracking-tight">Interactive Instruments & Calculators</h2>
-        <p class="text-xs sm:text-sm text-[var(--text-secondary)] mt-1 max-w-xl">
-          Real sandbox tools to calculate hardware constraints and decode advanced AI notation before shipping code.
-        </p>
-      </div>
-
-      <!-- Segmented Switcher (§4.1) -->
-      <div class="flex mb-6">
-        <div class="inline-flex p-0.5 rounded-[var(--radius-control)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-          <button onclick="switchInstrument('gpu')" id="inst-tab-gpu" class="px-3.5 py-1.5 rounded-[var(--radius-control)] bg-[var(--brand)] text-white text-xs font-medium transition-all">
-            ⚡ GPU Memory & VRAM Workbench
-          </button>
-          <button onclick="switchInstrument('decoder')" id="inst-tab-decoder" class="px-3.5 py-1.5 rounded-[var(--radius-control)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all">
-            📐 Mathematical Notation Decoder
-          </button>
-        </div>
-      </div>
-
-      <!-- Instrument 1: GPU Memory Workbench -->
-      <div id="inst-gpu-panel" class="p-6 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          
-          <div class="lg:col-span-7 space-y-5">
-            <div>
-              <span class="text-[10px] font-mono text-[var(--stage-learn-solid)] uppercase font-semibold">INFRASTRUCTURE CALCULATOR</span>
-              <h3 class="text-lg font-semibold text-[var(--text-primary)] mt-0.5">GPU VRAM & KV Cache Budget Estimator</h3>
-              <p class="text-xs text-[var(--text-secondary)]">Simulate parameter memory footprint, KV cache consumption across context length, and verify Out-Of-Memory boundaries.</p>
-            </div>
-
-            <div class="space-y-3.5">
-              <div>
-                <div class="flex justify-between text-xs font-mono mb-1 text-[var(--text-primary)]">
-                  <span>Model Size (Parameters)</span>
-                  <span id="gpu-param-val" class="font-bold text-[var(--stage-learn-solid)]">7 Billion (7B)</span>
-                </div>
-                <input type="range" id="gpu-param-slider" min="1" max="70" value="7" step="1" oninput="updateGpuCalc()" class="w-full">
-                <div class="flex justify-between text-[10px] text-[var(--text-tertiary)] font-mono mt-1">
-                  <span>1B</span>
-                  <span>7B (Llama/Mistral)</span>
-                  <span>13B</span>
-                  <span>70B (Llama 3)</span>
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-xs font-mono text-[var(--text-primary)] mb-1">Precision / Quantization</label>
-                <div class="grid grid-cols-3 gap-2">
-                  <button type="button" onclick="setPrecision('fp16')" id="prec-fp16" class="p-1.5 text-xs rounded-[var(--radius-control)] border border-[var(--brand)] bg-[var(--stage-learn-tint)] text-[var(--text-primary)] font-mono font-medium">FP16 (2 B/p)</button>
-                  <button type="button" onclick="setPrecision('int8')" id="prec-int8" class="p-1.5 text-xs rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] font-mono hover:border-[var(--border-strong)]">INT8 (1 B/p)</button>
-                  <button type="button" onclick="setPrecision('int4')" id="prec-int4" class="p-1.5 text-xs rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] font-mono hover:border-[var(--border-strong)]">INT4 AWQ (0.5 B/p)</button>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <div class="flex justify-between text-xs font-mono mb-1 text-[var(--text-primary)]">
-                    <span>Context Length</span>
-                    <span id="gpu-ctx-val" class="text-[var(--stage-learn-solid)] font-semibold">4k tokens</span>
-                  </div>
-                  <input type="range" id="gpu-ctx-slider" min="1" max="32" value="4" step="1" oninput="updateGpuCalc()" class="w-full">
-                </div>
-                <div>
-                  <div class="flex justify-between text-xs font-mono mb-1 text-[var(--text-primary)]">
-                    <span>Batch Size</span>
-                    <span id="gpu-batch-val" class="text-[var(--stage-learn-solid)] font-semibold">4 requests</span>
-                  </div>
-                  <input type="range" id="gpu-batch-slider" min="1" max="32" value="4" step="1" oninput="updateGpuCalc()" class="w-full">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Output VRAM Visualization Right -->
-          <div class="lg:col-span-5 bg-[var(--bg-subtle)] p-5 rounded-[var(--radius-control)] border border-[var(--border-hairline)] space-y-3">
-            <span class="text-[10px] font-mono uppercase text-[var(--text-tertiary)] font-semibold block">TOTAL ESTIMATED VRAM</span>
-            
-            <div class="flex items-baseline gap-2">
-              <span id="gpu-total-vram" class="text-4xl font-mono font-bold text-[var(--text-primary)] t-num">16.4</span>
-              <span class="text-sm font-mono text-[var(--text-tertiary)]">GB</span>
-            </div>
-
-            <div class="space-y-1.5 text-xs font-mono pt-2 border-t border-[var(--border-hairline)]">
-              <div class="flex justify-between">
-                <span class="text-[var(--text-tertiary)]">Weights:</span>
-                <span id="gpu-weights-mem" class="text-[var(--text-primary)] font-medium">14.0 GB</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-[var(--text-tertiary)]">KV Cache:</span>
-                <span id="gpu-kv-mem" class="text-[var(--text-primary)] font-medium">1.2 GB</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-[var(--text-tertiary)]">CUDA Headroom:</span>
-                <span class="text-[var(--text-primary)] font-medium">1.2 GB</span>
-              </div>
-            </div>
-
-            <div id="gpu-fit-box" class="p-2.5 rounded-[var(--radius-control)] bg-[var(--stage-prove-tint)] border border-[var(--stage-prove-line)] text-xs">
-              <span class="font-semibold text-[var(--stage-prove-text)] block">✓ Fits in 1x NVIDIA RTX 4090 / A10G (24GB)</span>
-              <span class="text-[11px] text-[var(--stage-prove-text)] opacity-80 block mt-0.5 font-mono">Headroom: ~7.6 GB free</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Instrument 2: Mathematical Notation Decoder -->
-      <div id="inst-decoder-panel" class="hidden p-6 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
-          <div>
-            <h3 class="text-lg font-semibold text-[var(--text-primary)]">Research Paper Math Decoder</h3>
-            <p class="text-xs text-[var(--text-secondary)]">Search notation symbols to get instant plain-English intuition and LaTeX formulas.</p>
-          </div>
-          <input type="text" id="math-search-input" oninput="filterMathSymbols()" placeholder="Filter symbols (e.g. gradient, kl, norm)..." class="w-full sm:w-60 px-3 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] text-xs bg-[var(--bg-surface)] text-[var(--text-primary)] outline-none">
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="math-grid">
-          <div class="math-card p-3.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-            <div class="flex items-center justify-between">
-              <span class="text-xl font-bold font-mono text-[var(--text-primary)]">∇_θ L</span>
-              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--stage-learn-tint)] text-[var(--stage-learn-solid)]">Opt</span>
-            </div>
-            <h4 class="text-xs font-semibold text-[var(--text-primary)] mt-1.5">Gradient with respect to Parameters</h4>
-            <p class="text-[11px] text-[var(--text-secondary)] mt-0.5">Vector of partial derivatives showing the direction of steepest loss ascent.</p>
-            <div class="mt-2.5 pt-1.5 border-t border-[var(--border-hairline)] flex justify-between text-[10px] font-mono text-[var(--text-tertiary)]">
-              <span>\nabla_\theta \mathcal{L}</span>
-              <button onclick="copyLatex('\\nabla_\\theta \\mathcal{L}')" class="text-[var(--text-link)] hover:underline">Copy LaTeX</button>
-            </div>
-          </div>
-
-          <div class="math-card p-3.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-            <div class="flex items-center justify-between">
-              <span class="text-xl font-bold font-mono text-[var(--text-primary)]">D_KL (P || Q)</span>
-              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--stage-practice-tint)] text-[var(--stage-practice-text)]">Entropy</span>
-            </div>
-            <h4 class="text-xs font-semibold text-[var(--text-primary)] mt-1.5">Kullback–Leibler Divergence</h4>
-            <p class="text-[11px] text-[var(--text-secondary)] mt-0.5">Quantifies relative entropy / distribution drift, used critically in RLHF and VAEs.</p>
-            <div class="mt-2.5 pt-1.5 border-t border-[var(--border-hairline)] flex justify-between text-[10px] font-mono text-[var(--text-tertiary)]">
-              <span>D_{KL}(P \parallel Q)</span>
-              <button onclick="copyLatex('D_{KL}(P \\parallel Q)')" class="text-[var(--text-link)] hover:underline">Copy LaTeX</button>
-            </div>
-          </div>
-
-          <div class="math-card p-3.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-            <div class="flex items-center justify-between">
-              <span class="text-xl font-bold font-mono text-[var(--text-primary)]">W_Q · W_K^T</span>
-              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--stage-prove-tint)] text-[var(--stage-prove-text)]">Attention</span>
-            </div>
-            <h4 class="text-xs font-semibold text-[var(--text-primary)] mt-1.5">Attention Affinity Matrix</h4>
-            <p class="text-[11px] text-[var(--text-secondary)] mt-0.5">Dot-product similarity projection measuring cross-token alignment before scaling.</p>
-            <div class="mt-2.5 pt-1.5 border-t border-[var(--border-hairline)] flex justify-between text-[10px] font-mono text-[var(--text-tertiary)]">
-              <span>W_Q W_K^T / \sqrt{d_k}</span>
-              <button onclick="copyLatex('W_Q W_K^T / \\sqrt{d_k}')" class="text-[var(--text-link)] hover:underline">Copy LaTeX</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 6. CURRICULUM SPECIFICATIONS (§4.4)                                       -->
-  <!-- ========================================================================= -->
-  <section id="curriculum" class="py-14 border-b border-[var(--border-hairline)]">
-    <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
-      
-      <div class="ruled-header flex items-center justify-between">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--text-tertiary)]">05 / Curricular Specifications</span>
-        <span class="text-[11px] font-mono text-[var(--text-tertiary)]">Aligned with Tier-1 Tech Bar</span>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        
-        <!-- Track 1: System Design -->
-        <div class="p-5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] flex flex-col justify-between">
-          <div>
-            <span class="text-[10px] font-mono uppercase text-[var(--stage-learn-solid)] block font-semibold">TRACK 01</span>
-            <h3 class="text-base font-semibold text-[var(--text-primary)] mt-1">System Design In Depth</h3>
-            <span class="text-[11px] font-mono text-[var(--text-tertiary)] block mb-2">18 Modules · 8 Labs</span>
-            <p class="text-xs text-[var(--text-secondary)] leading-relaxed">
-              LSM-Trees vs B-Trees, append-only logs, distributed consensus (Raft/Paxos), and real-world architectures.
-            </p>
-          </div>
-          <div class="mt-4 pt-3 border-t border-[var(--border-hairline)] flex items-center justify-between text-xs">
-            <span class="text-[var(--stage-prove-solid)] font-mono text-[11px] font-medium">● 3 Verified Builds</span>
-            <button onclick="openDemoModal()" class="text-[var(--text-link)] hover:underline font-mono text-[11px]">Syllabus →</button>
-          </div>
-        </div>
-
-        <!-- Track 2: Inference -->
-        <div class="p-5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] flex flex-col justify-between">
-          <div>
-            <span class="text-[10px] font-mono uppercase text-[var(--stage-build-solid)] block font-semibold">TRACK 02</span>
-            <h3 class="text-base font-semibold text-[var(--text-primary)] mt-1">LLM Inference Engineering</h3>
-            <span class="text-[11px] font-mono text-[var(--text-tertiary)] block mb-2">14 Modules · 6 Labs</span>
-            <p class="text-xs text-[var(--text-secondary)] leading-relaxed">
-              Memory-bandwidth bottlenecks, KV cache arithmetic, PagedAttention, continuous batching, and FlashAttention-2.
-            </p>
-          </div>
-          <div class="mt-4 pt-3 border-t border-[var(--border-hairline)] flex items-center justify-between text-xs">
-            <span class="text-[var(--stage-prove-solid)] font-mono text-[11px] font-medium">● 2 Verified Builds</span>
-            <button onclick="openDemoModal()" class="text-[var(--text-link)] hover:underline font-mono text-[11px]">Syllabus →</button>
-          </div>
-        </div>
-
-        <!-- Track 3: AI Research -->
-        <div class="p-5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] flex flex-col justify-between">
-          <div>
-            <span class="text-[10px] font-mono uppercase text-[var(--stage-learn-solid)] block font-semibold">TRACK 03</span>
-            <h3 class="text-base font-semibold text-[var(--text-primary)] mt-1">AI Research & Models</h3>
-            <span class="text-[11px] font-mono text-[var(--text-tertiary)] block mb-2">16 Modules · 10 Labs</span>
-            <p class="text-xs text-[var(--text-secondary)] leading-relaxed">
-              Transformer decoder from scratch, pre-training scaling laws, SFT pipelines, RLHF, and DPO alignment.
-            </p>
-          </div>
-          <div class="mt-4 pt-3 border-t border-[var(--border-hairline)] flex items-center justify-between text-xs">
-            <span class="text-[var(--stage-prove-solid)] font-mono text-[11px] font-medium">● 4 Verified Builds</span>
-            <button onclick="openDemoModal()" class="text-[var(--text-link)] hover:underline font-mono text-[11px]">Syllabus →</button>
-          </div>
-        </div>
-
-        <!-- Track 4: ML Math -->
-        <div class="p-5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] flex flex-col justify-between">
-          <div>
-            <span class="text-[10px] font-mono uppercase text-[var(--stage-practice-solid)] block font-semibold">TRACK 04</span>
-            <h3 class="text-base font-semibold text-[var(--text-primary)] mt-1">ML Mathematics</h3>
-            <span class="text-[11px] font-mono text-[var(--text-tertiary)] block mb-2">12 Modules · 50+ Drills</span>
-            <p class="text-xs text-[var(--text-secondary)] leading-relaxed">
-              Vector spaces, linear maps, eigendecomposition, SVD, multivariable gradients, and information theory.
-            </p>
-          </div>
-          <div class="mt-4 pt-3 border-t border-[var(--border-hairline)] flex items-center justify-between text-xs">
-            <span class="text-[var(--stage-prove-solid)] font-mono text-[11px] font-medium">● 2 Verified Builds</span>
-            <button onclick="openDemoModal()" class="text-[var(--text-link)] hover:underline font-mono text-[11px]">Syllabus →</button>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 7. INSTITUTIONAL AUDIENCE OUTCOMES & PLANS                                -->
-  <!-- ========================================================================= -->
-  <section id="institutions" class="py-14 border-b border-[var(--border-hairline)] bg-[var(--bg-subtle)]/50">
-    <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
-      
-      <div class="ruled-header flex items-center justify-between">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--text-tertiary)]">06 / Stakeholders & Commercial Tiers</span>
-        <span class="text-[11px] font-mono text-[var(--text-tertiary)]">Audience Segments</span>
-      </div>
-
-      <div class="flex mb-6">
-        <div class="inline-flex p-0.5 rounded-[var(--radius-control)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-          <button onclick="switchAudience('students')" id="aud-tab-students" class="px-3 py-1 rounded-[var(--radius-control)] bg-[var(--brand)] text-white text-xs font-medium transition-all">For Students</button>
-          <button onclick="switchAudience('placement')" id="aud-tab-placement" class="px-3 py-1 rounded-[var(--radius-control)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all">For Placement Teams</button>
-          <button onclick="switchAudience('faculty')" id="aud-tab-faculty" class="px-3 py-1 rounded-[var(--radius-control)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all">For Faculty & HODs</button>
-          <button onclick="switchAudience('leadership')" id="aud-tab-leadership" class="px-3 py-1 rounded-[var(--radius-control)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all">For Leadership</button>
-        </div>
-      </div>
-
-      <div id="audience-content" class="p-6 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] mb-10">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-            <span class="text-[10px] font-mono text-[var(--stage-learn-solid)] font-semibold block mb-0.5">01. CERTAINTY</span>
-            <h4 class="text-sm font-semibold text-[var(--text-primary)]">Deterministic Roadmap</h4>
-            <p class="text-xs text-[var(--text-secondary)] mt-1 leading-relaxed">Know exactly what to study each week without wasting months on superficial beginner tutorials.</p>
-          </div>
-          <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-            <span class="text-[10px] font-mono text-[var(--stage-prove-solid)] font-semibold block mb-0.5">02. CREDIBILITY</span>
-            <h4 class="text-sm font-semibold text-[var(--text-primary)]">Verifiable Portfolio</h4>
-            <p class="text-xs text-[var(--text-secondary)] mt-1 leading-relaxed">Proof-of-work code builds and stress tests that instantly distinguish you from generic applicants.</p>
-          </div>
-          <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-            <span class="text-[10px] font-mono text-[var(--stage-practice-solid)] font-semibold block mb-0.5">03. PLACEMENT READY</span>
-            <h4 class="text-sm font-semibold text-[var(--text-primary)]">Verified Score Badge</h4>
-            <p class="text-xs text-[var(--text-secondary)] mt-1 leading-relaxed">Your 0-100 Readiness Index gives recruiting partners instant confidence in your engineering abilities.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Commercial Plans Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div class="p-6 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] flex flex-col justify-between">
-          <div>
-            <span class="text-[10px] font-mono text-[var(--text-tertiary)] uppercase font-semibold">DEPARTMENT TRIAL</span>
-            <h3 class="text-lg font-semibold text-[var(--text-primary)] mt-0.5">Campus Pilot</h3>
-            <p class="text-xs text-[var(--text-secondary)] mt-0.5">For 1 cohort of 100–300 students.</p>
-            <div class="my-4">
-              <span class="text-3xl font-mono font-bold text-[var(--text-primary)]">4–8</span>
-              <span class="text-xs text-[var(--text-tertiary)] font-mono">Weeks</span>
-            </div>
-            <ul class="space-y-1.5 text-xs text-[var(--text-secondary)]">
-              <li>✓ 1 complete track (e.g. System Design)</li>
-              <li>✓ Interactive Labs & Code Build Suites</li>
-              <li>✓ Baseline diagnostic & readiness score</li>
-            </ul>
-          </div>
-          <button onclick="openDemoModal()" class="w-full mt-6 btn-proof-secondary py-2 text-xs font-semibold">
-            Request Pilot Access
-          </button>
-        </div>
-
-        <div class="p-6 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border-2 border-[var(--brand)] relative flex flex-col justify-between shadow-[var(--shadow-raised)]">
-          <div class="absolute -top-2.5 left-4 px-2 py-0.5 rounded-[var(--radius-mark)] bg-[var(--brand)] text-white text-[9px] font-mono font-semibold uppercase">
-            CAMPUS LICENSE
-          </div>
-          <div>
-            <span class="text-[10px] font-mono text-[var(--stage-learn-solid)] uppercase font-semibold">FULL IMPLEMENTATION</span>
-            <h3 class="text-lg font-semibold text-[var(--text-primary)] mt-0.5">Full Campus OS</h3>
-            <p class="text-xs text-[var(--text-secondary)] mt-0.5">Campus-wide rollout across multiple branches.</p>
-            <div class="my-4">
-              <span class="text-3xl font-mono font-bold text-[var(--text-primary)]">Annual</span>
-              <span class="text-xs text-[var(--text-tertiary)] font-mono">Contract</span>
-            </div>
-            <ul class="space-y-1.5 text-xs text-[var(--text-secondary)]">
-              <li>✓ All 4 tracks (Systems, Inference, AI, Math)</li>
-              <li>✓ Unlimited student seats & cohort telemetry</li>
-              <li>✓ NAAC & NBA compliant audit reporting</li>
-              <li>✓ Dedicated academic success director</li>
-            </ul>
-          </div>
-          <button onclick="openDemoModal()" class="w-full mt-6 btn-proof-primary py-2 text-xs font-semibold">
-            Schedule Institutional Review
-          </button>
-        </div>
-
-        <div class="p-6 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] flex flex-col justify-between">
-          <div>
-            <span class="text-[10px] font-mono text-[var(--text-tertiary)] uppercase font-semibold">INDIVIDUAL LEARNER</span>
-            <h3 class="text-lg font-semibold text-[var(--text-primary)] mt-0.5">Student Pro</h3>
-            <p class="text-xs text-[var(--text-secondary)] mt-0.5">Self-paced independent access.</p>
-            <div class="my-4">
-              <span class="text-3xl font-mono font-bold text-[var(--text-primary)]">$39</span>
-              <span class="text-xs text-[var(--text-tertiary)] font-mono">/ mo</span>
-            </div>
-            <ul class="space-y-1.5 text-xs text-[var(--text-secondary)]">
-              <li>✓ Complete access to all 4 curricula</li>
-              <li>✓ Interactive sandbox labs & decoders</li>
-              <li>✓ Verifiable public evidence dossier link</li>
-            </ul>
-          </div>
-          <button onclick="openDemoModal()" class="w-full mt-6 btn-proof-secondary py-2 text-xs font-semibold">
-            Get Pro Access
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 7. PROOFOS DESIGN SYSTEM & COLOR PALETTE WORKBENCH (§2, §3, §4)           -->
-  <!-- ========================================================================= -->
-  <section id="design-system" class="py-14 border-b border-[var(--border-hairline)] bg-[var(--bg-canvas)]">
-    <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
-      
-      <!-- Section Index Header (§1.5) -->
-      <div class="ruled-header flex items-center justify-between">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--text-tertiary)]">07 / Design System &amp; Color Palette Studio</span>
-        <div class="flex items-center gap-2">
-          <span class="w-1.5 h-1.5 rounded-full bg-[var(--stage-prove-solid)] animate-pulse"></span>
-          <span class="text-[11px] font-mono text-[var(--stage-prove-solid)] font-medium">Specification: design.md v1.0 · Live Token Studio</span>
-        </div>
-      </div>
-
-      <!-- Title & Intro -->
-      <div class="mb-10 max-w-2xl">
-        <h2 class="text-2xl sm:text-3xl font-semibold text-[var(--text-primary)] tracking-tight">
-          ProofOS Design System Studio &amp; Live Palette Workbench
-        </h2>
-        <p class="text-xs sm:text-sm text-[var(--text-secondary)] mt-2 leading-relaxed">
-          ProofOS is an editorial, Swiss-inspired interface system designed around capability and evidence.
-          Use this interactive studio to inspect every reference token, verify WCAG 2.2 contrast compliance, test the 5-stage Proof Cell ladder, or customize the active color palette in real time.
-        </p>
-      </div>
-
-      <!-- Quick Switcher Tabs for Design System Exploration -->
-      <div class="flex items-center gap-2 pb-4 mb-6 border-b border-[var(--border-hairline)] overflow-x-auto">
-        <button onclick="switchDsTab('palette')" id="ds-tab-palette" class="px-3 py-1.5 rounded-[var(--radius-control)] bg-[var(--brand)] text-white text-xs font-medium transition-all">
-          🎨 Live Palette Customizer
-        </button>
-        <button onclick="switchDsTab('swatches')" id="ds-tab-swatches" class="px-3 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all">
-          📋 Reference Palette Swatches
-        </button>
-        <button onclick="switchDsTab('ladder')" id="ds-tab-ladder" class="px-3 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all">
-          🪜 5-Stage Proof Cell Ladder
-        </button>
-        <button onclick="switchDsTab('contrast')" id="ds-tab-contrast" class="px-3 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all">
-          ⚖️ Contrast Matrix (WCAG 2.2)
-        </button>
-        <button onclick="switchDsTab('geometry')" id="ds-tab-geometry" class="px-3 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all">
-          📐 Geometry &amp; Elevation
-        </button>
-      </div>
-
-      <!-- TAB 1: LIVE COLOR PALETTE CUSTOMIZER -->
-      <div id="ds-panel-palette" class="space-y-6">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          <!-- Left: Controls & Pickers -->
-          <div class="lg:col-span-6 space-y-5 p-5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] shadow-[var(--shadow-raised)]">
-            <div class="flex items-center justify-between pb-3 border-b border-[var(--border-hairline)]">
-              <div>
-                <span class="text-[10px] font-mono text-[var(--text-tertiary)] uppercase block">PALETTE WORKBENCH</span>
-                <h3 class="text-sm font-semibold text-[var(--text-primary)]">Real-Time Token Modifiers</h3>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <button onclick="applyPalettePreset('light')" class="px-2 py-0.5 rounded-[var(--radius-control)] text-[10px] font-mono border border-[var(--border-default)] hover:bg-[var(--bg-subtle)] text-[var(--text-secondary)]">Light</button>
-                <button onclick="applyPalettePreset('dark')" class="px-2 py-0.5 rounded-[var(--radius-control)] text-[10px] font-mono border border-[var(--border-default)] hover:bg-[var(--bg-subtle)] text-[var(--text-secondary)]">Dark</button>
-                <button onclick="applyPalettePreset('nordic')" class="px-2 py-0.5 rounded-[var(--radius-control)] text-[10px] font-mono border border-[var(--border-default)] hover:bg-[var(--bg-subtle)] text-[var(--text-secondary)]">Nordic</button>
-                <button onclick="resetPaletteToDefault()" class="px-2 py-0.5 rounded-[var(--radius-control)] text-[10px] font-mono bg-[var(--bg-subtle)] hover:bg-[var(--bg-inset)] text-[var(--text-primary)] font-medium">Reset</button>
-              </div>
-            </div>
-
-            <!-- Color Inputs Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              
-              <!-- Canvas Background -->
-              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
-                <div>
-                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">--bg-canvas (Ground)</span>
-                  <span id="label-bg-canvas" class="font-mono text-xs text-[var(--text-primary)] font-semibold">#FAFAF8</span>
-                </div>
-                <input type="color" id="picker-bg-canvas" value="#fafaf8" onchange="updateLiveToken('--bg-canvas', this.value, 'label-bg-canvas')" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
-              </div>
-
-              <!-- Card Surface -->
-              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
-                <div>
-                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">--bg-surface (Cards)</span>
-                  <span id="label-bg-surface" class="font-mono text-xs text-[var(--text-primary)] font-semibold">#FFFFFF</span>
-                </div>
-                <input type="color" id="picker-bg-surface" value="#ffffff" onchange="updateLiveToken('--bg-surface', this.value, 'label-bg-surface')" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
-              </div>
-
-              <!-- Brand Navy Primary Action -->
-              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
-                <div>
-                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">--brand (Navy Action)</span>
-                  <span id="label-brand" class="font-mono text-xs text-[var(--text-primary)] font-semibold">#102F60</span>
-                </div>
-                <input type="color" id="picker-brand" value="#102f60" onchange="updateLiveToken('--brand', this.value, 'label-brand'); updateLiveToken('--action-primary-bg', this.value);" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
-              </div>
-
-              <!-- Text Primary Ink -->
-              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
-                <div>
-                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">--text-primary (Ink)</span>
-                  <span id="label-text-primary" class="font-mono text-xs text-[var(--text-primary)] font-semibold">#20252B</span>
-                </div>
-                <input type="color" id="picker-text-primary" value="#20252b" onchange="updateLiveToken('--text-primary', this.value, 'label-text-primary')" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
-              </div>
-
-              <!-- Stage 01 Learn (Blue) -->
-              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
-                <div>
-                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">01 Learn (--stage-learn-solid)</span>
-                  <span id="label-stage-learn" class="font-mono text-xs text-[var(--stage-learn-solid)] font-semibold">#2458E8</span>
-                </div>
-                <input type="color" id="picker-stage-learn" value="#2458e8" onchange="updateLiveToken('--stage-learn-solid', this.value, 'label-stage-learn'); updateLiveToken('--stage-learn-text', this.value);" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
-              </div>
-
-              <!-- Stage 02 Practice (Amber) -->
-              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
-                <div>
-                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">02 Practice (--stage-practice-solid)</span>
-                  <span id="label-stage-practice" class="font-mono text-xs text-[var(--stage-practice-solid)] font-semibold">#C07824</span>
-                </div>
-                <input type="color" id="picker-stage-practice" value="#c07824" onchange="updateLiveToken('--stage-practice-solid', this.value, 'label-stage-practice')" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
-              </div>
-
-              <!-- Stage 03 Build (Purple) -->
-              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
-                <div>
-                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">03 Build (--stage-build-solid)</span>
-                  <span id="label-stage-build" class="font-mono text-xs text-[var(--stage-build-solid)] font-semibold">#7156B5</span>
-                </div>
-                <input type="color" id="picker-stage-build" value="#7156b5" onchange="updateLiveToken('--stage-build-solid', this.value, 'label-stage-build'); updateLiveToken('--stage-build-text', this.value);" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
-              </div>
-
-              <!-- Stage 05 Prove (Green) -->
-              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
-                <div>
-                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">05 Prove (--stage-prove-solid)</span>
-                  <span id="label-stage-prove" class="font-mono text-xs text-[var(--stage-prove-solid)] font-semibold">#167D66</span>
-                </div>
-                <input type="color" id="picker-stage-prove" value="#167d66" onchange="updateLiveToken('--stage-prove-solid', this.value, 'label-stage-prove')" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
-              </div>
-
-            </div>
-
-            <!-- Export Buttons -->
-            <div class="pt-2 flex items-center gap-3">
-              <button onclick="copyGeneratedCss()" class="btn-proof-primary px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5">
-                <span>📋 Copy CSS Tokens</span>
-              </button>
-              <button onclick="downloadTokensCss()" class="btn-proof-secondary px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5">
-                <span>⬇ Download tokens.css</span>
-              </button>
-            </div>
-            
-            <span id="css-copy-status" class="text-[11px] font-mono text-[var(--stage-prove-solid)] hidden block">✓ CSS variables copied to clipboard!</span>
-          </div>
-
-          <!-- Right: Live Responsive Preview of Components -->
-          <div class="lg:col-span-6 space-y-4">
-            
-            <div class="p-5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] shadow-[var(--shadow-raised)] notched-verified">
-              <div class="flex items-center justify-between pb-3 border-b border-[var(--border-hairline)]">
-                <span class="text-[10px] font-mono uppercase tracking-wider text-[var(--text-tertiary)]">LIVE NOTCHED CARD PREVIEW</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-[var(--radius-control)] bg-[var(--stage-prove-tint)] text-[var(--stage-prove-text)] font-semibold border border-[var(--stage-prove-line)]">
-                  Verified Mark (Notch Active)
-                </span>
-              </div>
-
-              <div class="py-4 space-y-2">
-                <h4 class="text-base font-semibold text-[var(--text-primary)]">ProofOS Component Sandbox</h4>
-                <p class="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  Every element on this screen is reactively bound to your live color variables. Notice how hairline borders, subtle tints, and tactile press edges adapt in harmony.
-                </p>
-              </div>
-
-              <!-- Live Buttons Demo -->
-              <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-[var(--border-hairline)]">
-                <button class="btn-proof-primary px-3 py-1.5 text-xs font-semibold">Primary Commit</button>
-                <button class="btn-proof-secondary px-3 py-1.5 text-xs font-semibold">Secondary Action</button>
-                <span class="proof-cell bg-[var(--stage-learn-solid)] text-white">01</span>
-                <span class="proof-cell bg-[var(--stage-practice-tint)] text-[var(--stage-practice-text)] border-[var(--stage-practice-solid)]">02</span>
-                <span class="proof-cell bg-[var(--stage-build-tint)] text-[var(--stage-build-solid)] border-[var(--stage-build-line)]">03</span>
-                <span class="proof-cell bg-[var(--stage-review-solid)] text-white">04</span>
-                <span class="proof-cell bg-[var(--stage-prove-solid)] text-white">✓</span>
-              </div>
-            </div>
-
-            <!-- Code Preview Box -->
-            <div class="p-4 rounded-[var(--radius-surface)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] font-mono text-[11px] text-[var(--text-secondary)]">
-              <span class="text-[10px] uppercase text-[var(--text-tertiary)] block mb-1.5 font-bold">// Active Root Tokens Cascade</span>
-              <pre id="live-css-preview" class="overflow-x-auto text-[11px] leading-relaxed text-[var(--text-primary)]">:root {
-  --bg-canvas: #fafaf8;
-  --bg-surface: #ffffff;
-  --brand: #102f60;
-  --text-primary: #20252b;
-  --stage-learn-solid: #2458e8;
-  --stage-practice-solid: #c07824;
-  --stage-build-solid: #7156b5;
-  --stage-prove-solid: #167d66;
-}</pre>
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-
-      <!-- TAB 2: REFERENCE PALETTE PRIMITIVES SWATCHES -->
-      <div id="ds-panel-swatches" class="hidden space-y-6">
-        
-        <!-- Paper Primitives -->
-        <div>
-          <span class="text-xs font-mono font-semibold uppercase text-[var(--text-tertiary)] block mb-3">Paper Series (Ground, Canvas &amp; Inset Surfaces)</span>
-          <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
-            <div onclick="copyHex('#fafaf8', '--ref-paper-50')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
-              <div class="w-full h-12 rounded-[var(--radius-control)] border border-[#d9d9d0] mb-2" style="background-color: #fafaf8;"></div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Paper 50</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#FAFAF8</span>
-              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Canvas Ground</span>
-            </div>
-            <div onclick="copyHex('#f4f4f0', '--ref-paper-100')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
-              <div class="w-full h-12 rounded-[var(--radius-control)] border border-[#d9d9d0] mb-2" style="background-color: #f4f4f0;"></div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Paper 100</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#F4F4F0</span>
-              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Subtle Surface</span>
-            </div>
-            <div onclick="copyHex('#eeeee8', '--ref-paper-200')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
-              <div class="w-full h-12 rounded-[var(--radius-control)] border border-[#d9d9d0] mb-2" style="background-color: #eeeee8;"></div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Paper 200</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#EEEEE8</span>
-              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Inset Ground</span>
-            </div>
-            <div onclick="copyHex('#e6e6df', '--ref-paper-300')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
-              <div class="w-full h-12 rounded-[var(--radius-control)] border border-[#d9d9d0] mb-2" style="background-color: #e6e6df;"></div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Paper 300</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#E6E6DF</span>
-              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Hairline Border</span>
-            </div>
-            <div onclick="copyHex('#d9d9d0', '--ref-paper-400')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
-              <div class="w-full h-12 rounded-[var(--radius-control)] border border-[#d9d9d0] mb-2" style="background-color: #d9d9d0;"></div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Paper 400</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#D9D9D0</span>
-              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Default Border</span>
-            </div>
-            <div onclick="copyHex('#8c8c82', '--ref-paper-600')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
-              <div class="w-full h-12 rounded-[var(--radius-control)] mb-2" style="background-color: #8c8c82;"></div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Paper 600</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#8C8C82</span>
-              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Control Border</span>
-            </div>
-            <div onclick="copyHex('#ffffff', '--ref-white')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
-              <div class="w-full h-12 rounded-[var(--radius-control)] border border-[#d9d9d0] mb-2" style="background-color: #ffffff;"></div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Pure White</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#FFFFFF</span>
-              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Card Surface</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Ink Primitives -->
-        <div>
-          <span class="text-xs font-mono font-semibold uppercase text-[var(--text-tertiary)] block mb-3">Ink Series (Typography &amp; Contrast Hierarchy)</span>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div onclick="copyHex('#20252b', '--ref-ink-900')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
-              <div class="w-full h-12 rounded-[var(--radius-control)] mb-2" style="background-color: #20252b;"></div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Ink 900</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#20252B</span>
-              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Primary Charcoal</span>
-            </div>
-            <div onclick="copyHex('#444c56', '--ref-ink-700')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
-              <div class="w-full h-12 rounded-[var(--radius-control)] mb-2" style="background-color: #444c56;"></div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Ink 700</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#444C56</span>
-              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Secondary Text</span>
-            </div>
-            <div onclick="copyHex('#636b75', '--ref-ink-500')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
-              <div class="w-full h-12 rounded-[var(--radius-control)] mb-2" style="background-color: #636b75;"></div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Ink 500</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#636B75</span>
-              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Tertiary &amp; Mono</span>
-            </div>
-            <div onclick="copyHex('#a4aab2', '--ref-ink-300')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
-              <div class="w-full h-12 rounded-[var(--radius-control)] mb-2" style="background-color: #a4aab2;"></div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Ink 300</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#A4AAB2</span>
-              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Disabled &amp; Strong Rule</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5 Stages Series -->
-        <div>
-          <span class="text-xs font-mono font-semibold uppercase text-[var(--text-tertiary)] block mb-3">The 5 Stage Progression Ladders (§2.1)</span>
-          <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
-            
-            <!-- Learn -->
-            <div class="p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-              <div class="w-full h-10 rounded-[var(--radius-control)] mb-2 flex items-center justify-center font-bold text-white text-xs" style="background-color: #2458e8;">01 Learn</div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Blue 600</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#2458E8</span>
-              <div class="mt-2 space-y-1 text-[10px] font-mono">
-                <div class="p-1 rounded bg-[#edf2fe] text-[#2458e8] border border-[#c4d3fa]">Tint: #EDF2FE</div>
-                <div class="p-1 rounded bg-white text-[#2458e8] border border-[#c4d3fa]">Line: #C4D3FA</div>
-              </div>
-            </div>
-
-            <!-- Practice -->
-            <div class="p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-              <div class="w-full h-10 rounded-[var(--radius-control)] mb-2 flex items-center justify-center font-bold text-white text-xs" style="background-color: #c07824;">02 Practice</div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Amber 600</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#C07824</span>
-              <div class="mt-2 space-y-1 text-[10px] font-mono">
-                <div class="p-1 rounded bg-[#fbf1e3] text-[#8f5510] border border-[#efd3a8]">Text: #8F5510</div>
-                <div class="p-1 rounded bg-[#fbf1e3] text-[#c07824] border border-[#efd3a8]">Tint: #FBF1E3</div>
-              </div>
-            </div>
-
-            <!-- Build -->
-            <div class="p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-              <div class="w-full h-10 rounded-[var(--radius-control)] mb-2 flex items-center justify-center font-bold text-white text-xs" style="background-color: #7156b5;">03 Build</div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Purple 600</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#7156B5</span>
-              <div class="mt-2 space-y-1 text-[10px] font-mono">
-                <div class="p-1 rounded bg-[#f1eef9] text-[#7156b5] border border-[#d3c8ec]">Tint: #F1EEF9</div>
-                <div class="p-1 rounded bg-white text-[#7156b5] border border-[#d3c8ec]">Line: #D3C8EC</div>
-              </div>
-            </div>
-
-            <!-- Review -->
-            <div class="p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-              <div class="w-full h-10 rounded-[var(--radius-control)] mb-2 flex items-center justify-center font-bold text-white text-xs" style="background-color: #102f60;">04 Review</div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Navy 900</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#102F60</span>
-              <div class="mt-2 space-y-1 text-[10px] font-mono">
-                <div class="p-1 rounded bg-[#e9eef7] text-[#102f60] border border-[#bccae3]">Tint: #E9EEF7</div>
-                <div class="p-1 rounded bg-white text-[#102f60] border border-[#bccae3]">Line: #BCCAE3</div>
-              </div>
-            </div>
-
-            <!-- Prove -->
-            <div class="p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-              <div class="w-full h-10 rounded-[var(--radius-control)] mb-2 flex items-center justify-center font-bold text-white text-xs" style="background-color: #167d66;">05 Prove ✓</div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">Green 600</span>
-              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#167D66</span>
-              <div class="mt-2 space-y-1 text-[10px] font-mono">
-                <div class="p-1 rounded bg-[#e7f4f0] text-[#126a55] border border-[#b3dccf]">Text: #126A55</div>
-                <div class="p-1 rounded bg-[#e7f4f0] text-[#167d66] border border-[#b3dccf]">Tint: #E7F4F0</div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-
-      <!-- TAB 3: 5-STAGE PROOF CELL LADDER (§4.2) -->
-      <div id="ds-panel-ladder" class="hidden space-y-6">
-        <div class="p-6 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-          <div class="max-w-xl mb-6">
-            <h3 class="text-base font-semibold text-[var(--text-primary)]">The Proof Cell Atomic Mark &amp; Fill States</h3>
-            <p class="text-xs text-[var(--text-secondary)] mt-1">
-              The atomic progression mark: 24px square, 2px radius, 1px border. <strong>Shape</strong> indicates the stage; <strong>fill</strong> measures verified evidence.
-            </p>
-          </div>
-
-          <!-- The 5 Visual States -->
-          <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
-            
-            <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] text-center">
-              <div class="w-8 h-8 mx-auto mb-2 rounded-[2px] border border-dashed border-[var(--text-disabled)] flex items-center justify-center text-xs font-mono text-[var(--text-disabled)]">
-                –
-              </div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">locked</span>
-              <span class="text-[10px] text-[var(--text-tertiary)] block mt-0.5">Dashed border, empty</span>
-            </div>
-
-            <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] text-center">
-              <div class="w-8 h-8 mx-auto mb-2 rounded-[2px] border border-[var(--stage-learn-solid)] flex items-center justify-center text-xs font-mono text-[var(--stage-learn-solid)]">
-                ○
-              </div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">available</span>
-              <span class="text-[10px] text-[var(--text-tertiary)] block mt-0.5">Solid stage border</span>
-            </div>
-
-            <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] text-center">
-              <div class="w-8 h-8 mx-auto mb-2 rounded-[2px] border border-[var(--stage-practice-solid)] relative overflow-hidden flex items-center justify-center text-xs font-mono font-semibold text-[var(--stage-practice-text)]">
-                <div id="dynamic-cell-fill" class="absolute bottom-0 left-0 right-0 bg-[var(--stage-practice-tint)] border-t border-[var(--stage-practice-solid)] transition-all" style="height: 60%;"></div>
-                <span class="relative z-10">60%</span>
-              </div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">active</span>
-              <span class="text-[10px] text-[var(--text-tertiary)] block mt-0.5">Rises with progress</span>
-            </div>
-
-            <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] text-center">
-              <div class="w-8 h-8 mx-auto mb-2 rounded-[2px] border border-[var(--stage-build-solid)] bg-[var(--stage-build-tint)] flex items-center justify-center text-xs font-mono font-semibold text-[var(--stage-build-solid)]">
-                ■
-              </div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">done</span>
-              <span class="text-[10px] text-[var(--text-tertiary)] block mt-0.5">Learner completed</span>
-            </div>
-
-            <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] text-center">
-              <div class="w-8 h-8 mx-auto mb-2 rounded-[2px] bg-[var(--stage-prove-solid)] notched-verified flex items-center justify-center text-xs font-mono font-bold text-white shadow-xs">
-                ✓
-              </div>
-              <span class="text-xs font-semibold block text-[var(--text-primary)]">verified</span>
-              <span class="text-[10px] text-[var(--text-tertiary)] block mt-0.5">Solid fill + The Notch</span>
-            </div>
-
-          </div>
-
-          <!-- Progress Slider for Active Cell -->
-          <div class="mt-6 pt-5 border-t border-[var(--border-hairline)] max-w-md">
-            <div class="flex items-center justify-between text-xs mb-1.5">
-              <label class="font-mono text-[var(--text-secondary)]">Simulate Active Cell Fill Progress:</label>
-              <span id="cell-fill-val" class="font-mono font-bold text-[var(--text-primary)]">60%</span>
-            </div>
-            <input type="range" min="12" max="100" value="60" oninput="document.getElementById('dynamic-cell-fill').style.height = this.value + '%'; document.getElementById('cell-fill-val').innerText = this.value + '%';" class="w-full h-1.5 bg-[var(--border-default)] rounded-[var(--radius-control)] accent-[var(--brand)]">
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 4: WCAG 2.2 CONTRAST MATRIX (§3.2) -->
-      <div id="ds-panel-contrast" class="hidden space-y-6">
-        <div class="p-6 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] overflow-x-auto">
-          <div class="max-w-xl mb-4">
-            <h3 class="text-base font-semibold text-[var(--text-primary)]">WCAG 2.2 Strict Contrast Matrix</h3>
-            <p class="text-xs text-[var(--text-secondary)] mt-1">
-              Every token pair is verified to pass WCAG 2.2 AA (4.5:1 text, 3:1 graphical marks) and AAA (7:1 body text) in both Light and Dark themes.
-            </p>
-          </div>
-
-          <table class="w-full text-left text-xs">
-            <thead>
-              <tr class="border-b border-[var(--border-hairline)] font-mono text-[10px] uppercase text-[var(--text-tertiary)]">
-                <th class="py-2.5">Pair</th>
-                <th class="py-2.5">Semantic Tokens</th>
-                <th class="py-2.5">Light Ratio</th>
-                <th class="py-2.5">Dark Ratio</th>
-                <th class="py-2.5">Standard</th>
-                <th class="py-2.5">Audit Status</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-[var(--border-hairline)] font-mono">
-              <tr>
-                <td class="py-2.5 font-sans font-medium text-[var(--text-primary)]">Body on canvas</td>
-                <td class="py-2.5 text-[var(--text-secondary)]">--text-primary on --bg-canvas</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">14.77:1</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">15.83:1</td>
-                <td class="py-2.5 text-[var(--text-tertiary)]">7:1 (AAA)</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">✓ PASS</td>
-              </tr>
-              <tr>
-                <td class="py-2.5 font-sans font-medium text-[var(--text-primary)]">Body on surface</td>
-                <td class="py-2.5 text-[var(--text-secondary)]">--text-primary on --bg-surface</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">15.43:1</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">14.86:1</td>
-                <td class="py-2.5 text-[var(--text-tertiary)]">7:1 (AAA)</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">✓ PASS</td>
-              </tr>
-              <tr>
-                <td class="py-2.5 font-sans font-medium text-[var(--text-primary)]">Secondary on surface</td>
-                <td class="py-2.5 text-[var(--text-secondary)]">--text-secondary on --bg-surface</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">8.70:1</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">9.35:1</td>
-                <td class="py-2.5 text-[var(--text-tertiary)]">4.5:1 (AA)</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">✓ PASS</td>
-              </tr>
-              <tr>
-                <td class="py-2.5 font-sans font-medium text-[var(--text-primary)]">Primary Action Button</td>
-                <td class="py-2.5 text-[var(--text-secondary)]">--action-primary-fg on --action-primary-bg</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">13.15:1</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">13.68:1</td>
-                <td class="py-2.5 text-[var(--text-tertiary)]">4.5:1 (AA)</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">✓ PASS</td>
-              </tr>
-              <tr>
-                <td class="py-2.5 font-sans font-medium text-[var(--text-primary)]">01 Learn text on tint</td>
-                <td class="py-2.5 text-[var(--text-secondary)]">--stage-learn-text on --stage-learn-tint</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">5.15:1</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">6.13:1</td>
-                <td class="py-2.5 text-[var(--text-tertiary)]">4.5:1 (AA)</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">✓ PASS</td>
-              </tr>
-              <tr>
-                <td class="py-2.5 font-sans font-medium text-[var(--text-primary)]">02 Practice text on tint</td>
-                <td class="py-2.5 text-[var(--text-secondary)]">--stage-practice-text on --stage-practice-tint</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">5.41:1</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">7.75:1</td>
-                <td class="py-2.5 text-[var(--text-tertiary)]">4.5:1 (AA)</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">✓ PASS</td>
-              </tr>
-              <tr>
-                <td class="py-2.5 font-sans font-medium text-[var(--text-primary)]">05 Prove text on tint</td>
-                <td class="py-2.5 text-[var(--text-secondary)]">--stage-prove-text on --stage-prove-tint</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">5.78:1</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">7.00:1</td>
-                <td class="py-2.5 text-[var(--text-tertiary)]">4.5:1 (AA)</td>
-                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">✓ PASS</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- TAB 5: GEOMETRY & ELEVATION RULES (§2.5, §2.6) -->
-      <div id="ds-panel-geometry" class="hidden space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          <div class="p-5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-            <span class="text-[10px] font-mono uppercase text-[var(--text-tertiary)] block mb-1">RULE 01: RADII</span>
-            <h4 class="text-sm font-semibold text-[var(--text-primary)]">Strict 2 / 6 / 8px Limits</h4>
-            <p class="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
-              Nothing in the system is fully round. Pills and radii above 8px are forbidden.
-            </p>
-            <div class="mt-4 space-y-2 text-xs font-mono">
-              <div class="p-2 rounded-[2px] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex justify-between">
-                <span>--radius-mark</span>
-                <span class="font-bold">2px</span>
-              </div>
-              <div class="p-2 rounded-[6px] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex justify-between">
-                <span>--radius-control</span>
-                <span class="font-bold">6px</span>
-              </div>
-              <div class="p-2 rounded-[8px] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex justify-between">
-                <span>--radius-surface</span>
-                <span class="font-bold">8px</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="p-5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-            <span class="text-[10px] font-mono uppercase text-[var(--text-tertiary)] block mb-1">RULE 02: TACTILE PRESS</span>
-            <h4 class="text-sm font-semibold text-[var(--text-primary)]">Physical 2px Edge Collapse</h4>
-            <p class="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
-              Commit actions physically depress. Primary actions translate 2px down, collapsing the lower edge.
-            </p>
-            <div class="mt-4">
-              <button class="btn-proof-primary w-full py-2 text-xs font-semibold">
-                Click &amp; Hold to Test Press (2px)
-              </button>
-            </div>
-          </div>
-
-          <div class="p-5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
-            <span class="text-[10px] font-mono uppercase text-[var(--text-tertiary)] block mb-1">RULE 03: THE NOTCH</span>
-            <h4 class="text-sm font-semibold text-[var(--text-primary)]">Verified Evidence Signature</h4>
-            <p class="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
-              A 12px folded corner strictly reserved for third-party verified work. Never used as generic decoration.
-            </p>
-            <div class="mt-4 p-3 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] notched-verified">
-              <span class="text-[11px] font-mono font-medium text-[var(--stage-prove-solid)]">✓ Notched Verification Edge</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 8. FOOTER: SWISS METADATA & LEGAL (§1.2)                                  -->
-  <!-- ========================================================================= -->
-  <footer class="mt-auto border-t border-[var(--border-hairline)] bg-[var(--bg-surface)] py-10 text-xs text-[var(--text-tertiary)]">
-    <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
-        
-        <div class="col-span-2 space-y-2">
-          <div class="flex items-center gap-2">
-            <div class="flex items-end gap-[2px] h-4 w-5">
-              <div class="w-0.8 h-1.5 bg-[var(--stage-learn-solid)]"></div>
-              <div class="w-0.8 h-2 bg-[var(--stage-practice-solid)]"></div>
-              <div class="w-0.8 h-2.5 bg-[var(--stage-build-solid)]"></div>
-              <div class="w-0.8 h-3 bg-[var(--stage-review-solid)]"></div>
-              <div class="w-0.8 h-3.5 bg-[var(--stage-prove-solid)]"></div>
-            </div>
-            <span class="font-semibold text-sm text-[var(--text-primary)]">Pathwisse ProofOS</span>
-          </div>
-          <p class="text-xs text-[var(--text-secondary)] max-w-sm">
-            Capability, made visible. Built around one continuous ladder: Learn → Practice → Build → Review → Prove.
-          </p>
-          <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">Specification: design.md v1.0</span>
-        </div>
-
-        <div>
-          <span class="font-semibold text-[var(--text-primary)] block mb-2 font-mono text-[11px]">PLATFORM</span>
-          <ul class="space-y-1.5">
-            <li><a href="#overview" class="hover:underline">Overview</a></li>
-            <li><a href="#ladder" class="hover:underline">Capability Trail</a></li>
-            <li><a href="#telemetry" class="hover:underline">Readiness Index</a></li>
-            <li><a href="#labs" class="hover:underline">GPU Workbench</a></li>
-            <li><a href="#design-system" class="hover:underline text-[var(--stage-prove-solid)] font-medium">Design Studio & Palette</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <span class="font-semibold text-[var(--text-primary)] block mb-2 font-mono text-[11px]">CURRICULUM</span>
-          <ul class="space-y-1.5">
-            <li><a href="#curriculum" class="hover:underline">System Design</a></li>
-            <li><a href="#curriculum" class="hover:underline">Inference Engineering</a></li>
-            <li><a href="#curriculum" class="hover:underline">AI Research</a></li>
-            <li><a href="#curriculum" class="hover:underline">ML Mathematics</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <span class="font-semibold text-[var(--text-primary)] block mb-2 font-mono text-[11px]">INSTITUTIONS</span>
-          <ul class="space-y-1.5">
-            <li><a href="#institutions" class="hover:underline">Campus Pilots</a></li>
-            <li><a href="#institutions" class="hover:underline">Placement Teams</a></li>
-            <li><a href="#institutions" class="hover:underline">NAAC/NBA Compliance</a></li>
-            <li><a href="javascript:void(0)" onclick="openDemoModal()" class="text-[var(--text-link)] hover:underline">Request Consult</a></li>
-          </ul>
-        </div>
-
-      </div>
-
-      <div class="pt-6 border-t border-[var(--border-hairline)] flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-[11px]">
-        <span>© 2026 Pathwisse. ProofOS v1.0.</span>
-        <div class="flex items-center gap-4">
-          <span>Evidence Beats Claims</span>
-          <span>•</span>
-          <span>Zero-Hallucination Telemetry</span>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ========================================================================= -->
-  <!-- MODAL: REQUEST DEMO & PILOT FORM                                          -->
-  <!-- ========================================================================= -->
-  <div id="demo-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-    <div class="max-w-md w-full p-6 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] shadow-[var(--shadow-overlay)] relative">
-      <button onclick="closeDemoModal()" class="absolute top-4 right-4 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] text-sm">
-        ✕
-      </button>
-      
-      <div class="mb-4">
-        <span class="text-[10px] font-mono font-semibold text-[var(--stage-learn-solid)] uppercase">CAMPUS CONSULTATION</span>
-        <h3 class="text-base font-semibold text-[var(--text-primary)] mt-0.5">Request Institutional Demo</h3>
-        <p class="text-xs text-[var(--text-secondary)] mt-0.5">Connect with curriculum directors to review cohort pilot options.</p>
-      </div>
-
-      <form onsubmit="handleDemoSubmit(event)" class="space-y-3 text-left">
-        <div>
-          <label class="block text-[11px] font-mono text-[var(--text-secondary)] mb-1">Full Name</label>
-          <input required type="text" placeholder="Dr. Sarah Jenkins" class="w-full px-3 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] text-xs bg-[var(--bg-surface)] text-[var(--text-primary)] outline-none focus:border-[var(--focus-ring)]">
-        </div>
-        <div>
-          <label class="block text-[11px] font-mono text-[var(--text-secondary)] mb-1">Institution</label>
-          <input required type="text" placeholder="National Institute of Technology" class="w-full px-3 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] text-xs bg-[var(--bg-surface)] text-[var(--text-primary)] outline-none focus:border-[var(--focus-ring)]">
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-[11px] font-mono text-[var(--text-secondary)] mb-1">Official Email</label>
-            <input required type="email" placeholder="director@college.edu" class="w-full px-3 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] text-xs bg-[var(--bg-surface)] text-[var(--text-primary)] outline-none focus:border-[var(--focus-ring)]">
-          </div>
-          <div>
-            <label class="block text-[11px] font-mono text-[var(--text-secondary)] mb-1">Role</label>
-            <select class="w-full px-2.5 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] text-xs bg-[var(--bg-surface)] text-[var(--text-primary)] outline-none">
-              <option>Placement Director</option>
-              <option>Dean / Principal</option>
-              <option>HOD (CSE/IT/AI)</option>
-              <option>Faculty Lead</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <label class="block text-[11px] font-mono text-[var(--text-secondary)] mb-1">Cohort Scope</label>
-          <select class="w-full px-2.5 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] text-xs bg-[var(--bg-surface)] text-[var(--text-primary)] outline-none">
-            <option>100–300 Students (Pilot)</option>
-            <option>300–1,000 Students (Faculty)</option>
-            <option>1,000+ Students (Campus OS)</option>
-          </select>
-        </div>
-        <button type="submit" class="w-full mt-3 btn-proof-primary py-2 text-xs font-semibold">
-          Submit Institutional Request
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- COMMAND PALETTE (CMD+K / CTRL+K)                                          -->
-  <!-- ========================================================================= -->
-  <div id="cmd-palette" class="fixed inset-0 z-50 hidden flex items-start justify-center pt-20 p-4 bg-black/40 backdrop-blur-xs">
-    <div class="max-w-md w-full p-3.5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] shadow-[var(--shadow-overlay)]">
-      <div class="flex items-center gap-2 pb-2.5 border-b border-[var(--border-hairline)]">
-        <svg class="w-3.5 h-3.5 text-[var(--text-tertiary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-        <input type="text" id="palette-search" placeholder="Type destination or tool (GPU, Raft, Math)..." class="flex-1 bg-transparent border-none text-xs text-[var(--text-primary)] outline-none">
-        <kbd class="text-[10px] font-mono text-[var(--text-tertiary)] px-1 rounded bg-[var(--bg-subtle)]">ESC</kbd>
-      </div>
-      <div class="pt-2 space-y-1 text-xs">
-        <a href="#overview" onclick="toggleCommandPalette()" class="flex items-center justify-between p-2 rounded-[var(--radius-control)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)]">
-          <span>Overview & Evidence</span>
-          <span class="font-mono text-[10px] text-[var(--text-tertiary)]">#overview</span>
-        </a>
-        <a href="#ladder" onclick="toggleCommandPalette()" class="flex items-center justify-between p-2 rounded-[var(--radius-control)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)]">
-          <span>10-Stage Capability Trail</span>
-          <span class="font-mono text-[10px] text-[var(--text-tertiary)]">#ladder</span>
-        </a>
-        <a href="#labs" onclick="toggleCommandPalette(); switchInstrument('gpu');" class="flex items-center justify-between p-2 rounded-[var(--radius-control)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)]">
-          <span>GPU Memory & VRAM Workbench</span>
-          <span class="font-mono text-[10px] text-[var(--stage-learn-solid)]">Lab</span>
-        </a>
-        <a href="#labs" onclick="toggleCommandPalette(); switchInstrument('decoder');" class="flex items-center justify-between p-2 rounded-[var(--radius-control)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)]">
-          <span>Mathematical Notation Library</span>
-          <span class="font-mono text-[10px] text-[var(--stage-learn-solid)]">Lab</span>
-        </a>
-        <a href="#design-system" onclick="toggleCommandPalette()" class="flex items-center justify-between p-2 rounded-[var(--radius-control)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)]">
-          <span class="font-medium text-[var(--stage-prove-solid)]">🎨 ProofOS Design System & Color Palette Studio</span>
-          <span class="font-mono text-[10px] text-[var(--text-tertiary)]">#design-system</span>
-        </a>
-        <a href="#curriculum" onclick="toggleCommandPalette()" class="flex items-center justify-between p-2 rounded-[var(--radius-control)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)]">
-          <span>System Design & Inference Tracks</span>
-          <span class="font-mono text-[10px] text-[var(--text-tertiary)]">#curriculum</span>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- JAVASCRIPT CONTROLLERS                                                    -->
-  <!-- ========================================================================= -->
-  <script>
-    // 1. Theme Management (defaults to ProofOS warm paper light ground)
-    function toggleProofOSTheme() {
-      const html = document.documentElement;
-      if (html.getAttribute('data-theme') === 'dark') {
-        html.setAttribute('data-theme', 'light');
-        localStorage.setItem('proofos-theme', 'light');
-      } else {
-        html.setAttribute('data-theme', 'dark');
-        localStorage.setItem('proofos-theme', 'dark');
-      }
-    }
-
-    // 2. Command Palette (⌘K)
-    function toggleCommandPalette() {
-      const pal = document.getElementById('cmd-palette');
-      pal.classList.toggle('hidden');
-      if (!pal.classList.contains('hidden')) {
-        setTimeout(() => document.getElementById('palette-search').focus(), 50);
-      }
-    }
-    window.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        toggleCommandPalette();
-      }
-      if (e.key === 'Escape') {
-        document.getElementById('cmd-palette').classList.add('hidden');
-        document.getElementById('demo-modal').classList.add('hidden');
-      }
-    });
-
-    // 3. Modal Form
-    function openDemoModal() {
-      document.getElementById('demo-modal').classList.remove('hidden');
-    }
-    function closeDemoModal() {
-      document.getElementById('demo-modal').classList.add('hidden');
-    }
-    function handleDemoSubmit(e) {
-      e.preventDefault();
-      alert('Thank you! Your institutional inquiry has been submitted. Our Academic Director will reach out within 24 hours.');
-      closeDemoModal();
-    }
-
-    // 4. 10-Stage Operating Model Data & Switcher
-    const stagesData = {
-      1: {
-        badge: "STAGE 01 OF 10 · LEARN",
-        owner: "Ownership: Student + Department Counselor",
-        title: "Career Goal & Competency Profiling",
-        desc: "Students identify target engineering specializations (e.g. Distributed Systems Engineer, LLM Inference Specialist, or AI Research Practitioner). The operating system maps exact skill graphs and industry requirements without vague generalizations.",
-        metric: "100%",
-        metricLabel: "Students with deterministic milestone roadmaps",
-        deliv: ["Role Competency Matrix", "Baseline Diagnostic", "Weeks 1–2"]
-      },
-      2: {
-        badge: "STAGE 02 OF 10 · LEARN",
-        owner: "Ownership: Curriculum Office + AI Engine",
-        title: "Deterministic Skill Mapping",
-        desc: "Translates standard university syllabus into targeted engineering requirements. Identifies gaps between semester courses and high-bar industry benchmarks.",
-        metric: "42",
-        metricLabel: "Core competencies mapped per track",
-        deliv: ["Competency Blueprint", "Course Alignment Matrix", "Weeks 3–4"]
-      },
-      3: {
-        badge: "STAGE 03 OF 10 · LEARN",
-        owner: "Ownership: Faculty & Interactive Platform",
-        title: "Core Mathematical & Systems Foundations",
-        desc: "Deep mastery of underlying principles: LSM trees, append-only logs, matrix calculus, probability densities, and backpropagation mechanics.",
-        metric: "94%",
-        metricLabel: "Concept retention rate through active recall",
-        deliv: ["Math Decoder Drills", "Interactive Foundations", "Weeks 5–8"]
-      },
-      4: {
-        badge: "STAGE 04 OF 10 · PRACTICE",
-        owner: "Ownership: Student + Automated Test Runners",
-        title: "Hands-on Interactive Labs",
-        desc: "Browser-based sandbox environments. Students calculate KV caches, configure Raft leader elections, and simulate network partitions.",
-        metric: "16+",
-        metricLabel: "Interactive labs completed per learner",
-        deliv: ["GPU Memory Workbench", "Raft Consensus Lab", "Weeks 9–12"]
-      },
-      5: {
-        badge: "STAGE 05 OF 10 · BUILD",
-        owner: "Ownership: Student + Code Review Pipeline",
-        title: "Production Code Builds",
-        desc: "Full end-to-end repository builds: custom storage engines, FlashAttention CUDA bindings, and distributed pub/sub brokers verified against automated test suites.",
-        metric: "3+",
-        metricLabel: "Production-grade repositories shipped",
-        deliv: ["Storage Engine Build", "Distributed Cache", "Weeks 13–16"]
-      },
-      6: {
-        badge: "STAGE 06 OF 10 · REVIEW",
-        owner: "Ownership: Industry Mentors + Alumni Network",
-        title: "Structured Code Review & Mentoring",
-        desc: "Senior engineering practitioners review pull requests, architecture decisions, and code cleanliness, mirroring top-tier engineering teams.",
-        metric: "100%",
-        metricLabel: "Builds code-reviewed by human engineers",
-        deliv: ["PR Review Logs", "Architecture Debrief", "Weeks 17–18"]
-      },
-      7: {
-        badge: "STAGE 07 OF 10 · PROVE",
-        owner: "Ownership: Verified Telemetry Engine",
-        title: "Quantified Readiness Indexing",
-        desc: "Real-time 0–100 scoring based on code completeness, test coverage, mathematical drills, and code review feedback.",
-        metric: "88/100",
-        metricLabel: "Average verified readiness of completing cohort",
-        deliv: ["Verifiable Index", "Skill Radar Chart", "Week 19"]
-      },
-      8: {
-        badge: "STAGE 08 OF 10 · PROVE",
-        owner: "Ownership: Placement Cell + HODs",
-        title: "Cohort Benchmarking & Gap Interventions",
-        desc: "Institutional dashboard identifies top-quartile students and alerts mentors to students needing targeted support before hiring drives.",
-        metric: "< 5%",
-        metricLabel: "Unidentified at-risk rate across cohort",
-        deliv: ["Cohort Percentiles", "Intervention Triggers", "Week 20"]
-      },
-      9: {
-        badge: "STAGE 09 OF 10 · PROVE",
-        owner: "Ownership: Placement Directorate & Recruiters",
-        title: "Algorithmic Placement Matching",
-        desc: "Verified profiles and code artifacts are matched directly to hiring partners seeking proven systems and AI engineering talent.",
-        metric: "3.4x",
-        metricLabel: "Higher interview shortlist rate",
-        deliv: ["Verified Candidate Dossier", "Recruiter Shortlists", "Weeks 21–24"]
-      },
-      10: {
-        badge: "STAGE 10 OF 10 · PROVE",
-        owner: "Ownership: Dean / College Leadership",
-        title: "Accreditation & Institutional Reporting",
-        desc: "Continuous exportable reports for NAAC, NBA, and ABET accreditation bodies documenting verifiable outcome-based education metrics.",
-        metric: "100%",
-        metricLabel: "Compliant outcome-based data audit trail",
-        deliv: ["NAAC Criterion 2 & 5 Logs", "Placement Audit Report", "End of Semester"]
-      }
-    };
-
-    function selectStage(num) {
-      document.querySelectorAll('.stage-nav-btn').forEach((btn, idx) => {
-        if (idx + 1 === num) {
-          btn.className = "stage-nav-btn flex-1 p-2.5 rounded-[var(--radius-control)] border border-[var(--brand)] bg-[var(--brand)] text-white text-left transition-all";
-          btn.querySelector('span:first-child').className = "text-[9px] font-mono opacity-80 block";
-        } else {
-          btn.className = "stage-nav-btn flex-1 p-2.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-primary)] text-left hover:border-[var(--border-strong)] transition-all";
-          btn.querySelector('span:first-child').className = "text-[9px] font-mono text-[var(--text-tertiary)] block";
-        }
-      });
-
-      const d = stagesData[num];
-      document.getElementById('stage-badge').innerText = d.badge;
-      document.getElementById('stage-owner').innerText = d.owner;
-      document.getElementById('stage-title').innerText = d.title;
-      document.getElementById('stage-desc').innerText = d.desc;
-      document.getElementById('stage-metric').innerText = d.metric;
-      document.getElementById('stage-metric-label').innerText = d.metricLabel;
-
-      const delivEl = document.getElementById('stage-deliverables');
-      delivEl.innerHTML = `
-        <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-          <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">DELIVERABLE</span>
-          <span class="text-xs font-medium text-[var(--text-primary)]">${d.deliv[0]}</span>
-        </div>
-        <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-          <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">VERIFICATION</span>
-          <span class="text-xs font-medium text-[var(--stage-prove-solid)]">${d.deliv[1]}</span>
-        </div>
-        <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-          <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">TIME HORIZON</span>
-          <span class="text-xs font-medium text-[var(--text-primary)]">${d.deliv[2]}</span>
-        </div>
-      `;
-    }
-
-    // 5. Readiness Score Recalculator
-    function recalculateReadiness() {
-      const checks = document.querySelectorAll('.milestone-toggle');
-      let score = 0;
-      checks.forEach(c => {
-        if (c.checked) score += parseInt(c.getAttribute('data-pts') || 0);
-      });
-
-      document.getElementById('sim-score').innerText = score;
-      document.getElementById('demo-readiness-score').innerText = score;
-
-      const verdict = document.getElementById('sim-verdict');
-      if (score >= 85) {
-        verdict.className = "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--radius-control)] text-xs font-mono font-medium bg-[var(--stage-prove-tint)] text-[var(--stage-prove-text)] border border-[var(--stage-prove-line)] mb-4";
-        verdict.innerText = "● Proven Placement Ready";
-      } else if (score >= 60) {
-        verdict.className = "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--radius-control)] text-xs font-mono font-medium bg-[var(--stage-learn-tint)] text-[var(--stage-learn-solid)] border border-[var(--stage-learn-line)] mb-4";
-        verdict.innerText = "● Intermediate Progress";
-      } else {
-        verdict.className = "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[var(--radius-control)] text-xs font-mono font-medium bg-[var(--stage-practice-tint)] text-[var(--stage-practice-text)] border border-[var(--stage-practice-line)] mb-4";
-        verdict.innerText = "● Needs Intervention";
-      }
-
-      document.getElementById('bar-artifact').style.width = Math.min(100, Math.round(score * 1.05)) + '%';
-      document.getElementById('bar-artifact-val').innerText = Math.min(100, Math.round(score * 1.05)) + '%';
-      
-      document.getElementById('bar-systems').style.width = Math.min(100, Math.round(score * 0.98)) + '%';
-      document.getElementById('bar-systems-val').innerText = Math.min(100, Math.round(score * 0.98)) + '%';
-
-      document.getElementById('bar-math').style.width = Math.min(100, Math.round(score * 0.95)) + '%';
-      document.getElementById('bar-math-val').innerText = Math.min(100, Math.round(score * 0.95)) + '%';
-    }
-
-    function resetReadinessDemo() {
-      const checks = document.querySelectorAll('.milestone-toggle');
-      checks.forEach((c, idx) => c.checked = idx < 4);
-      recalculateReadiness();
-    }
-
-    // 6. GPU Memory Workbench Calculator
-    let currentPrecision = 2.0;
-
-    function setPrecision(prec) {
-      document.getElementById('prec-fp16').className = "p-1.5 text-xs rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] font-mono hover:border-[var(--border-strong)]";
-      document.getElementById('prec-int8').className = "p-1.5 text-xs rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] font-mono hover:border-[var(--border-strong)]";
-      document.getElementById('prec-int4').className = "p-1.5 text-xs rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] font-mono hover:border-[var(--border-strong)]";
-
-      if (prec === 'fp16') {
-        currentPrecision = 2.0;
-        document.getElementById('prec-fp16').className = "p-1.5 text-xs rounded-[var(--radius-control)] border border-[var(--brand)] bg-[var(--stage-learn-tint)] text-[var(--text-primary)] font-mono font-medium";
-      } else if (prec === 'int8') {
-        currentPrecision = 1.0;
-        document.getElementById('prec-int8').className = "p-1.5 text-xs rounded-[var(--radius-control)] border border-[var(--brand)] bg-[var(--stage-learn-tint)] text-[var(--text-primary)] font-mono font-medium";
-      } else if (prec === 'int4') {
-        currentPrecision = 0.5;
-        document.getElementById('prec-int4').className = "p-1.5 text-xs rounded-[var(--radius-control)] border border-[var(--brand)] bg-[var(--stage-learn-tint)] text-[var(--text-primary)] font-mono font-medium";
-      }
-      updateGpuCalc();
-    }
-
-    function updateGpuCalc() {
-      const paramsB = parseInt(document.getElementById('gpu-param-slider').value);
-      const ctxK = parseInt(document.getElementById('gpu-ctx-slider').value);
-      const batch = parseInt(document.getElementById('gpu-batch-slider').value);
-
-      document.getElementById('gpu-param-val').innerText = `${paramsB} Billion (${paramsB}B)`;
-      document.getElementById('gpu-ctx-val').innerText = `${ctxK}k tokens`;
-      document.getElementById('gpu-batch-val').innerText = `${batch} requests`;
-
-      const weightGB = paramsB * currentPrecision;
-      const kvGB = (0.075 * ctxK * batch * (paramsB / 7)).toFixed(1);
-      const cudaOverhead = 1.2;
-      const total = (weightGB + parseFloat(kvGB) + cudaOverhead).toFixed(1);
-
-      document.getElementById('gpu-total-vram').innerText = total;
-      document.getElementById('gpu-weights-mem').innerText = `${weightGB.toFixed(1)} GB`;
-      document.getElementById('gpu-kv-mem').innerText = `${kvGB} GB`;
-
-      const fitBox = document.getElementById('gpu-fit-box');
-      if (total <= 24) {
-        fitBox.className = "p-2.5 rounded-[var(--radius-control)] bg-[var(--stage-prove-tint)] border border-[var(--stage-prove-line)] text-xs";
-        fitBox.innerHTML = `
-          <span class="font-semibold text-[var(--stage-prove-text)] block">✓ Fits in 1x NVIDIA RTX 4090 / A10G (24GB)</span>
-          <span class="text-[11px] text-[var(--stage-prove-text)] opacity-80 block mt-0.5 font-mono">Headroom: ~${(24 - total).toFixed(1)} GB free</span>
-        `;
-      } else if (total <= 48) {
-        fitBox.className = "p-2.5 rounded-[var(--radius-control)] bg-[var(--stage-learn-tint)] border border-[var(--stage-learn-line)] text-xs";
-        fitBox.innerHTML = `
-          <span class="font-semibold text-[var(--stage-learn-solid)] block">✓ Requires 1x NVIDIA A40 / A6000 (48GB)</span>
-          <span class="text-[11px] text-[var(--stage-learn-solid)] opacity-80 block mt-0.5 font-mono">Headroom: ~${(48 - total).toFixed(1)} GB free</span>
-        `;
-      } else if (total <= 80) {
-        fitBox.className = "p-2.5 rounded-[var(--radius-control)] bg-[var(--stage-build-tint)] border border-[var(--stage-build-line)] text-xs";
-        fitBox.innerHTML = `
-          <span class="font-semibold text-[var(--stage-build-solid)] block">✓ Requires 1x NVIDIA A100 / H100 (80GB)</span>
-          <span class="text-[11px] text-[var(--stage-build-solid)] opacity-80 block mt-0.5 font-mono">Headroom: ~${(80 - total).toFixed(1)} GB free</span>
-        `;
-      } else {
-        fitBox.className = "p-2.5 rounded-[var(--radius-control)] bg-[var(--stage-practice-tint)] border border-[var(--stage-practice-line)] text-xs";
-        fitBox.innerHTML = `
-          <span class="font-semibold text-[var(--stage-practice-text)] block">⚠️ Multi-GPU Tensor Parallelism Required</span>
-          <span class="text-[11px] text-[var(--stage-practice-text)] opacity-80 block mt-0.5 font-mono">Requires 2x or 4x 80GB GPUs with NVLink interconnect</span>
-        `;
-      }
-    }
-
-    // 7. Instrument Tabs Switcher
-    function switchInstrument(tab) {
-      if (tab === 'gpu') {
-        document.getElementById('inst-gpu-panel').classList.remove('hidden');
-        document.getElementById('inst-decoder-panel').classList.add('hidden');
-        document.getElementById('inst-tab-gpu').className = "px-3.5 py-1.5 rounded-[var(--radius-control)] bg-[var(--brand)] text-white text-xs font-medium transition-all";
-        document.getElementById('inst-tab-decoder').className = "px-3.5 py-1.5 rounded-[var(--radius-control)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all";
-      } else {
-        document.getElementById('inst-gpu-panel').classList.add('hidden');
-        document.getElementById('inst-decoder-panel').classList.remove('hidden');
-        document.getElementById('inst-tab-gpu').className = "px-3.5 py-1.5 rounded-[var(--radius-control)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all";
-        document.getElementById('inst-tab-decoder').className = "px-3.5 py-1.5 rounded-[var(--radius-control)] bg-[var(--brand)] text-white text-xs font-medium transition-all";
-      }
-    }
-
-    function filterMathSymbols() {
-      const q = document.getElementById('math-search-input').value.toLowerCase();
-      document.querySelectorAll('.math-card').forEach(card => {
-        const text = card.innerText.toLowerCase();
-        card.style.display = text.includes(q) ? 'block' : 'none';
-      });
-    }
-
-    function copyLatex(latex) {
-      navigator.clipboard.writeText(latex);
-      alert(`Copied LaTeX to clipboard: ${latex}`);
-    }
-
-    // 8. Audience Switcher
-    const audienceData = {
-      students: [
-        { label: "01. CERTAINTY", title: "Deterministic Roadmap", desc: "Know exactly what to study each week without wasting months on superficial beginner tutorials." },
-        { label: "02. CREDIBILITY", title: "Verifiable Portfolio", desc: "Proof-of-work code builds and stress tests that instantly distinguish you from generic applicants." },
-        { label: "03. PLACEMENT READY", title: "Verified Score Badge", desc: "Your 0-100 Readiness Index gives recruiting partners instant confidence in your engineering abilities." }
-      ],
-      placement: [
-        { label: "01. SCREENING SPEED", title: "Instant Talent Filtering", desc: "Filter thousands of students by verified competency scores rather than unverified resumes." },
-        { label: "02. RECRUITER TRUST", title: "Evidence-Backed Dossiers", desc: "Deliver recruiters candidate profiles with verified commit histories and stress test outputs." },
-        { label: "03. HIGHER OFFERS", title: "Premium CTC Placement", desc: "Guide students directly into high-tier systems and AI engineering roles with 2x to 3x higher packages." }
-      ],
-      faculty: [
-        { label: "01. SYLLABUS ALIGNMENT", title: "Automated Curriculum Sync", desc: "Map existing university courses to current industry frameworks without rebuilding syllabi." },
-        { label: "02. EARLY RISK DETECTION", title: "At-Risk Alerts", desc: "Identify students struggling with mathematical prerequisites weeks before semester exams." },
-        { label: "03. AUTOMATED LABS", title: "Zero Grading Burden", desc: "Automated test suites and benchmarks evaluate code builds, saving hundreds of faculty grading hours." }
-      ],
-      leadership: [
-        { label: "01. AUDIT COMPLIANCE", title: "NAAC & NBA Evidence", desc: "Continuous exportable reports documenting outcome-based education metrics for accreditation boards." },
-        { label: "02. INSTITUTIONAL BRAND", title: "Top-Tier Placement Prestige", desc: "Build a reputation as a premier tech institution producing engineers who ship from day one." },
-        { label: "03. SCALABLE GOVERNANCE", title: "Departmental Telemetry", desc: "Track readiness distributions, faculty intervention velocity, and recruiter hiring conversion in one place." }
-      ]
-    };
-
-    function switchAudience(aud) {
-      const tabs = ['students', 'placement', 'faculty', 'leadership'];
-      tabs.forEach(t => {
-        const btn = document.getElementById(`aud-tab-${t}`);
-        if (t === aud) {
-          btn.className = "px-3 py-1 rounded-[var(--radius-control)] bg-[var(--brand)] text-white text-xs font-medium transition-all";
-        } else {
-          btn.className = "px-3 py-1 rounded-[var(--radius-control)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all";
-        }
-      });
-
-      const cards = audienceData[aud];
-      const container = document.getElementById('audience-content');
-      container.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-            <span class="text-[10px] font-mono text-[var(--stage-learn-solid)] font-semibold block mb-0.5">${cards[0].label}</span>
-            <h4 class="text-sm font-semibold text-[var(--text-primary)]">${cards[0].title}</h4>
-            <p class="text-xs text-[var(--text-secondary)] mt-1 leading-relaxed">${cards[0].desc}</p>
-          </div>
-          <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-            <span class="text-[10px] font-mono text-[var(--stage-prove-solid)] font-semibold block mb-0.5">${cards[1].label}</span>
-            <h4 class="text-sm font-semibold text-[var(--text-primary)]">${cards[1].title}</h4>
-            <p class="text-xs text-[var(--text-secondary)] mt-1 leading-relaxed">${cards[1].desc}</p>
-          </div>
-          <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)]">
-            <span class="text-[10px] font-mono text-[var(--stage-practice-solid)] font-semibold block mb-0.5">${cards[2].label}</span>
-            <h4 class="text-sm font-semibold text-[var(--text-primary)]">${cards[2].title}</h4>
-            <p class="text-xs text-[var(--text-secondary)] mt-1 leading-relaxed">${cards[2].desc}</p>
-          </div>
-        </div>
-      `;
-    }
-
-    // =========================================================================
-    // PROOFOS DESIGN SYSTEM & COLOR STUDIO CONTROLLER
-    // =========================================================================
-    function switchDsTab(tab) {
-      const tabs = ['palette', 'swatches', 'ladder', 'contrast', 'geometry'];
-      tabs.forEach(t => {
-        const btn = document.getElementById('ds-tab-' + t);
-        const panel = document.getElementById('ds-panel-' + t);
-        if (btn && panel) {
-          if (t === tab) {
-            btn.className = "px-3 py-1.5 rounded-[var(--radius-control)] bg-[var(--brand)] text-white text-xs font-medium transition-all";
-            panel.classList.remove('hidden');
-          } else {
-            btn.className = "px-3 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all";
-            panel.classList.add('hidden');
+      })();
+    </script>
+
+    <!-- Icons & PWA -->
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/svg+xml" sizes="any" href="/assets/brand/fanout-mark.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Fanout" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="msapplication-TileColor" content="#FBFBFB" />
+    <meta name="msapplication-TileImage" content="/icon-192.png" />
+
+    <!-- Open Graph site identity; route-specific fields live in the generated block above. -->
+    <meta property="og:site_name" content="Fanout" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="article:author" content="https://x.com/notsurajgaud" />
+    <meta property="article:publisher" content="https://x.com/notsurajgaud" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@notsurajgaud" />
+    <meta name="twitter:creator" content="@notsurajgaud" />
+    <meta name="twitter:domain" content="fanout.sh" />
+
+    <!-- Shared Google tag for Ads and GA4. GA4 enhanced measurement handles
+         page views on initial load and SPA history changes. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18393127573"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-18393127573');
+      gtag('config', 'G-EPZE2FZ1XT');
+    </script>
+
+    <!-- X Ads conversion tracking base code -->
+    <script>
+      !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments)},s.version="1.1",s.queue=[],u=t.createElement(n),u.async=!0,u.src="https://static.ads-twitter.com/uwt.js",a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,"script");
+      // Three pixels, three ads accounts — see shared/x-capi.ts X_PIXEL_IDS.
+      // The sync test in tests/x-pixel.test.ts keeps these literals honest.
+      twq("config", "reepc");
+      twq("config", "reczr");
+      twq("config", "rf84d");
+    </script>
+
+    <!-- Meta Pixel base code. fbevents.js hooks pushState itself, so SPA route
+         changes fire PageView without react-router wiring. -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      // Automatic event detection labelled every button "SubscribedButtonClick";
+      // real funnel events are forwarded from src/lib/analytics/metaPixel.ts.
+      fbq('set', 'autoConfig', false, '2545109755937527');
+      fbq('init', '2545109755937527');
+      fbq('track', 'PageView');
+    </script>
+
+    <!-- TikTok Pixel base code. events.js hooks pushState itself (like
+         fbevents.js), so SPA route changes fire Pageview without react-router
+         wiring; funnel events are forwarded from
+         src/lib/analytics/tiktokPixel.ts. One ttq.load per pixel in
+         shared/tiktok-capi.ts TIKTOK_PIXEL_IDS; every global ttq call (page,
+         track, identify) fans out to each loaded pixel with the same
+         event_id (verified live 2026-09-10). The literals are pinned to
+         TIKTOK_PIXEL_IDS by tests/tiktok-pixel.test.ts. -->
+    <script>
+      !function (w, d, t) {
+        w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+      var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+      ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+
+        ttq.load('DAH7P8RC77UDHLL3QKVG');
+        ttq.page();
+      }(window, document, 'ttq');
+    </script>
+
+    <!-- rel=me for identity verification (Mastodon, IndieWeb) -->
+    <link rel="me" href="https://x.com/notsurajgaud" />
+    <link rel="me" href="https://github.com/suraj-xd" />
+    <link rel="author" href="https://x.com/notsurajgaud" />
+
+    <!-- Sitemap -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Fanout Daily papers" href="/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Fanout blog" href="/blog/feed.xml" />
+    <link rel="alternate" type="text/plain" title="Fanout for language models" href="/llms.txt" />
+
+    <!-- Structured data — WebSite + Organization + Person. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://fanout.sh/#website",
+            "url": "https://fanout.sh/",
+            "name": "Fanout",
+            "description": "Mapped technical learning across AI research, system design, ML math, and inference engineering, with practical labs, daily papers, and roadmaps.",
+            "inLanguage": "en-US",
+            "publisher": { "@id": "https://fanout.sh/#org" }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://fanout.sh/#org",
+            "name": "Fanout",
+            "url": "https://fanout.sh/",
+            "logo": "https://fanout.sh/icon-512.png",
+            "description": "Technical learning for AI systems engineers, with structured courses, practical roadmaps, interactive labs, and source-led field notes.",
+            "knowsAbout": [
+              "AI research engineering",
+              "LLM inference engineering",
+              "Machine learning mathematics",
+              "System design"
+            ],
+            "founder": { "@id": "https://fanout.sh/#person" },
+            "brand": "Fanout",
+            "sameAs": [
+              "https://x.com/Fanoutdotsh",
+              "https://www.instagram.com/fanout.sh/"
+            ]
+          },
+          {
+            "@type": "Person",
+            "@id": "https://fanout.sh/#person",
+            "name": "Suraj Gaud",
+            "alternateName": "notsurajgaud",
+            "url": "https://surajgaud.com",
+            "sameAs": [
+              "https://x.com/notsurajgaud",
+              "https://github.com/suraj-xd"
+            ]
           }
-        }
-      });
-    }
-
-    function jumpToDesignStudio() {
-      const el = document.getElementById('design-system');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function updateLiveToken(varName, colorVal, labelId) {
-      document.documentElement.style.setProperty(varName, colorVal);
-      if (labelId && document.getElementById(labelId)) {
-        document.getElementById(labelId).innerText = colorVal.toUpperCase();
+        ]
       }
-      updateLiveCssCode();
-    }
+    </script>
 
-    function updateLiveCssCode() {
-      const getVal = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-      const css = ':root {\n' +
-        '  --bg-canvas: ' + getVal('--bg-canvas') + ';\n' +
-        '  --bg-surface: ' + getVal('--bg-surface') + ';\n' +
-        '  --brand: ' + getVal('--brand') + ';\n' +
-        '  --text-primary: ' + getVal('--text-primary') + ';\n' +
-        '  --stage-learn-solid: ' + getVal('--stage-learn-solid') + ';\n' +
-        '  --stage-practice-solid: ' + getVal('--stage-practice-solid') + ';\n' +
-        '  --stage-build-solid: ' + getVal('--stage-build-solid') + ';\n' +
-        '  --stage-prove-solid: ' + getVal('--stage-prove-solid') + ';\n' +
-        '}';
-      const el = document.getElementById('live-css-preview');
-      if (el) el.innerText = css;
-    }
+    <!-- Icon fonts are decorative; load them without delaying first paint. -->
+    <!-- Core subsets of the faces nearly every page renders (scripts/generate-webfonts.py).
+         Extended files load on demand through unicode-range. -->
+    <link rel="preload" href="/assets/OverusedGrotesk-Roman-core-Bdvro-z4.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/OverusedGrotesk-Medium-core-BPZFOhJr.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/OverusedGrotesk-SemiBold-core-z15TJaaJ.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/IBMPlexMono-Regular-core-BhwDdshb.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/IBMPlexMono-Medium-core-Cm2hjasA.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/DepartureMono-Regular-core-BG0_QVaz.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/phosphor-regular-d6b5dcdf2f.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="/assets/phosphor-fill-fc2384beef.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="/assets/phosphor-bold-0fc7c5b1b7.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript>
+      <link rel="stylesheet" href="/assets/phosphor-regular-d6b5dcdf2f.css" />
+      <link rel="stylesheet" href="/assets/phosphor-fill-fc2384beef.css" />
+      <link rel="stylesheet" href="/assets/phosphor-bold-0fc7c5b1b7.css" />
+    </noscript>
+    <script type="module" crossorigin src="/assets/index-CXfpSli5.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-BgaNhQyE.js">
+    <link rel="modulepreload" crossorigin href="/assets/courses-BfdxzLqa.js">
+    <link rel="modulepreload" crossorigin href="/assets/gift-links-ZewkrAX8.js">
+    <link rel="modulepreload" crossorigin href="/assets/dodoCurrency-DJAmdqii.js">
+    <link rel="modulepreload" crossorigin href="/assets/module-g1eYuniJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-C65L1HE3.js">
+    <link rel="modulepreload" crossorigin href="/assets/jsx-runtime-CIkHs51R.js">
+    <link rel="modulepreload" crossorigin href="/assets/dist-B84PheR_.js">
+    <link rel="modulepreload" crossorigin href="/assets/preload-helper-BfGapeCf.js">
+    <link rel="modulepreload" crossorigin href="/assets/datafast-B4-DpDB2.js">
+    <link rel="modulepreload" crossorigin href="/assets/api-CZnonzPU.js">
+    <link rel="modulepreload" crossorigin href="/assets/auth-CKFvb8-Z.js">
+    <link rel="modulepreload" crossorigin href="/assets/useActiveOffer-Cr7YoOeM.js">
+    <link rel="modulepreload" crossorigin href="/assets/dist-BXxUuVPX.js">
+    <link rel="modulepreload" crossorigin href="/assets/haptics-CImxe2gB.js">
+    <link rel="modulepreload" crossorigin href="/assets/PhIcon-C8YzW2Wq.js">
+    <link rel="modulepreload" crossorigin href="/assets/utils-40vLMUdz.js">
+    <link rel="modulepreload" crossorigin href="/assets/lucide-react-BhmvaPUY.js">
+    <link rel="modulepreload" crossorigin href="/assets/button-Db2QPobg.js">
+    <link rel="modulepreload" crossorigin href="/assets/brand-C2gbhl7g.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-DS65NBSq.js">
+    <link rel="modulepreload" crossorigin href="/assets/profile-bootstrap-BrHLLe3z.js">
+    <link rel="modulepreload" crossorigin href="/assets/subscription-CGNDjmrL.js">
+    <link rel="modulepreload" crossorigin href="/assets/dialog-BjiUTJbW.js">
+    <link rel="stylesheet" crossorigin href="/assets/brand-q-gmNaul.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-DCAXL5XB.css">
 
-    function applyPalettePreset(preset) {
-      if (preset === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        setTokenAndPicker('--bg-canvas', '#fafaf8', 'picker-bg-canvas', 'label-bg-canvas');
-        setTokenAndPicker('--bg-surface', '#ffffff', 'picker-bg-surface', 'label-bg-surface');
-        setTokenAndPicker('--brand', '#102f60', 'picker-brand', 'label-brand');
-        setTokenAndPicker('--action-primary-bg', '#102f60');
-        setTokenAndPicker('--text-primary', '#20252b', 'picker-text-primary', 'label-text-primary');
-        setTokenAndPicker('--stage-learn-solid', '#2458e8', 'picker-stage-learn', 'label-stage-learn');
-        setTokenAndPicker('--stage-practice-solid', '#c07824', 'picker-stage-practice', 'label-stage-practice');
-        setTokenAndPicker('--stage-build-solid', '#7156b5', 'picker-stage-build', 'label-stage-build');
-        setTokenAndPicker('--stage-prove-solid', '#167d66', 'picker-stage-prove', 'label-stage-prove');
-      } else if (preset === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        setTokenAndPicker('--bg-canvas', '#111315', 'picker-bg-canvas', 'label-bg-canvas');
-        setTokenAndPicker('--bg-surface', '#171a1d', 'picker-bg-surface', 'label-bg-surface');
-        setTokenAndPicker('--brand', '#a9c1f0', 'picker-brand', 'label-brand');
-        setTokenAndPicker('--action-primary-bg', '#e4ebfa');
-        setTokenAndPicker('--text-primary', '#ecede9', 'picker-text-primary', 'label-text-primary');
-        setTokenAndPicker('--stage-learn-solid', '#7e9cff', 'picker-stage-learn', 'label-stage-learn');
-        setTokenAndPicker('--stage-practice-solid', '#d9954a', 'picker-stage-practice', 'label-stage-practice');
-        setTokenAndPicker('--stage-build-solid', '#b09bec', 'picker-stage-build', 'label-stage-build');
-        setTokenAndPicker('--stage-prove-solid', '#4fc3a4', 'picker-stage-prove', 'label-stage-prove');
-      } else if (preset === 'nordic') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        setTokenAndPicker('--bg-canvas', '#f0f4f8', 'picker-bg-canvas', 'label-bg-canvas');
-        setTokenAndPicker('--bg-surface', '#ffffff', 'picker-bg-surface', 'label-bg-surface');
-        setTokenAndPicker('--brand', '#0b2545', 'picker-brand', 'label-brand');
-        setTokenAndPicker('--action-primary-bg', '#0b2545');
-        setTokenAndPicker('--text-primary', '#13293d', 'picker-text-primary', 'label-text-primary');
-        setTokenAndPicker('--stage-learn-solid', '#006494', 'picker-stage-learn', 'label-stage-learn');
-        setTokenAndPicker('--stage-practice-solid', '#d48c24', 'picker-stage-practice', 'label-stage-practice');
-        setTokenAndPicker('--stage-build-solid', '#5a4e8d', 'picker-stage-build', 'label-stage-build');
-        setTokenAndPicker('--stage-prove-solid', '#1f7a65', 'picker-stage-prove', 'label-stage-prove');
+    <!-- Pathwisse ProofOS v1.0 Design System Specification (from design.md) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style id="proofos-design-system">
+      /* ==========================================================================
+         Pathwisse ProofOS v1.0 — Semantic Design System Tokens
+         Strictly preserves 100% of Fanout product structure, layout & functionality.
+         Refreshes: Colors, Typography, Spacing, Borders, Radii, and Elevation.
+         ========================================================================== */
+
+      :root {
+        /* ---- Reference Palette Primitives (Light) (§2.2, §3.1) ---- */
+        --ref-paper-50: #fafaf8;
+        --ref-paper-100: #f4f4f0;
+        --ref-paper-200: #eeeee8;
+        --ref-paper-300: #e6e6df;
+        --ref-paper-400: #d9d9d0;
+        --ref-paper-600: #8c8c82;
+        --ref-white: #ffffff;
+        --ref-ink-900: #20252b;
+        --ref-ink-700: #444c56;
+        --ref-ink-500: #636b75;
+        --ref-ink-300: #a4aab2;
+        --ref-navy-900: #102f60;
+        --ref-navy-950: #0a2147;
+        --ref-navy-50: #e9eef7;
+        --ref-blue-600: #2458e8;
+        --ref-blue-50: #edf2fe;
+        --ref-blue-200: #c4d3fa;
+        --ref-green-600: #167d66;
+        --ref-green-700: #126a55;
+        --ref-green-50: #e7f4f0;
+        --ref-green-200: #b3dccf;
+        --ref-purple-600: #7156b5;
+        --ref-purple-50: #f1eef9;
+        --ref-purple-200: #d3c8ec;
+        --ref-amber-600: #c07824;
+        --ref-amber-800: #8f5510;
+        --ref-amber-50: #fbf1e3;
+        --ref-amber-200: #efd3a8;
+        --ref-red-700: #b3261e;
+        --ref-red-50: #fcecea;
+        --ref-red-200: #f0bdb8;
+
+        /* ---- Fanout Core Theme Variable Mapping (Light Ground) ---- */
+        --ga-bg: var(--ref-paper-50) !important;
+        --ga-surface: var(--ref-white) !important;
+        --ga-sidebar: var(--ref-paper-100) !important;
+        --ga-hover: var(--ref-paper-200) !important;
+        --ga-chip: var(--ref-paper-100) !important;
+        --ga-divider: var(--ref-paper-300) !important;
+        --ga-border: var(--ref-paper-400) !important;
+        --ga-border-strong: var(--ref-ink-300) !important;
+
+        --ga-ink-900: var(--ref-ink-900) !important;
+        --ga-ink-800: var(--ref-ink-900) !important;
+        --ga-ink-700: var(--ref-ink-700) !important;
+        --ga-ink-600: var(--ref-ink-500) !important;
+        --ga-ink-500: var(--ref-ink-500) !important;
+        --ga-ink-400: var(--ref-ink-300) !important;
+        --ga-ink-300: var(--ref-ink-300) !important;
+        --ga-ink-200: var(--ref-paper-400) !important;
+        --ga-ink-100: var(--ref-paper-300) !important;
+        --ga-ink-50: var(--ref-paper-50) !important;
+
+        --ga-fg1: var(--ref-ink-900) !important;
+        --ga-fg2: var(--ref-ink-700) !important;
+        --ga-fg3: var(--ref-ink-500) !important;
+        --ga-fg-inv: var(--ref-white) !important;
+
+        /* The 5-Stage ProofOS Progression Palette (§2.1) */
+        --ga-cat-blue: var(--ref-blue-600) !important;       /* Stage 01 Learn */
+        --ga-cat-orange: var(--ref-amber-600) !important;    /* Stage 02 Practice */
+        --ga-warning: var(--ref-amber-600) !important;
+        --ga-cat-purple: var(--ref-purple-600) !important;   /* Stage 03 Build */
+        --ga-course-access: var(--ref-navy-900) !important;  /* Stage 04 Review / Brand */
+        --ga-course-access-bg: var(--ref-navy-50) !important;
+        --ga-cat-green: var(--ref-green-600) !important;     /* Stage 05 Prove */
+        --ga-status-online: var(--ref-green-600) !important;
+        --ga-success: var(--ref-green-600) !important;
+        --ga-cat-red: var(--ref-red-700) !important;         /* Danger / Error */
+        --ga-danger: var(--ref-red-700) !important;
+        --ga-info: var(--ref-blue-600) !important;
+
+        --primary: var(--ref-navy-900) !important;
+        --primary-foreground: var(--ref-white) !important;
+        --background: var(--ref-paper-50) !important;
+        --foreground: var(--ref-ink-900) !important;
+        --card: var(--ref-white) !important;
+        --card-foreground: var(--ref-ink-900) !important;
+        --border: var(--ref-paper-300) !important;
+        --input: var(--ref-paper-400) !important;
+        --ring: var(--ref-blue-600) !important;
+
+        /* ---- Typography (§2.3) ---- */
+        --ga-font-sans: "Geist Variable", "Geist", "Overused Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif !important;
+        --ga-font-mono: "Geist Mono Variable", "Geist Mono", "IBM Plex Mono", ui-monospace, monospace !important;
+        --ga-font-departure: "Geist Mono Variable", "Geist Mono", "Departure Mono", monospace !important;
+
+        /* ---- Geometry & Spacing (§2.4, §2.5) ---- */
+        --ga-r-xs: 2px !important;
+        --ga-r-sm: 6px !important;
+        --ga-r-md: 8px !important;
+        --ga-r-lg: 8px !important;
+        --ga-r-xl: 8px !important;
+        --radius: 8px !important;
+
+        /* Borders first, subtle elevation (§2.6) */
+        --ga-shadow-sm: 0 1px 0 rgb(16 47 96 / 0.05) !important;
+        --ga-shadow-md: 0 1px 0 rgb(16 47 96 / 0.06), 0 2px 4px rgb(16 47 96 / 0.03) !important;
+        --ga-shadow-lg: 0 12px 32px -12px rgb(16 24 40 / 0.18), 0 2px 6px -2px rgb(16 24 40 / 0.08) !important;
+
+        --ga-topbar-glass: #fafaf8e6 !important;
+        --ga-panel-glass: #fffffff0 !important;
       }
-      updateLiveCssCode();
-    }
 
-    function setTokenAndPicker(varName, val, pickerId, labelId) {
-      document.documentElement.style.setProperty(varName, val);
-      if (pickerId && document.getElementById(pickerId)) document.getElementById(pickerId).value = val;
-      if (labelId && document.getElementById(labelId)) document.getElementById(labelId).innerText = val.toUpperCase();
-    }
+      /* ---- Dark Theme (Warm-neutral charcoal ground) (§3.1, §8) ---- */
+      .dark, [data-theme="dark"] {
+        --ref-paper-50: #111315 !important;
+        --ref-paper-100: #1a1d20 !important;
+        --ref-paper-200: #212529 !important;
+        --ref-paper-300: #2a2f34 !important;
+        --ref-paper-400: #343a40 !important;
+        --ref-paper-600: #7b838c !important;
+        --ref-white: #171a1d !important;
+        --ref-ink-900: #ecede9 !important;
+        --ref-ink-700: #b9bec5 !important;
+        --ref-ink-500: #8f96a0 !important;
+        --ref-ink-300: #565d66 !important;
+        --ref-navy-900: #a9c1f0 !important;
+        --ref-navy-950: #c4d5f6 !important;
+        --ref-navy-50: #18233b !important;
+        --ref-blue-600: #7e9cff !important;
+        --ref-blue-50: #172041 !important;
+        --ref-blue-200: #2c3e78 !important;
+        --ref-green-600: #4fc3a4 !important;
+        --ref-green-700: #4fc3a4 !important;
+        --ref-green-50: #112a25 !important;
+        --ref-green-200: #1f5a4d !important;
+        --ref-purple-600: #b09bec !important;
+        --ref-purple-50: #231d3a !important;
+        --ref-purple-200: #46397a !important;
+        --ref-amber-600: #d9954a !important;
+        --ref-amber-800: #e5ab6a !important;
+        --ref-amber-50: #2d2112 !important;
+        --ref-amber-200: #6a4a1f !important;
+        --ref-red-700: #f08a82 !important;
+        --ref-red-50: #301816 !important;
+        --ref-red-200: #6b2e2a !important;
 
-    function resetPaletteToDefault() {
-      applyPalettePreset('light');
-    }
+        --ga-bg: #111315 !important;
+        --ga-surface: #171a1d !important;
+        --ga-sidebar: #1a1d20 !important;
+        --ga-hover: #212529 !important;
+        --ga-chip: #212529 !important;
+        --ga-divider: #2a2f34 !important;
+        --ga-border: #343a40 !important;
+        --ga-border-strong: #565d66 !important;
 
-    function copyHex(hex, tokenName) {
-      navigator.clipboard.writeText(hex);
-      alert('Copied ' + tokenName + ': ' + hex + ' to clipboard!');
-    }
+        --ga-fg1: #ecede9 !important;
+        --ga-fg2: #b9bec5 !important;
+        --ga-fg3: #8f96a0 !important;
+        --ga-fg-inv: #111315 !important;
 
-    function copyGeneratedCss() {
-      const getVal = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-      const css = '/* Pathwisse ProofOS v1.0 Generated Palette */\n:root {\n' +
-        '  --bg-canvas: ' + getVal('--bg-canvas') + ';\n' +
-        '  --bg-surface: ' + getVal('--bg-surface') + ';\n' +
-        '  --brand: ' + getVal('--brand') + ';\n' +
-        '  --text-primary: ' + getVal('--text-primary') + ';\n' +
-        '  --stage-learn-solid: ' + getVal('--stage-learn-solid') + ';\n' +
-        '  --stage-practice-solid: ' + getVal('--stage-practice-solid') + ';\n' +
-        '  --stage-build-solid: ' + getVal('--stage-build-solid') + ';\n' +
-        '  --stage-prove-solid: ' + getVal('--stage-prove-solid') + ';\n' +
-        '}';
-      navigator.clipboard.writeText(css);
-      const status = document.getElementById('css-copy-status');
-      if (status) {
-        status.classList.remove('hidden');
-        setTimeout(() => status.classList.add('hidden'), 2500);
+        --ga-cat-blue: #7e9cff !important;
+        --ga-cat-orange: #d9954a !important;
+        --ga-warning: #d9954a !important;
+        --ga-cat-purple: #b09bec !important;
+        --ga-cat-green: #4fc3a4 !important;
+        --ga-success: #4fc3a4 !important;
+        --ga-cat-red: #f08a82 !important;
+        --ga-danger: #f08a82 !important;
+        --ga-info: #7e9cff !important;
+        --ga-course-access: #a9c1f0 !important;
+        --ga-course-access-bg: #18233b !important;
+
+        --primary: #e4ebfa !important;
+        --primary-foreground: #0b1f40 !important;
+        --background: #111315 !important;
+        --foreground: #ecede9 !important;
+        --card: #171a1d !important;
+        --card-foreground: #ecede9 !important;
+        --border: #2a2f34 !important;
+        --input: #343a40 !important;
+        --ring: #7e9cff !important;
+
+        --ga-topbar-glass: #111315e6 !important;
+        --ga-panel-glass: #171a1df5 !important;
       }
-    }
 
-    function downloadTokensCss() {
-      const getVal = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-      const css = '/* Pathwisse ProofOS v1.0 Generated Tokens */\n:root {\n' +
-        '  --bg-canvas: ' + getVal('--bg-canvas') + ';\n' +
-        '  --bg-surface: ' + getVal('--bg-surface') + ';\n' +
-        '  --brand: ' + getVal('--brand') + ';\n' +
-        '  --text-primary: ' + getVal('--text-primary') + ';\n' +
-        '  --stage-learn-solid: ' + getVal('--stage-learn-solid') + ';\n' +
-        '  --stage-practice-solid: ' + getVal('--stage-practice-solid') + ';\n' +
-        '  --stage-build-solid: ' + getVal('--stage-build-solid') + ';\n' +
-        '  --stage-prove-solid: ' + getVal('--stage-prove-solid') + ';\n' +
-        '}';
-      const blob = new Blob([css], { type: 'text/css' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'tokens.css';
-      a.click();
-    }
+      /* ---- Visual Styling Polish (§1.2, §2.3) ---- */
+      body {
+        background-color: var(--ga-bg) !important;
+        color: var(--ga-fg1) !important;
+        font-family: var(--ga-font-sans) !important;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
 
+      /* Tactile commit button press feedback (§4.1) */
+      button:active, .btn:active {
+        transform: translateY(1px);
+      }
+    </style>
 
-    // Initialize
-    updateGpuCalc();
-    recalculateReadiness();
-  </script>
-</body>
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W7BVZPQV"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <!-- Meta Pixel no-JS fallback; img is not valid inside a head noscript. -->
+    <noscript><img height="1" width="1" style="display:none" alt=""
+      src="https://www.facebook.com/tr?id=2545109755937527&ev=PageView&noscript=1"
+    /></noscript>
+    <div id="root">
+      <!-- fanout:route-heading:start -->
+      <h1 class="sr-only" data-fanout-static-route>Mapped technical learning across AI research, system design, and ML math</h1>
+      <nav class="sr-only" aria-label="Fanout site directory" data-fanout-static-route><h2>Explore Fanout</h2><ul><li><a href="/">Fanout home</a></li><li><a href="/ai">Fanout AI Research Course &amp; Roadmap</a></li><li><a href="/system">System Design Course: Concepts, Cases and Builds</a></li><li><a href="/ml-math">Machine Learning Mathematics Course</a></li><li><a href="/math-decoder">Math Decoder for AI Research Papers</a></li><li><a href="/inference-eng">Inference Engineering Course</a></li><li><a href="/open-robotics">Open Robotics</a></li><li><a href="/labs">Interactive AI and System Design Labs</a></li><li><a href="/labs/math-decoder">Mathematical Notation Library</a></li><li><a href="/daily">AI Research Papers Explained Daily</a></li><li><a href="/blog">Fanout blog: AI, systems and ML engineering</a></li><li><a href="/roadmaps">AI, system design &amp; ML math roadmaps</a></li><li><a href="/tools">Tools for technical work</a></li><li><a href="/knowledge-graph">Knowledge Topography</a></li><li><a href="/study-with-me">Study With Me</a></li><li><a href="/pricing">Fanout Course Pricing: AI, Systems and ML Math</a></li></ul></nav>
+      <!-- fanout:route-heading:end -->
+    </div>
+    <script>
+      // Ask for regional prices now, while the app bundle is still downloading,
+      // so they are ready when the pricing UI mounts. Consumed once by
+      // src/features/pricing/pricingQuoteClient.ts; harmless if never used.
+      (function () {
+        try {
+          var path = location.pathname;
+          if (path !== "/" && path !== "/pricing") return;
+          var currency =
+            new URLSearchParams(location.search).get("currency") === "usd"
+              ? "usd"
+              : "local";
+          window.__fanoutEarlyQuote = {
+            currency: currency,
+            startedAt: Date.now(),
+            response: fetch(
+              "/api/checkout?surface=pricing-quote&currency=" + currency,
+              { credentials: "same-origin" }
+            ).catch(function () {
+              return null;
+            }),
+          };
+        } catch (error) {}
+      })();
+    </script>
+  </body>
 </html>
