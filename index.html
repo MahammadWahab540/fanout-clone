@@ -314,7 +314,7 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-blue-100 selection:text-blue-900">
+<body class="min-h-screen flex flex-col selection:bg-[var(--bg-selected)] selection:text-[var(--text-primary)]">
 
   <!-- ========================================================================= -->
   <!-- 1. GLOBAL NAVIGATION SHELL                                                -->
@@ -345,6 +345,7 @@
         <a href="#labs" class="px-2.5 py-1 rounded-[var(--radius-control)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors">Practice Labs</a>
         <a href="#curriculum" class="px-2.5 py-1 rounded-[var(--radius-control)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors">Curricula</a>
         <a href="#institutions" class="px-2.5 py-1 rounded-[var(--radius-control)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors">Institutions</a>
+        <a href="#design-system" class="px-2.5 py-1 rounded-[var(--radius-control)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[var(--stage-prove-solid)]"></span><span>Design Studio</span></a>
       </nav>
 
       <!-- Right CTAs & Tools -->
@@ -358,6 +359,10 @@
         </button>
 
         <!-- Theme Toggle -->
+        <button onclick="jumpToDesignStudio()" class="p-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] transition-colors flex items-center gap-1" title="Design System Studio">
+          <svg class="w-3.5 h-3.5 text-[var(--stage-learn-solid)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4 4 4 0 014-4c.48 0 .93.08 1.35.23L15.65 6.9a2 2 0 112.83 2.83l-6.33 7.3A4 4 0 017 21z"></path></svg>
+          <span class="text-[11px] font-mono hidden lg:inline">Tokens</span>
+        </button>
         <button onclick="toggleProofOSTheme()" class="p-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] transition-colors" title="Toggle theme">
           <svg id="theme-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
         </button>
@@ -1132,6 +1137,564 @@
   </section>
 
   <!-- ========================================================================= -->
+  <!-- 7. PROOFOS DESIGN SYSTEM & COLOR PALETTE WORKBENCH (§2, §3, §4)           -->
+  <!-- ========================================================================= -->
+  <section id="design-system" class="py-14 border-b border-[var(--border-hairline)] bg-[var(--bg-canvas)]">
+    <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
+      
+      <!-- Section Index Header (§1.5) -->
+      <div class="ruled-header flex items-center justify-between">
+        <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--text-tertiary)]">07 / Design System &amp; Color Palette Studio</span>
+        <div class="flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-[var(--stage-prove-solid)] animate-pulse"></span>
+          <span class="text-[11px] font-mono text-[var(--stage-prove-solid)] font-medium">Specification: design.md v1.0 · Live Token Studio</span>
+        </div>
+      </div>
+
+      <!-- Title & Intro -->
+      <div class="mb-10 max-w-2xl">
+        <h2 class="text-2xl sm:text-3xl font-semibold text-[var(--text-primary)] tracking-tight">
+          ProofOS Design System Studio &amp; Live Palette Workbench
+        </h2>
+        <p class="text-xs sm:text-sm text-[var(--text-secondary)] mt-2 leading-relaxed">
+          ProofOS is an editorial, Swiss-inspired interface system designed around capability and evidence.
+          Use this interactive studio to inspect every reference token, verify WCAG 2.2 contrast compliance, test the 5-stage Proof Cell ladder, or customize the active color palette in real time.
+        </p>
+      </div>
+
+      <!-- Quick Switcher Tabs for Design System Exploration -->
+      <div class="flex items-center gap-2 pb-4 mb-6 border-b border-[var(--border-hairline)] overflow-x-auto">
+        <button onclick="switchDsTab('palette')" id="ds-tab-palette" class="px-3 py-1.5 rounded-[var(--radius-control)] bg-[var(--brand)] text-white text-xs font-medium transition-all">
+          🎨 Live Palette Customizer
+        </button>
+        <button onclick="switchDsTab('swatches')" id="ds-tab-swatches" class="px-3 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all">
+          📋 Reference Palette Swatches
+        </button>
+        <button onclick="switchDsTab('ladder')" id="ds-tab-ladder" class="px-3 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all">
+          🪜 5-Stage Proof Cell Ladder
+        </button>
+        <button onclick="switchDsTab('contrast')" id="ds-tab-contrast" class="px-3 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all">
+          ⚖️ Contrast Matrix (WCAG 2.2)
+        </button>
+        <button onclick="switchDsTab('geometry')" id="ds-tab-geometry" class="px-3 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all">
+          📐 Geometry &amp; Elevation
+        </button>
+      </div>
+
+      <!-- TAB 1: LIVE COLOR PALETTE CUSTOMIZER -->
+      <div id="ds-panel-palette" class="space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Left: Controls & Pickers -->
+          <div class="lg:col-span-6 space-y-5 p-5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] shadow-[var(--shadow-raised)]">
+            <div class="flex items-center justify-between pb-3 border-b border-[var(--border-hairline)]">
+              <div>
+                <span class="text-[10px] font-mono text-[var(--text-tertiary)] uppercase block">PALETTE WORKBENCH</span>
+                <h3 class="text-sm font-semibold text-[var(--text-primary)]">Real-Time Token Modifiers</h3>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button onclick="applyPalettePreset('light')" class="px-2 py-0.5 rounded-[var(--radius-control)] text-[10px] font-mono border border-[var(--border-default)] hover:bg-[var(--bg-subtle)] text-[var(--text-secondary)]">Light</button>
+                <button onclick="applyPalettePreset('dark')" class="px-2 py-0.5 rounded-[var(--radius-control)] text-[10px] font-mono border border-[var(--border-default)] hover:bg-[var(--bg-subtle)] text-[var(--text-secondary)]">Dark</button>
+                <button onclick="applyPalettePreset('nordic')" class="px-2 py-0.5 rounded-[var(--radius-control)] text-[10px] font-mono border border-[var(--border-default)] hover:bg-[var(--bg-subtle)] text-[var(--text-secondary)]">Nordic</button>
+                <button onclick="resetPaletteToDefault()" class="px-2 py-0.5 rounded-[var(--radius-control)] text-[10px] font-mono bg-[var(--bg-subtle)] hover:bg-[var(--bg-inset)] text-[var(--text-primary)] font-medium">Reset</button>
+              </div>
+            </div>
+
+            <!-- Color Inputs Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              
+              <!-- Canvas Background -->
+              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">--bg-canvas (Ground)</span>
+                  <span id="label-bg-canvas" class="font-mono text-xs text-[var(--text-primary)] font-semibold">#FAFAF8</span>
+                </div>
+                <input type="color" id="picker-bg-canvas" value="#fafaf8" onchange="updateLiveToken('--bg-canvas', this.value, 'label-bg-canvas')" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
+              </div>
+
+              <!-- Card Surface -->
+              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">--bg-surface (Cards)</span>
+                  <span id="label-bg-surface" class="font-mono text-xs text-[var(--text-primary)] font-semibold">#FFFFFF</span>
+                </div>
+                <input type="color" id="picker-bg-surface" value="#ffffff" onchange="updateLiveToken('--bg-surface', this.value, 'label-bg-surface')" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
+              </div>
+
+              <!-- Brand Navy Primary Action -->
+              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">--brand (Navy Action)</span>
+                  <span id="label-brand" class="font-mono text-xs text-[var(--text-primary)] font-semibold">#102F60</span>
+                </div>
+                <input type="color" id="picker-brand" value="#102f60" onchange="updateLiveToken('--brand', this.value, 'label-brand'); updateLiveToken('--action-primary-bg', this.value);" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
+              </div>
+
+              <!-- Text Primary Ink -->
+              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">--text-primary (Ink)</span>
+                  <span id="label-text-primary" class="font-mono text-xs text-[var(--text-primary)] font-semibold">#20252B</span>
+                </div>
+                <input type="color" id="picker-text-primary" value="#20252b" onchange="updateLiveToken('--text-primary', this.value, 'label-text-primary')" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
+              </div>
+
+              <!-- Stage 01 Learn (Blue) -->
+              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">01 Learn (--stage-learn-solid)</span>
+                  <span id="label-stage-learn" class="font-mono text-xs text-[var(--stage-learn-solid)] font-semibold">#2458E8</span>
+                </div>
+                <input type="color" id="picker-stage-learn" value="#2458e8" onchange="updateLiveToken('--stage-learn-solid', this.value, 'label-stage-learn'); updateLiveToken('--stage-learn-text', this.value);" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
+              </div>
+
+              <!-- Stage 02 Practice (Amber) -->
+              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">02 Practice (--stage-practice-solid)</span>
+                  <span id="label-stage-practice" class="font-mono text-xs text-[var(--stage-practice-solid)] font-semibold">#C07824</span>
+                </div>
+                <input type="color" id="picker-stage-practice" value="#c07824" onchange="updateLiveToken('--stage-practice-solid', this.value, 'label-stage-practice')" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
+              </div>
+
+              <!-- Stage 03 Build (Purple) -->
+              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">03 Build (--stage-build-solid)</span>
+                  <span id="label-stage-build" class="font-mono text-xs text-[var(--stage-build-solid)] font-semibold">#7156B5</span>
+                </div>
+                <input type="color" id="picker-stage-build" value="#7156b5" onchange="updateLiveToken('--stage-build-solid', this.value, 'label-stage-build'); updateLiveToken('--stage-build-text', this.value);" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
+              </div>
+
+              <!-- Stage 05 Prove (Green) -->
+              <div class="p-2.5 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">05 Prove (--stage-prove-solid)</span>
+                  <span id="label-stage-prove" class="font-mono text-xs text-[var(--stage-prove-solid)] font-semibold">#167D66</span>
+                </div>
+                <input type="color" id="picker-stage-prove" value="#167d66" onchange="updateLiveToken('--stage-prove-solid', this.value, 'label-stage-prove')" class="w-8 h-8 rounded-[var(--radius-control)] border border-[var(--border-default)] cursor-pointer bg-transparent">
+              </div>
+
+            </div>
+
+            <!-- Export Buttons -->
+            <div class="pt-2 flex items-center gap-3">
+              <button onclick="copyGeneratedCss()" class="btn-proof-primary px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5">
+                <span>📋 Copy CSS Tokens</span>
+              </button>
+              <button onclick="downloadTokensCss()" class="btn-proof-secondary px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5">
+                <span>⬇ Download tokens.css</span>
+              </button>
+            </div>
+            
+            <span id="css-copy-status" class="text-[11px] font-mono text-[var(--stage-prove-solid)] hidden block">✓ CSS variables copied to clipboard!</span>
+          </div>
+
+          <!-- Right: Live Responsive Preview of Components -->
+          <div class="lg:col-span-6 space-y-4">
+            
+            <div class="p-5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] shadow-[var(--shadow-raised)] notched-verified">
+              <div class="flex items-center justify-between pb-3 border-b border-[var(--border-hairline)]">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-[var(--text-tertiary)]">LIVE NOTCHED CARD PREVIEW</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-[var(--radius-control)] bg-[var(--stage-prove-tint)] text-[var(--stage-prove-text)] font-semibold border border-[var(--stage-prove-line)]">
+                  Verified Mark (Notch Active)
+                </span>
+              </div>
+
+              <div class="py-4 space-y-2">
+                <h4 class="text-base font-semibold text-[var(--text-primary)]">ProofOS Component Sandbox</h4>
+                <p class="text-xs text-[var(--text-secondary)] leading-relaxed">
+                  Every element on this screen is reactively bound to your live color variables. Notice how hairline borders, subtle tints, and tactile press edges adapt in harmony.
+                </p>
+              </div>
+
+              <!-- Live Buttons Demo -->
+              <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-[var(--border-hairline)]">
+                <button class="btn-proof-primary px-3 py-1.5 text-xs font-semibold">Primary Commit</button>
+                <button class="btn-proof-secondary px-3 py-1.5 text-xs font-semibold">Secondary Action</button>
+                <span class="proof-cell bg-[var(--stage-learn-solid)] text-white">01</span>
+                <span class="proof-cell bg-[var(--stage-practice-tint)] text-[var(--stage-practice-text)] border-[var(--stage-practice-solid)]">02</span>
+                <span class="proof-cell bg-[var(--stage-build-tint)] text-[var(--stage-build-solid)] border-[var(--stage-build-line)]">03</span>
+                <span class="proof-cell bg-[var(--stage-review-solid)] text-white">04</span>
+                <span class="proof-cell bg-[var(--stage-prove-solid)] text-white">✓</span>
+              </div>
+            </div>
+
+            <!-- Code Preview Box -->
+            <div class="p-4 rounded-[var(--radius-surface)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] font-mono text-[11px] text-[var(--text-secondary)]">
+              <span class="text-[10px] uppercase text-[var(--text-tertiary)] block mb-1.5 font-bold">// Active Root Tokens Cascade</span>
+              <pre id="live-css-preview" class="overflow-x-auto text-[11px] leading-relaxed text-[var(--text-primary)]">:root {
+  --bg-canvas: #fafaf8;
+  --bg-surface: #ffffff;
+  --brand: #102f60;
+  --text-primary: #20252b;
+  --stage-learn-solid: #2458e8;
+  --stage-practice-solid: #c07824;
+  --stage-build-solid: #7156b5;
+  --stage-prove-solid: #167d66;
+}</pre>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAB 2: REFERENCE PALETTE PRIMITIVES SWATCHES -->
+      <div id="ds-panel-swatches" class="hidden space-y-6">
+        
+        <!-- Paper Primitives -->
+        <div>
+          <span class="text-xs font-mono font-semibold uppercase text-[var(--text-tertiary)] block mb-3">Paper Series (Ground, Canvas &amp; Inset Surfaces)</span>
+          <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
+            <div onclick="copyHex('#fafaf8', '--ref-paper-50')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
+              <div class="w-full h-12 rounded-[var(--radius-control)] border border-[#d9d9d0] mb-2" style="background-color: #fafaf8;"></div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Paper 50</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#FAFAF8</span>
+              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Canvas Ground</span>
+            </div>
+            <div onclick="copyHex('#f4f4f0', '--ref-paper-100')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
+              <div class="w-full h-12 rounded-[var(--radius-control)] border border-[#d9d9d0] mb-2" style="background-color: #f4f4f0;"></div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Paper 100</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#F4F4F0</span>
+              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Subtle Surface</span>
+            </div>
+            <div onclick="copyHex('#eeeee8', '--ref-paper-200')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
+              <div class="w-full h-12 rounded-[var(--radius-control)] border border-[#d9d9d0] mb-2" style="background-color: #eeeee8;"></div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Paper 200</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#EEEEE8</span>
+              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Inset Ground</span>
+            </div>
+            <div onclick="copyHex('#e6e6df', '--ref-paper-300')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
+              <div class="w-full h-12 rounded-[var(--radius-control)] border border-[#d9d9d0] mb-2" style="background-color: #e6e6df;"></div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Paper 300</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#E6E6DF</span>
+              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Hairline Border</span>
+            </div>
+            <div onclick="copyHex('#d9d9d0', '--ref-paper-400')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
+              <div class="w-full h-12 rounded-[var(--radius-control)] border border-[#d9d9d0] mb-2" style="background-color: #d9d9d0;"></div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Paper 400</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#D9D9D0</span>
+              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Default Border</span>
+            </div>
+            <div onclick="copyHex('#8c8c82', '--ref-paper-600')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
+              <div class="w-full h-12 rounded-[var(--radius-control)] mb-2" style="background-color: #8c8c82;"></div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Paper 600</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#8C8C82</span>
+              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Control Border</span>
+            </div>
+            <div onclick="copyHex('#ffffff', '--ref-white')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
+              <div class="w-full h-12 rounded-[var(--radius-control)] border border-[#d9d9d0] mb-2" style="background-color: #ffffff;"></div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Pure White</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#FFFFFF</span>
+              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Card Surface</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ink Primitives -->
+        <div>
+          <span class="text-xs font-mono font-semibold uppercase text-[var(--text-tertiary)] block mb-3">Ink Series (Typography &amp; Contrast Hierarchy)</span>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div onclick="copyHex('#20252b', '--ref-ink-900')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
+              <div class="w-full h-12 rounded-[var(--radius-control)] mb-2" style="background-color: #20252b;"></div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Ink 900</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#20252B</span>
+              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Primary Charcoal</span>
+            </div>
+            <div onclick="copyHex('#444c56', '--ref-ink-700')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
+              <div class="w-full h-12 rounded-[var(--radius-control)] mb-2" style="background-color: #444c56;"></div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Ink 700</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#444C56</span>
+              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Secondary Text</span>
+            </div>
+            <div onclick="copyHex('#636b75', '--ref-ink-500')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
+              <div class="w-full h-12 rounded-[var(--radius-control)] mb-2" style="background-color: #636b75;"></div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Ink 500</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#636B75</span>
+              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Tertiary &amp; Mono</span>
+            </div>
+            <div onclick="copyHex('#a4aab2', '--ref-ink-300')" class="swatch-card p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] cursor-pointer hover:border-[var(--border-strong)] transition-all">
+              <div class="w-full h-12 rounded-[var(--radius-control)] mb-2" style="background-color: #a4aab2;"></div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Ink 300</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#A4AAB2</span>
+              <span class="text-[9px] font-mono text-[var(--stage-learn-solid)] block mt-0.5">Disabled &amp; Strong Rule</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 Stages Series -->
+        <div>
+          <span class="text-xs font-mono font-semibold uppercase text-[var(--text-tertiary)] block mb-3">The 5 Stage Progression Ladders (§2.1)</span>
+          <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+            
+            <!-- Learn -->
+            <div class="p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
+              <div class="w-full h-10 rounded-[var(--radius-control)] mb-2 flex items-center justify-center font-bold text-white text-xs" style="background-color: #2458e8;">01 Learn</div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Blue 600</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#2458E8</span>
+              <div class="mt-2 space-y-1 text-[10px] font-mono">
+                <div class="p-1 rounded bg-[#edf2fe] text-[#2458e8] border border-[#c4d3fa]">Tint: #EDF2FE</div>
+                <div class="p-1 rounded bg-white text-[#2458e8] border border-[#c4d3fa]">Line: #C4D3FA</div>
+              </div>
+            </div>
+
+            <!-- Practice -->
+            <div class="p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
+              <div class="w-full h-10 rounded-[var(--radius-control)] mb-2 flex items-center justify-center font-bold text-white text-xs" style="background-color: #c07824;">02 Practice</div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Amber 600</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#C07824</span>
+              <div class="mt-2 space-y-1 text-[10px] font-mono">
+                <div class="p-1 rounded bg-[#fbf1e3] text-[#8f5510] border border-[#efd3a8]">Text: #8F5510</div>
+                <div class="p-1 rounded bg-[#fbf1e3] text-[#c07824] border border-[#efd3a8]">Tint: #FBF1E3</div>
+              </div>
+            </div>
+
+            <!-- Build -->
+            <div class="p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
+              <div class="w-full h-10 rounded-[var(--radius-control)] mb-2 flex items-center justify-center font-bold text-white text-xs" style="background-color: #7156b5;">03 Build</div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Purple 600</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#7156B5</span>
+              <div class="mt-2 space-y-1 text-[10px] font-mono">
+                <div class="p-1 rounded bg-[#f1eef9] text-[#7156b5] border border-[#d3c8ec]">Tint: #F1EEF9</div>
+                <div class="p-1 rounded bg-white text-[#7156b5] border border-[#d3c8ec]">Line: #D3C8EC</div>
+              </div>
+            </div>
+
+            <!-- Review -->
+            <div class="p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
+              <div class="w-full h-10 rounded-[var(--radius-control)] mb-2 flex items-center justify-center font-bold text-white text-xs" style="background-color: #102f60;">04 Review</div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Navy 900</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#102F60</span>
+              <div class="mt-2 space-y-1 text-[10px] font-mono">
+                <div class="p-1 rounded bg-[#e9eef7] text-[#102f60] border border-[#bccae3]">Tint: #E9EEF7</div>
+                <div class="p-1 rounded bg-white text-[#102f60] border border-[#bccae3]">Line: #BCCAE3</div>
+              </div>
+            </div>
+
+            <!-- Prove -->
+            <div class="p-3 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
+              <div class="w-full h-10 rounded-[var(--radius-control)] mb-2 flex items-center justify-center font-bold text-white text-xs" style="background-color: #167d66;">05 Prove ✓</div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">Green 600</span>
+              <span class="text-[10px] font-mono text-[var(--text-tertiary)] block">#167D66</span>
+              <div class="mt-2 space-y-1 text-[10px] font-mono">
+                <div class="p-1 rounded bg-[#e7f4f0] text-[#126a55] border border-[#b3dccf]">Text: #126A55</div>
+                <div class="p-1 rounded bg-[#e7f4f0] text-[#167d66] border border-[#b3dccf]">Tint: #E7F4F0</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TAB 3: 5-STAGE PROOF CELL LADDER (§4.2) -->
+      <div id="ds-panel-ladder" class="hidden space-y-6">
+        <div class="p-6 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
+          <div class="max-w-xl mb-6">
+            <h3 class="text-base font-semibold text-[var(--text-primary)]">The Proof Cell Atomic Mark &amp; Fill States</h3>
+            <p class="text-xs text-[var(--text-secondary)] mt-1">
+              The atomic progression mark: 24px square, 2px radius, 1px border. <strong>Shape</strong> indicates the stage; <strong>fill</strong> measures verified evidence.
+            </p>
+          </div>
+
+          <!-- The 5 Visual States -->
+          <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
+            
+            <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] text-center">
+              <div class="w-8 h-8 mx-auto mb-2 rounded-[2px] border border-dashed border-[var(--text-disabled)] flex items-center justify-center text-xs font-mono text-[var(--text-disabled)]">
+                –
+              </div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">locked</span>
+              <span class="text-[10px] text-[var(--text-tertiary)] block mt-0.5">Dashed border, empty</span>
+            </div>
+
+            <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] text-center">
+              <div class="w-8 h-8 mx-auto mb-2 rounded-[2px] border border-[var(--stage-learn-solid)] flex items-center justify-center text-xs font-mono text-[var(--stage-learn-solid)]">
+                ○
+              </div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">available</span>
+              <span class="text-[10px] text-[var(--text-tertiary)] block mt-0.5">Solid stage border</span>
+            </div>
+
+            <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] text-center">
+              <div class="w-8 h-8 mx-auto mb-2 rounded-[2px] border border-[var(--stage-practice-solid)] relative overflow-hidden flex items-center justify-center text-xs font-mono font-semibold text-[var(--stage-practice-text)]">
+                <div id="dynamic-cell-fill" class="absolute bottom-0 left-0 right-0 bg-[var(--stage-practice-tint)] border-t border-[var(--stage-practice-solid)] transition-all" style="height: 60%;"></div>
+                <span class="relative z-10">60%</span>
+              </div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">active</span>
+              <span class="text-[10px] text-[var(--text-tertiary)] block mt-0.5">Rises with progress</span>
+            </div>
+
+            <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] text-center">
+              <div class="w-8 h-8 mx-auto mb-2 rounded-[2px] border border-[var(--stage-build-solid)] bg-[var(--stage-build-tint)] flex items-center justify-center text-xs font-mono font-semibold text-[var(--stage-build-solid)]">
+                ■
+              </div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">done</span>
+              <span class="text-[10px] text-[var(--text-tertiary)] block mt-0.5">Learner completed</span>
+            </div>
+
+            <div class="p-4 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] text-center">
+              <div class="w-8 h-8 mx-auto mb-2 rounded-[2px] bg-[var(--stage-prove-solid)] notched-verified flex items-center justify-center text-xs font-mono font-bold text-white shadow-xs">
+                ✓
+              </div>
+              <span class="text-xs font-semibold block text-[var(--text-primary)]">verified</span>
+              <span class="text-[10px] text-[var(--text-tertiary)] block mt-0.5">Solid fill + The Notch</span>
+            </div>
+
+          </div>
+
+          <!-- Progress Slider for Active Cell -->
+          <div class="mt-6 pt-5 border-t border-[var(--border-hairline)] max-w-md">
+            <div class="flex items-center justify-between text-xs mb-1.5">
+              <label class="font-mono text-[var(--text-secondary)]">Simulate Active Cell Fill Progress:</label>
+              <span id="cell-fill-val" class="font-mono font-bold text-[var(--text-primary)]">60%</span>
+            </div>
+            <input type="range" min="12" max="100" value="60" oninput="document.getElementById('dynamic-cell-fill').style.height = this.value + '%'; document.getElementById('cell-fill-val').innerText = this.value + '%';" class="w-full h-1.5 bg-[var(--border-default)] rounded-[var(--radius-control)] accent-[var(--brand)]">
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: WCAG 2.2 CONTRAST MATRIX (§3.2) -->
+      <div id="ds-panel-contrast" class="hidden space-y-6">
+        <div class="p-6 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)] overflow-x-auto">
+          <div class="max-w-xl mb-4">
+            <h3 class="text-base font-semibold text-[var(--text-primary)]">WCAG 2.2 Strict Contrast Matrix</h3>
+            <p class="text-xs text-[var(--text-secondary)] mt-1">
+              Every token pair is verified to pass WCAG 2.2 AA (4.5:1 text, 3:1 graphical marks) and AAA (7:1 body text) in both Light and Dark themes.
+            </p>
+          </div>
+
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-[var(--border-hairline)] font-mono text-[10px] uppercase text-[var(--text-tertiary)]">
+                <th class="py-2.5">Pair</th>
+                <th class="py-2.5">Semantic Tokens</th>
+                <th class="py-2.5">Light Ratio</th>
+                <th class="py-2.5">Dark Ratio</th>
+                <th class="py-2.5">Standard</th>
+                <th class="py-2.5">Audit Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[var(--border-hairline)] font-mono">
+              <tr>
+                <td class="py-2.5 font-sans font-medium text-[var(--text-primary)]">Body on canvas</td>
+                <td class="py-2.5 text-[var(--text-secondary)]">--text-primary on --bg-canvas</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">14.77:1</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">15.83:1</td>
+                <td class="py-2.5 text-[var(--text-tertiary)]">7:1 (AAA)</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">✓ PASS</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 font-sans font-medium text-[var(--text-primary)]">Body on surface</td>
+                <td class="py-2.5 text-[var(--text-secondary)]">--text-primary on --bg-surface</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">15.43:1</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">14.86:1</td>
+                <td class="py-2.5 text-[var(--text-tertiary)]">7:1 (AAA)</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">✓ PASS</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 font-sans font-medium text-[var(--text-primary)]">Secondary on surface</td>
+                <td class="py-2.5 text-[var(--text-secondary)]">--text-secondary on --bg-surface</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">8.70:1</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">9.35:1</td>
+                <td class="py-2.5 text-[var(--text-tertiary)]">4.5:1 (AA)</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">✓ PASS</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 font-sans font-medium text-[var(--text-primary)]">Primary Action Button</td>
+                <td class="py-2.5 text-[var(--text-secondary)]">--action-primary-fg on --action-primary-bg</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">13.15:1</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">13.68:1</td>
+                <td class="py-2.5 text-[var(--text-tertiary)]">4.5:1 (AA)</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">✓ PASS</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 font-sans font-medium text-[var(--text-primary)]">01 Learn text on tint</td>
+                <td class="py-2.5 text-[var(--text-secondary)]">--stage-learn-text on --stage-learn-tint</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">5.15:1</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">6.13:1</td>
+                <td class="py-2.5 text-[var(--text-tertiary)]">4.5:1 (AA)</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">✓ PASS</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 font-sans font-medium text-[var(--text-primary)]">02 Practice text on tint</td>
+                <td class="py-2.5 text-[var(--text-secondary)]">--stage-practice-text on --stage-practice-tint</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">5.41:1</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">7.75:1</td>
+                <td class="py-2.5 text-[var(--text-tertiary)]">4.5:1 (AA)</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">✓ PASS</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 font-sans font-medium text-[var(--text-primary)]">05 Prove text on tint</td>
+                <td class="py-2.5 text-[var(--text-secondary)]">--stage-prove-text on --stage-prove-tint</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">5.78:1</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">7.00:1</td>
+                <td class="py-2.5 text-[var(--text-tertiary)]">4.5:1 (AA)</td>
+                <td class="py-2.5 text-[var(--stage-prove-solid)] font-bold">✓ PASS</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 5: GEOMETRY & ELEVATION RULES (§2.5, §2.6) -->
+      <div id="ds-panel-geometry" class="hidden space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <div class="p-5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
+            <span class="text-[10px] font-mono uppercase text-[var(--text-tertiary)] block mb-1">RULE 01: RADII</span>
+            <h4 class="text-sm font-semibold text-[var(--text-primary)]">Strict 2 / 6 / 8px Limits</h4>
+            <p class="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
+              Nothing in the system is fully round. Pills and radii above 8px are forbidden.
+            </p>
+            <div class="mt-4 space-y-2 text-xs font-mono">
+              <div class="p-2 rounded-[2px] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex justify-between">
+                <span>--radius-mark</span>
+                <span class="font-bold">2px</span>
+              </div>
+              <div class="p-2 rounded-[6px] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex justify-between">
+                <span>--radius-control</span>
+                <span class="font-bold">6px</span>
+              </div>
+              <div class="p-2 rounded-[8px] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] flex justify-between">
+                <span>--radius-surface</span>
+                <span class="font-bold">8px</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
+            <span class="text-[10px] font-mono uppercase text-[var(--text-tertiary)] block mb-1">RULE 02: TACTILE PRESS</span>
+            <h4 class="text-sm font-semibold text-[var(--text-primary)]">Physical 2px Edge Collapse</h4>
+            <p class="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
+              Commit actions physically depress. Primary actions translate 2px down, collapsing the lower edge.
+            </p>
+            <div class="mt-4">
+              <button class="btn-proof-primary w-full py-2 text-xs font-semibold">
+                Click &amp; Hold to Test Press (2px)
+              </button>
+            </div>
+          </div>
+
+          <div class="p-5 rounded-[var(--radius-surface)] bg-[var(--bg-surface)] border border-[var(--border-default)]">
+            <span class="text-[10px] font-mono uppercase text-[var(--text-tertiary)] block mb-1">RULE 03: THE NOTCH</span>
+            <h4 class="text-sm font-semibold text-[var(--text-primary)]">Verified Evidence Signature</h4>
+            <p class="text-xs text-[var(--text-secondary)] mt-1.5 leading-relaxed">
+              A 12px folded corner strictly reserved for third-party verified work. Never used as generic decoration.
+            </p>
+            <div class="mt-4 p-3 rounded-[var(--radius-control)] bg-[var(--bg-subtle)] border border-[var(--border-hairline)] notched-verified">
+              <span class="text-[11px] font-mono font-medium text-[var(--stage-prove-solid)]">✓ Notched Verification Edge</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
   <!-- 8. FOOTER: SWISS METADATA & LEGAL (§1.2)                                  -->
   <!-- ========================================================================= -->
   <footer class="mt-auto border-t border-[var(--border-hairline)] bg-[var(--bg-surface)] py-10 text-xs text-[var(--text-tertiary)]">
@@ -1162,6 +1725,7 @@
             <li><a href="#ladder" class="hover:underline">Capability Trail</a></li>
             <li><a href="#telemetry" class="hover:underline">Readiness Index</a></li>
             <li><a href="#labs" class="hover:underline">GPU Workbench</a></li>
+            <li><a href="#design-system" class="hover:underline text-[var(--stage-prove-solid)] font-medium">Design Studio & Palette</a></li>
           </ul>
         </div>
 
@@ -1278,6 +1842,10 @@
         <a href="#labs" onclick="toggleCommandPalette(); switchInstrument('decoder');" class="flex items-center justify-between p-2 rounded-[var(--radius-control)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)]">
           <span>Mathematical Notation Library</span>
           <span class="font-mono text-[10px] text-[var(--stage-learn-solid)]">Lab</span>
+        </a>
+        <a href="#design-system" onclick="toggleCommandPalette()" class="flex items-center justify-between p-2 rounded-[var(--radius-control)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)]">
+          <span class="font-medium text-[var(--stage-prove-solid)]">🎨 ProofOS Design System & Color Palette Studio</span>
+          <span class="font-mono text-[10px] text-[var(--text-tertiary)]">#design-system</span>
         </a>
         <a href="#curriculum" onclick="toggleCommandPalette()" class="flex items-center justify-between p-2 rounded-[var(--radius-control)] hover:bg-[var(--bg-subtle)] text-[var(--text-primary)]">
           <span>System Design & Inference Tracks</span>
@@ -1656,6 +2224,148 @@
         </div>
       `;
     }
+
+    // =========================================================================
+    // PROOFOS DESIGN SYSTEM & COLOR STUDIO CONTROLLER
+    // =========================================================================
+    function switchDsTab(tab) {
+      const tabs = ['palette', 'swatches', 'ladder', 'contrast', 'geometry'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('ds-tab-' + t);
+        const panel = document.getElementById('ds-panel-' + t);
+        if (btn && panel) {
+          if (t === tab) {
+            btn.className = "px-3 py-1.5 rounded-[var(--radius-control)] bg-[var(--brand)] text-white text-xs font-medium transition-all";
+            panel.classList.remove('hidden');
+          } else {
+            btn.className = "px-3 py-1.5 rounded-[var(--radius-control)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-all";
+            panel.classList.add('hidden');
+          }
+        }
+      });
+    }
+
+    function jumpToDesignStudio() {
+      const el = document.getElementById('design-system');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function updateLiveToken(varName, colorVal, labelId) {
+      document.documentElement.style.setProperty(varName, colorVal);
+      if (labelId && document.getElementById(labelId)) {
+        document.getElementById(labelId).innerText = colorVal.toUpperCase();
+      }
+      updateLiveCssCode();
+    }
+
+    function updateLiveCssCode() {
+      const getVal = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+      const css = ':root {\n' +
+        '  --bg-canvas: ' + getVal('--bg-canvas') + ';\n' +
+        '  --bg-surface: ' + getVal('--bg-surface') + ';\n' +
+        '  --brand: ' + getVal('--brand') + ';\n' +
+        '  --text-primary: ' + getVal('--text-primary') + ';\n' +
+        '  --stage-learn-solid: ' + getVal('--stage-learn-solid') + ';\n' +
+        '  --stage-practice-solid: ' + getVal('--stage-practice-solid') + ';\n' +
+        '  --stage-build-solid: ' + getVal('--stage-build-solid') + ';\n' +
+        '  --stage-prove-solid: ' + getVal('--stage-prove-solid') + ';\n' +
+        '}';
+      const el = document.getElementById('live-css-preview');
+      if (el) el.innerText = css;
+    }
+
+    function applyPalettePreset(preset) {
+      if (preset === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        setTokenAndPicker('--bg-canvas', '#fafaf8', 'picker-bg-canvas', 'label-bg-canvas');
+        setTokenAndPicker('--bg-surface', '#ffffff', 'picker-bg-surface', 'label-bg-surface');
+        setTokenAndPicker('--brand', '#102f60', 'picker-brand', 'label-brand');
+        setTokenAndPicker('--action-primary-bg', '#102f60');
+        setTokenAndPicker('--text-primary', '#20252b', 'picker-text-primary', 'label-text-primary');
+        setTokenAndPicker('--stage-learn-solid', '#2458e8', 'picker-stage-learn', 'label-stage-learn');
+        setTokenAndPicker('--stage-practice-solid', '#c07824', 'picker-stage-practice', 'label-stage-practice');
+        setTokenAndPicker('--stage-build-solid', '#7156b5', 'picker-stage-build', 'label-stage-build');
+        setTokenAndPicker('--stage-prove-solid', '#167d66', 'picker-stage-prove', 'label-stage-prove');
+      } else if (preset === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        setTokenAndPicker('--bg-canvas', '#111315', 'picker-bg-canvas', 'label-bg-canvas');
+        setTokenAndPicker('--bg-surface', '#171a1d', 'picker-bg-surface', 'label-bg-surface');
+        setTokenAndPicker('--brand', '#a9c1f0', 'picker-brand', 'label-brand');
+        setTokenAndPicker('--action-primary-bg', '#e4ebfa');
+        setTokenAndPicker('--text-primary', '#ecede9', 'picker-text-primary', 'label-text-primary');
+        setTokenAndPicker('--stage-learn-solid', '#7e9cff', 'picker-stage-learn', 'label-stage-learn');
+        setTokenAndPicker('--stage-practice-solid', '#d9954a', 'picker-stage-practice', 'label-stage-practice');
+        setTokenAndPicker('--stage-build-solid', '#b09bec', 'picker-stage-build', 'label-stage-build');
+        setTokenAndPicker('--stage-prove-solid', '#4fc3a4', 'picker-stage-prove', 'label-stage-prove');
+      } else if (preset === 'nordic') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        setTokenAndPicker('--bg-canvas', '#f0f4f8', 'picker-bg-canvas', 'label-bg-canvas');
+        setTokenAndPicker('--bg-surface', '#ffffff', 'picker-bg-surface', 'label-bg-surface');
+        setTokenAndPicker('--brand', '#0b2545', 'picker-brand', 'label-brand');
+        setTokenAndPicker('--action-primary-bg', '#0b2545');
+        setTokenAndPicker('--text-primary', '#13293d', 'picker-text-primary', 'label-text-primary');
+        setTokenAndPicker('--stage-learn-solid', '#006494', 'picker-stage-learn', 'label-stage-learn');
+        setTokenAndPicker('--stage-practice-solid', '#d48c24', 'picker-stage-practice', 'label-stage-practice');
+        setTokenAndPicker('--stage-build-solid', '#5a4e8d', 'picker-stage-build', 'label-stage-build');
+        setTokenAndPicker('--stage-prove-solid', '#1f7a65', 'picker-stage-prove', 'label-stage-prove');
+      }
+      updateLiveCssCode();
+    }
+
+    function setTokenAndPicker(varName, val, pickerId, labelId) {
+      document.documentElement.style.setProperty(varName, val);
+      if (pickerId && document.getElementById(pickerId)) document.getElementById(pickerId).value = val;
+      if (labelId && document.getElementById(labelId)) document.getElementById(labelId).innerText = val.toUpperCase();
+    }
+
+    function resetPaletteToDefault() {
+      applyPalettePreset('light');
+    }
+
+    function copyHex(hex, tokenName) {
+      navigator.clipboard.writeText(hex);
+      alert('Copied ' + tokenName + ': ' + hex + ' to clipboard!');
+    }
+
+    function copyGeneratedCss() {
+      const getVal = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+      const css = '/* Pathwisse ProofOS v1.0 Generated Palette */\n:root {\n' +
+        '  --bg-canvas: ' + getVal('--bg-canvas') + ';\n' +
+        '  --bg-surface: ' + getVal('--bg-surface') + ';\n' +
+        '  --brand: ' + getVal('--brand') + ';\n' +
+        '  --text-primary: ' + getVal('--text-primary') + ';\n' +
+        '  --stage-learn-solid: ' + getVal('--stage-learn-solid') + ';\n' +
+        '  --stage-practice-solid: ' + getVal('--stage-practice-solid') + ';\n' +
+        '  --stage-build-solid: ' + getVal('--stage-build-solid') + ';\n' +
+        '  --stage-prove-solid: ' + getVal('--stage-prove-solid') + ';\n' +
+        '}';
+      navigator.clipboard.writeText(css);
+      const status = document.getElementById('css-copy-status');
+      if (status) {
+        status.classList.remove('hidden');
+        setTimeout(() => status.classList.add('hidden'), 2500);
+      }
+    }
+
+    function downloadTokensCss() {
+      const getVal = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+      const css = '/* Pathwisse ProofOS v1.0 Generated Tokens */\n:root {\n' +
+        '  --bg-canvas: ' + getVal('--bg-canvas') + ';\n' +
+        '  --bg-surface: ' + getVal('--bg-surface') + ';\n' +
+        '  --brand: ' + getVal('--brand') + ';\n' +
+        '  --text-primary: ' + getVal('--text-primary') + ';\n' +
+        '  --stage-learn-solid: ' + getVal('--stage-learn-solid') + ';\n' +
+        '  --stage-practice-solid: ' + getVal('--stage-practice-solid') + ';\n' +
+        '  --stage-build-solid: ' + getVal('--stage-build-solid') + ';\n' +
+        '  --stage-prove-solid: ' + getVal('--stage-prove-solid') + ';\n' +
+        '}';
+      const blob = new Blob([css], { type: 'text/css' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'tokens.css';
+      a.click();
+    }
+
 
     // Initialize
     updateGpuCalc();
