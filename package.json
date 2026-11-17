@@ -1,11 +1,15 @@
 {
   "name": "fanout-clone",
   "version": "1.0.0",
-  "description": "Full reverse-engineered clone of fanout.sh",
-  "main": "server.js",
+  "description": "Full production clone of fanout.sh with ProofOS design system",
+  "main": "server.prod.js",
   "scripts": {
-    "start": "node server.js",
-    "serve": "node server.js"
+    "start": "node server.prod.js",
+    "prod": "node server.prod.js",
+    "dev": "node server.js",
+    "serve": "node server.prod.js",
+    "docker:build": "docker build -t fanout-prod .",
+    "docker:run": "docker run -d -p 80:80 fanout-prod"
   },
   "keywords": [
     "fanout",
@@ -14,6 +18,6 @@
     "ml-math",
     "inference-engineering"
   ],
-  "author": "Suraj Gaud (Reconstructed)",
+  "author": "Suraj Gaud",
   "license": "ISC"
 }
