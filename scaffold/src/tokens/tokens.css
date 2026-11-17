@@ -1,0 +1,168 @@
+/* ==========================================================================
+   Pathwisse ProofOS v1.0 — Design Tokens (design.md)
+   Two tiers:
+     1. --ref-*   raw palette. Never referenced by components.
+     2. --<role>  semantic tokens. The only tokens components may consume.
+   Themes: [data-theme="light"] (default) and [data-theme="dark"].
+   Spacing is a 4px half-step of an 8px grid: --space-N = N * 4px.
+   ========================================================================== */
+
+:root {
+  /* ---- Reference palette (light) --------------------------------------- */
+  --ref-paper-50: #fafaf8;
+  --ref-paper-100: #f4f4f0;
+  --ref-paper-200: #eeeee8;
+  --ref-paper-300: #e6e6df;
+  --ref-paper-400: #d9d9d0;
+  --ref-paper-600: #8c8c82;
+  --ref-white: #ffffff;
+  --ref-ink-900: #20252b;
+  --ref-ink-700: #444c56;
+  --ref-ink-500: #636b75;
+  --ref-ink-300: #a4aab2;
+  --ref-navy-900: #102f60;
+  --ref-navy-950: #0a2147;
+  --ref-navy-50: #e9eef7;
+  --ref-blue-600: #2458e8;
+  --ref-blue-50: #edf2fe;
+  --ref-blue-200: #c4d3fa;
+  --ref-green-600: #167d66;
+  --ref-green-700: #126a55;
+  --ref-green-50: #e7f4f0;
+  --ref-green-200: #b3dccf;
+  --ref-purple-600: #7156b5;
+  --ref-purple-50: #f1eef9;
+  --ref-purple-200: #d3c8ec;
+  --ref-amber-600: #c07824;
+  --ref-amber-800: #8f5510;
+  --ref-amber-50: #fbf1e3;
+  --ref-amber-200: #efd3a8;
+  --ref-red-700: #b3261e;
+  --ref-red-50: #fcecea;
+  --ref-red-200: #f0bdb8;
+
+  /* ---- Surfaces ---------------------------------------------------------- */
+  --bg-canvas: var(--ref-paper-50);
+  --bg-surface: var(--ref-white);
+  --bg-subtle: var(--ref-paper-100);
+  --bg-inset: var(--ref-paper-200);
+  --bg-selected: var(--ref-blue-50);
+  --notch-cut: var(--bg-canvas);
+
+  /* ---- Borders ----------------------------------------------------------- */
+  --border-hairline: var(--ref-paper-300);
+  --border-default: var(--ref-paper-400);
+  --border-strong: var(--ref-ink-300);
+  --border-control: var(--ref-paper-600);
+
+  /* ---- Text -------------------------------------------------------------- */
+  --text-primary: var(--ref-ink-900);
+  --text-secondary: var(--ref-ink-700);
+  --text-tertiary: var(--ref-ink-500);
+  --text-disabled: var(--ref-ink-300);
+  --text-inverse: var(--ref-white);
+  --text-link: var(--ref-blue-600);
+
+  /* ---- Brand + actions --------------------------------------------------- */
+  --brand: var(--ref-navy-900);
+  --brand-subtle: var(--ref-navy-50);
+  --action-primary-bg: var(--ref-navy-900);
+  --action-primary-bg-hover: var(--ref-navy-950);
+  --action-primary-fg: var(--ref-white);
+  --action-primary-edge: var(--ref-navy-950);
+  --action-secondary-bg: var(--ref-white);
+  --action-secondary-bg-hover: var(--ref-paper-100);
+  --action-ghost-bg-hover: var(--ref-paper-200);
+  --focus-ring: var(--ref-blue-600);
+
+  /* ---- Stage language: Learn → Practice → Build → Review → Prove --------- */
+  --stage-learn-solid: var(--ref-blue-600);
+  --stage-learn-text: var(--ref-blue-600);
+  --stage-learn-tint: var(--ref-blue-50);
+  --stage-learn-line: var(--ref-blue-200);
+
+  --stage-practice-solid: var(--ref-amber-600);
+  --stage-practice-text: var(--ref-amber-800);
+  --stage-practice-tint: var(--ref-amber-50);
+  --stage-practice-line: var(--ref-amber-200);
+
+  --stage-build-solid: var(--ref-purple-600);
+  --stage-build-text: var(--ref-purple-600);
+  --stage-build-tint: var(--ref-purple-50);
+  --stage-build-line: var(--ref-purple-200);
+
+  --stage-review-solid: var(--ref-navy-900);
+  --stage-review-text: var(--ref-navy-900);
+  --stage-review-tint: var(--ref-navy-50);
+  --stage-review-line: #bccae3;
+
+  --stage-prove-solid: var(--ref-green-600);
+  --stage-prove-text: var(--ref-green-700);
+  --stage-prove-tint: var(--ref-green-50);
+  --stage-prove-line: var(--ref-green-200);
+
+  /* ---- Geometry ---------------------------------------------------------- */
+  --radius-mark: 2px;
+  --radius-control: 6px;
+  --radius-surface: 8px;
+  --border-width: 1px;
+  --border-width-strong: 2px;
+  --control-sm: 28px;
+  --control-md: 32px;
+  --control-lg: 40px;
+  --press-depth: 2px;
+  --notch-size: 12px;
+
+  /* ---- Elevation --------------------------------------------------------- */
+  --shadow-raised: 0 1px 0 rgb(16 47 96 / 0.05);
+  --shadow-overlay: 0 12px 32px -12px rgb(16 24 40 / 0.22), 0 2px 6px -2px rgb(16 24 40 / 0.1);
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --ref-paper-50: #111315;
+  --ref-paper-100: #1a1d20;
+  --ref-paper-200: #212529;
+  --ref-paper-300: #2a2f34;
+  --ref-paper-400: #343a40;
+  --ref-paper-600: #7b838c;
+  --ref-white: #171a1d;
+  --ref-ink-900: #ecede9;
+  --ref-ink-700: #b9bec5;
+  --ref-ink-500: #8f96a0;
+  --ref-ink-300: #565d66;
+  --ref-navy-900: #a9c1f0;
+  --ref-navy-950: #c4d5f6;
+  --ref-navy-50: #18233b;
+  --ref-blue-600: #7e9cff;
+  --ref-blue-50: #172041;
+  --ref-blue-200: #2c3e78;
+  --ref-green-600: #4fc3a4;
+  --ref-green-700: #4fc3a4;
+  --ref-green-50: #112a25;
+  --ref-green-200: #1f5a4d;
+  --ref-purple-600: #b09bec;
+  --ref-purple-50: #231d3a;
+  --ref-purple-200: #46397a;
+  --ref-amber-600: #d9954a;
+  --ref-amber-800: #e5ab6a;
+  --ref-amber-50: #2d2112;
+  --ref-amber-200: #6a4a1f;
+  --ref-red-700: #f08a82;
+  --ref-red-50: #301816;
+  --ref-red-200: #6b2e2a;
+
+  --bg-selected: var(--ref-blue-50);
+  --action-primary-bg: #e4ebfa;
+  --action-primary-bg-hover: #f2f5fd;
+  --action-primary-fg: #0b1f40;
+  --action-primary-edge: #8ea4cf;
+  --action-secondary-bg: var(--ref-paper-100);
+  --action-secondary-bg-hover: var(--ref-paper-200);
+
+  --shadow-raised: 0 1px 0 rgb(0 0 0 / 0.3);
+  --shadow-overlay: 0 16px 40px -12px rgb(0 0 0 / 0.6), 0 0 0 1px var(--ref-paper-400);
+
+  color-scheme: dark;
+}
